@@ -42,4 +42,3 @@ export const scopes = {
 };
 
 export const msalInstance = new PublicClientApplication(msalConfig);
-await msalInstance.initialize(); //TODO: verify this

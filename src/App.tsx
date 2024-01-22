@@ -4,7 +4,7 @@ import { useIsAuthenticated } from '@azure/msal-react';
 import { ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
     Route,
     RouterProvider,
@@ -16,6 +16,7 @@ import { Login } from './pages/login/Login';
 import GlobalStyles from './style/GlobalStyles';
 import { queryClient } from './tanstackQuery';
 import { lightTheme } from './theme';
+import { msalInstance } from './msalConfig';
 
 const router = createBrowserRouter(
     createRoutesFromElements(<Route element={<RootLayout />} path="/" />)
@@ -31,6 +32,14 @@ function App() {
     const isAuthenticated = useIsAuthenticated();
     console.log(isAuthenticated);
     const [showDevtools, setShowDevtools] = React.useState(false);
+
+    const initiateMsal = useCallback(async () => {
+        await msalInstance.initialize(); //old browser does not support having this in the msalConfig file because it is asynchrounous
+    }, [msalInstance]); //can maybe remove msalInstace
+
+    useEffect(() => {
+        void initiateMsal();
+    }, [initiateMsal]);
 
     React.useEffect(() => {
         //@ts-expect-error toggleDevtools dont support ts
