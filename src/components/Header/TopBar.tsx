@@ -1,19 +1,11 @@
-import * as React from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Drawer } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import WP_1 from '../../../public/WP_1.svg';
-import { Drawer } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import DrawerContent from './DrawerContent';
 
@@ -42,7 +34,7 @@ function TopBar() {
         <Container maxWidth={'lg'}>
           <Toolbar disableGutters>
             {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-            <Box component="img" sx={{ width: 40, mr: 1 }} alt="bouvet logo" src={WP_1} />
+            <Box component="img" sx={{ width: 40, mr: 1 }} alt="logo" src={'/WP_1.svg'} />
             <Typography
               variant="h6"
               noWrap

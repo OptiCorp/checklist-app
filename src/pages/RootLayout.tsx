@@ -1,5 +1,4 @@
-import { Button, Container, CssBaseline } from '@mui/material';
-import React from 'react';
+import { Container, CssBaseline } from '@mui/material';
 import TopBar from '../components/Header/TopBar';
 
 const RootLayout = () => {
