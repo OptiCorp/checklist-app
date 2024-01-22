@@ -29,7 +29,6 @@ const GlobalStyles = createGlobalStyle`
         -moz-osx-font-smoothing: grayscale;
     }
     .wrapper {
-    /* padding: ${({ width }) => (width < 500 ? 0 : '8px')}; */
     padding: '8px';
     grid-template-columns: 1fr ;
     grid-template-rows: auto 1fr auto;

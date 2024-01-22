@@ -1,6 +1,6 @@
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
-import { useIsAuthenticated } from "@azure/msal-react";
+import { useIsAuthenticated } from '@azure/msal-react';
 import { ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
