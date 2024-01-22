@@ -37,20 +37,20 @@ function App() {
         window.toggleDevtools = () => setShowDevtools((old) => !old);
     }, []);
 
-    return (
-        <ThemeProvider theme={lightTheme}>
-            <GlobalStyles />
-            <QueryClientProvider client={queryClient}>
-                <ReactQueryDevtools initialIsOpen={showDevtools} />
-                {showDevtools && (
-                    <React.Suspense fallback={null}>
-                        <ReactQueryDevtoolsProduction />
-                    </React.Suspense>
-                )}
-                {isAuthenticated ? <RouterProvider router={router}></RouterProvider> : <Login />}
-            </QueryClientProvider>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider theme={lightTheme}>
+      <GlobalStyles />
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={showDevtools} />
+        {showDevtools && (
+          <React.Suspense fallback={null}>
+            <ReactQueryDevtoolsProduction />
+          </React.Suspense>
+        )}
+        {isAuthenticated ? <RouterProvider router={router}></RouterProvider> : <Login />}
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;
