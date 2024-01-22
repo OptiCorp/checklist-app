@@ -10,48 +10,54 @@ import { useState } from 'react';
 import DrawerContent from './DrawerContent';
 
 function TopBar() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleToggleNav = () => {
-    //setAnchorElNav(event.currentTarget);
-    setDrawerOpen((prevState) => !prevState);
-  };
-  //   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //     setAnchorElUser(event.currentTarget);
-  //   };
+    const handleToggleNav = () => {
+        //setAnchorElNav(event.currentTarget);
+        setDrawerOpen((prevState) => !prevState);
+    };
+    //   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    //     setAnchorElUser(event.currentTarget);
+    //   };
 
-  // const handleCloseNavMenu = () => {
-  //   //setAnchorElNav(null);
-  // };
+    // const handleCloseNavMenu = () => {
+    //   //setAnchorElNav(null);
+    // };
 
-  //   const handleCloseUserMenu = () => {
-  //     setAnchorElUser(null);
-  //   };
+    //   const handleCloseUserMenu = () => {
+    //     setAnchorElUser(null);
+    //   };
 
-  return (
-    <>
-      <AppBar position="static" color="secondary">
-        <Container maxWidth={'lg'}>
-          <Toolbar disableGutters>
-            {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-            <Box component="img" sx={{ width: 40, mr: 1 }} alt="logo" src={'/WP_1.svg'} />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none'
-              }}></Typography>
+    return (
+        <>
+            <AppBar position="static" color="secondary">
+                <Container maxWidth={'lg'}>
+                    <Toolbar disableGutters>
+                        {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+                        <Box
+                            component="img"
+                            sx={{ width: 40, mr: 1 }}
+                            alt="logo"
+                            src={'/WP_1.svg'}
+                        />
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="a"
+                            href="#app-bar-with-responsive-menu"
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'none', md: 'flex' },
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: 'inherit',
+                                textDecoration: 'none',
+                            }}
+                        ></Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-              {/* <IconButton
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            {/* <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
@@ -60,7 +66,7 @@ function TopBar() {
               color="inherit">
               <MenuIcon />
             </IconButton> */}
-              {/* <Menu
+                            {/* <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -83,48 +89,50 @@ function TopBar() {
                 </MenuItem>
               ))}
             </Menu> */}
-            </Box>
-            {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
-            {/* <Box
+                        </Box>
+                        {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+                        {/* <Box
             component="img"
             sx={{ width: 40, display: { xs: 'flex', md: 'none' }, mr: 1 }}
             alt="bouvet logo"
             src={WP_1}
           /> */}
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: { xs: 'flex', md: 'none' },
-                flexGrow: 1,
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none'
-              }}></Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {/* {pages.map((page) => (
+                        <Typography
+                            variant="h5"
+                            noWrap
+                            component="a"
+                            href="#app-bar-with-responsive-menu"
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'flex', md: 'none' },
+                                flexGrow: 1,
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: 'inherit',
+                                textDecoration: 'none',
+                            }}
+                        ></Typography>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                            {/* {pages.map((page) => (
               <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, display: 'block' }}>
                 {page}
               </Button>
             ))} */}
-            </Box>
+                        </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleToggleNav}
-                color="inherit">
-                <MenuIcon />
-              </IconButton>
-              {/* <Tooltip title="Open settings">
+                        <Box sx={{ flexGrow: 0 }}>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleToggleNav}
+                                color="inherit"
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            {/* <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
@@ -150,22 +158,23 @@ function TopBar() {
                 </MenuItem>
               ))}
             </Menu> */}
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <nav>
-        <Drawer
-          color="primary"
-          variant="temporary"
-          onClose={handleToggleNav}
-          anchor="right"
-          open={drawerOpen}
-          ModalProps={{ keepMounted: true }}>
-          <DrawerContent handleDrawerToggle={handleToggleNav}></DrawerContent>
-        </Drawer>
-      </nav>
-    </>
-  );
+                        </Box>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            <nav>
+                <Drawer
+                    color="primary"
+                    variant="temporary"
+                    onClose={handleToggleNav}
+                    anchor="right"
+                    open={drawerOpen}
+                    ModalProps={{ keepMounted: true }}
+                >
+                    <DrawerContent handleDrawerToggle={handleToggleNav}></DrawerContent>
+                </Drawer>
+            </nav>
+        </>
+    );
 }
 export default TopBar;

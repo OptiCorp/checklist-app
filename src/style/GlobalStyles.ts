@@ -3,16 +3,17 @@ import { createGlobalStyle } from 'styled-components';
 export const TEXT_SHADOW = '2px 1px 1px rgba(0, 0, 0, 0.5)';
 
 export const COLORS = {
-  white: '#FFFFFF',
-  lightestGray: '#FBFBFB',
-  lightGray: '#F2F2F2',
-  gray: '#CACACA',
-  darkGray: '#7E7E7E',
-  black: '#000000',
-  green: '#008000',
-  red: '#EB0000'
+    white: '#FFFFFF',
+    lightestGray: '#FBFBFB',
+    lightGray: '#F2F2F2',
+    gray: '#CACACA',
+    darkGray: '#7E7E7E',
+    black: '#000000',
+    green: '#008000',
+    red: '#EB0000',
 };
-type Props = {};
+
+// type Props = {};
 
 const GlobalStyles = createGlobalStyle<Props>`
    body, :root, html {
@@ -56,5 +57,5 @@ export default GlobalStyles;
 type ColorsType = typeof COLORS;
 
 declare module 'styled-components' {
-  export type DefaultTheme = ColorsType;
+    export type DefaultTheme = ColorsType;
 }

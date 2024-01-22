@@ -11,9 +11,9 @@ import { msalInstance } from './msalConfig.ts';
 // import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <MsalProvider instance={msalInstance}>
-      <App />
-    </MsalProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <MsalProvider instance={msalInstance}>
+            <App />
+        </MsalProvider>
+    </React.StrictMode>
 );
