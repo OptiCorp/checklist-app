@@ -15,7 +15,7 @@ export const COLORS = {
 
 // type Props = {};
 
-const GlobalStyles = createGlobalStyle<Props>`
+const GlobalStyles = createGlobalStyle`
    body, :root, html {
         margin: 0;
         width: 100%;
