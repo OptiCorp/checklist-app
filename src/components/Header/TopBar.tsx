@@ -30,7 +30,7 @@ function TopBar() {
 
     return (
         <>
-            <AppBar position="static" color="secondary">
+            <AppBar position="static" color="transparent">
                 <Container maxWidth={'lg'}>
                     <Toolbar disableGutters>
                         {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}

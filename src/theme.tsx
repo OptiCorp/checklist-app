@@ -8,11 +8,12 @@ export const lightTheme = createTheme({
             contrastText: '#FFFFFF',
         },
         secondary: {
-            main: '#FFFFFF',
+            main: '#FF0000',
             contrastText: '#000000',
         },
         mode: 'light',
     },
+    //shadows: Array(25).fill('none') as Shadows,
     components: {
         MuiButton: {
             styleOverrides: {
@@ -22,4 +23,5 @@ export const lightTheme = createTheme({
             },
         },
     },
+    spacing: 4,
 });
