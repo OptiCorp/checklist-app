@@ -1,5 +1,10 @@
-import { Container, CssBaseline } from '@mui/material';
+import { Container, CssBaseline, styled } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 import TopBar from '../components/Header/TopBar';
+
+const MainContainer = styled(Container)(({ _theme }) => ({
+    marginTop: '1rem',
+}));
 
 const RootLayout = () => {
     return (
@@ -7,7 +12,9 @@ const RootLayout = () => {
             <CssBaseline />
             <TopBar />
             <main>
-                <Container maxWidth={'lg'}>Beginning</Container>
+                <MainContainer maxWidth={'lg'}>
+                    <Outlet />
+                </MainContainer>
             </main>
         </>
     );

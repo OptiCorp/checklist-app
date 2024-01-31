@@ -15,7 +15,7 @@ export const COLORS = {
 
 // type Props = {};
 
-const GlobalStyles = createGlobalStyle<Props>`
+const GlobalStyles = createGlobalStyle`
    body, :root, html {
         margin: 0;
         width: 100%;
@@ -29,7 +29,6 @@ const GlobalStyles = createGlobalStyle<Props>`
         -moz-osx-font-smoothing: grayscale;
     }
     .wrapper {
-    /* padding: ${({ width }) => (width < 500 ? 0 : '8px')}; */
     padding: '8px';
     grid-template-columns: 1fr ;
     grid-template-rows: auto 1fr auto;
