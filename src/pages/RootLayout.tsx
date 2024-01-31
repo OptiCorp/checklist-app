@@ -1,8 +1,8 @@
 import { Container, CssBaseline, styled } from '@mui/material';
-import TopBar from '../components/Header/TopBar';
 import { Outlet } from 'react-router-dom';
+import TopBar from '../components/Header/TopBar';
 
-const MainContainer = styled(Container)(({ theme }) => ({
+const MainContainer = styled(Container)(({ _theme }) => ({
     marginTop: '1rem',
 }));
 

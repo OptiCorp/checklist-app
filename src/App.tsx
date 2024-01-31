@@ -11,18 +11,20 @@ import {
     createBrowserRouter,
     createRoutesFromElements,
 } from 'react-router-dom';
+import { msalInstance } from './msalConfig';
+import LandingPage from './pages/LandingPage/LandingPage';
 import RootLayout from './pages/RootLayout';
-import { Login } from './pages/login/Login';
+import { Login } from './pages/Login/Login';
 import GlobalStyles from './style/GlobalStyles';
 import { queryClient } from './tanstackQuery';
 import { lightTheme } from './theme';
-import { msalInstance } from './msalConfig';
-import LandingPage from './pages/LandingPage/LandingPage';
+import NewMobilization from './pages/mobilization/NewMobilization/NewMobilization';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<RootLayout />}>
             <Route element={<LandingPage />} path="/"></Route>
+            <Route element={<NewMobilization />} path="newMob"></Route>
         </Route>
     )
 );
@@ -34,9 +36,9 @@ const ReactQueryDevtoolsProduction = React.lazy(() =>
 );
 
 function App() {
-    //const isAuthenticated = useIsAuthenticated();
-    const [isAuthenticated, setIsAutheticated] = useState(true);
-    const [showDevtools, setShowDevtools] = React.useState(false);
+    //const isAuthenticated = useIsAuthenticated(); //to use Auth from msal
+    const [isAuthenticated, setIsAutheticated] = useState(true); //to skip auth
+    const [showDevtools, setShowDevtools] = useState(false);
 
     const initiateMsal = useCallback(async () => {
         await msalInstance.initialize(); //old browser does not support having this in the msalConfig file because it is asynchrounous

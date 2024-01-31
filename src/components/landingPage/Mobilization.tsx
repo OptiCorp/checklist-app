@@ -1,50 +1,111 @@
-import React from 'react';
-import CardWrapper from '../UI/CardWrapper';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import CardWrapper from '../UI/CardWrapper';
 
-const StyledUl = styled.ul`
-    list-style: none;
+export const StyledUl = styled.ul`
+    list-style-type: none;
     padding: 0;
     margin: 0;
 `;
 
+// const StyledLi = styled.li`
+//     margin-bottom: 0.5rem;
+//     text-indent: -5px;
+//     display: flex;
+// `;
+
+export type listTextType = {
+    id: string;
+    text: string;
+};
+
+const dummyTextSections: listTextType[] = [
+    { id: 'wp id', text: '5321-1' },
+    { id: 's/n', text: '1143 D12C 12' },
+    { id: 'p/n', text: 'bv 113 eu' },
+];
+
 const Mobilization = () => {
+    const navigate = useNavigate();
     const firstText = (
-        <Box>
-            <Typography variant="caption">
-                <StyledUl>
-                    <li>
-                        <b>aksdn</b>
-                    </li>
-                    <li>
-                        <b>aksdn</b>
-                    </li>
-                    <li>
-                        <b>aksdn</b>
-                    </li>
-                </StyledUl>
-            </Typography>
-        </Box>
+        <Typography variant="caption">
+            <StyledUl>
+                {dummyTextSections.map((item, i) => (
+                    <Grid
+                        key={i}
+                        component={'li'}
+                        container
+                        wrap="nowrap"
+                        justifyContent={'space-between'}
+                    >
+                        <Grid item sx={{ textWrap: 'nowrap' }}>
+                            <b>{item.id}:</b>
+                        </Grid>
+                        <Grid item>{item.text} alksdnlka</Grid>
+                    </Grid>
+                ))}
+            </StyledUl>
+        </Typography>
+    );
+    const middleText = (
+        <Typography variant="caption">
+            <StyledUl>
+                {dummyTextSections.map((item, i) => (
+                    <Grid
+                        key={i}
+                        component={'li'}
+                        container
+                        wrap="nowrap"
+                        justifyContent={'space-between'}
+                    >
+                        <Grid item sx={{ textWrap: 'nowrap' }}>
+                            <b>{item.id}:</b>
+                        </Grid>
+                        <Grid item>{item.text} alksdnlka</Grid>
+                    </Grid>
+                ))}
+            </StyledUl>
+        </Typography>
     );
     const secondText = (
-        <Box>
-            <Typography variant="caption">
-                <StyledUl>
-                    <li>aksdn</li>
-                    <li>aksdn</li>
-                    <li>aksdn</li>
-                </StyledUl>
-            </Typography>
-        </Box>
+        <Typography variant="caption">
+            <StyledUl>
+                {dummyTextSections.map((item, i) => (
+                    <Grid
+                        key={i}
+                        component={'li'}
+                        container
+                        wrap="nowrap"
+                        justifyContent={'space-between'}
+                    >
+                        <Grid item sx={{ textWrap: 'nowrap' }}>
+                            <b>{item.id}:</b>
+                        </Grid>
+                        <Grid item>{item.text} alksdnlka</Grid>
+                    </Grid>
+                ))}
+            </StyledUl>
+        </Typography>
     );
 
     return (
-        <Stack spacing={2}>
-            <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
-            <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
-            <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
-        </Stack>
+        <>
+            <Box sx={{ mt: 5 }}>
+                <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
+                    <CardWrapper
+                        firstChild={firstText}
+                        secondChild={secondText}
+                        middleChild={middleText}
+                    ></CardWrapper>
+                    <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
+                    <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
+                </Stack>
+            </Box>
+            <Button variant="contained" onClick={() => navigate('newMob')} sx={{ float: 'right' }}>
+                Create new mob
+            </Button>
+        </>
     );
 };
 
