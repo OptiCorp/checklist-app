@@ -19,12 +19,27 @@ import GlobalStyles from './style/GlobalStyles';
 import { queryClient } from './tanstackQuery';
 import { lightTheme } from './theme';
 import NewMobilization from './pages/mobilization/NewMobilization/NewMobilization';
+import MobDemobPage from './pages/mobilization/MobDemobPage';
+import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
+import PunchesPage from './pages/punch/PunchesPage';
+import PunchDetailsPage from './pages/punch/PunchDetailsPage';
+import PartDetailsPage from './pages/part/PartDetailsPage';
+import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<RootLayout />}>
             <Route element={<LandingPage />} path="/"></Route>
             <Route element={<NewMobilization />} path="newMob"></Route>
+            <Route element={<MobDemobPage />} path="mobdemob/:id"></Route>
+            <Route element={<ChecklistPage />} path="checklist/:id">
+                <Route element={<PunchesPage />} path="punches">
+                    <Route element={<PunchDetailsPage />} path="punchDetails/:id"></Route>
+                </Route>
+            </Route>
+            <Route element={<PartDetailsPage />} path="part/:id">
+                <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
+            </Route>
         </Route>
     )
 );

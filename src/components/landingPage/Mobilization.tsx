@@ -1,7 +1,9 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CardWrapper from '../UI/CardWrapper';
+import { useContext } from 'react';
+import { ActionType, BreadcrumbsContext } from '../../store/breadcrumbsContext';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -28,6 +30,16 @@ const dummyTextSections: listTextType[] = [
 
 const Mobilization = () => {
     const navigate = useNavigate();
+    const {state} = useLocation();
+    // const { state, dispatch } = useContext(BreadcrumbsContext);
+
+    // const handleNavigate = (navigateTo: string) => {
+    //     navigate(navigateTo);
+    //     dispatch({ type: ActionType.GoForward, payload: { link: navigateTo } });
+    // };
+
+    console.log(state);
+
     const firstText = (
         <Typography variant="caption">
             <StyledUl>

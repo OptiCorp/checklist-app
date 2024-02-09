@@ -18,7 +18,7 @@ const CardWrapper = ({ firstChild, secondChild, middleChild }: Props) => {
     return (
         <StyledCard>
             <Grid container direction={'row'} wrap="nowrap" minHeight={'4rem'}>
-                <Grid item xs={middleChild ? 4 : 6} p={3}>
+                <Grid justifyContent={'space-between'} item xs={middleChild ? 4 : 6} p={3}>
                     {firstChild}
                 </Grid>
                 {middleChild && (
