@@ -30,7 +30,7 @@ const dummyTextSections: listTextType[] = [
 
 const Mobilization = () => {
     const navigate = useNavigate();
-    const {state} = useLocation();
+    const { state } = useLocation();
     // const { state, dispatch } = useContext(BreadcrumbsContext);
 
     // const handleNavigate = (navigateTo: string) => {
@@ -44,17 +44,13 @@ const Mobilization = () => {
         <Typography variant="caption">
             <StyledUl>
                 {dummyTextSections.map((item, i) => (
-                    <Grid
-                        key={i}
-                        component={'li'}
-                        container
-                        wrap="nowrap"
-                        justifyContent={'space-between'}
-                    >
-                        <Grid item sx={{ textWrap: 'nowrap' }}>
+                    <Grid key={i} component={'li'} container wrap="nowrap">
+                        <Grid item xs={4}>
                             <b>{item.id}:</b>
                         </Grid>
-                        <Grid item>{item.text} alksdnlka</Grid>
+                        <Grid item xs={8}>
+                            {item.text}
+                        </Grid>
                     </Grid>
                 ))}
             </StyledUl>
@@ -64,17 +60,13 @@ const Mobilization = () => {
         <Typography variant="caption">
             <StyledUl>
                 {dummyTextSections.map((item, i) => (
-                    <Grid
-                        key={i}
-                        component={'li'}
-                        container
-                        wrap="nowrap"
-                        justifyContent={'space-between'}
-                    >
-                        <Grid item sx={{ textWrap: 'nowrap' }}>
+                    <Grid key={i} component={'li'} container wrap="nowrap">
+                        <Grid item xs={4}>
                             <b>{item.id}:</b>
                         </Grid>
-                        <Grid item>{item.text} alksdnlka</Grid>
+                        <Grid item xs={8}>
+                            {item.text}
+                        </Grid>
                     </Grid>
                 ))}
             </StyledUl>
@@ -84,17 +76,13 @@ const Mobilization = () => {
         <Typography variant="caption">
             <StyledUl>
                 {dummyTextSections.map((item, i) => (
-                    <Grid
-                        key={i}
-                        component={'li'}
-                        container
-                        wrap="nowrap"
-                        justifyContent={'space-between'}
-                    >
-                        <Grid item sx={{ textWrap: 'nowrap' }}>
+                    <Grid key={i} component={'li'} container wrap="nowrap">
+                        <Grid item xs={4}>
                             <b>{item.id}:</b>
                         </Grid>
-                        <Grid item>{item.text} alksdnlka</Grid>
+                        <Grid item xs={8}>
+                            {item.text}
+                        </Grid>
                     </Grid>
                 ))}
             </StyledUl>
