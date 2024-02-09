@@ -1,5 +1,5 @@
 import { Container, CssBaseline, styled } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import TopBar from '../components/Header/TopBar';
 import { BreadcrumbsContext, InitialBreadcrumbState } from '../store/breadcrumbsContext';
 import { useState, useReducer } from 'react';
@@ -11,7 +11,14 @@ const MainContainer = styled(Container)(({ _theme }) => ({
 
 const RootLayout = () => {
     const [state, dispatch] = useReducer(breadcrumbsReducer, InitialBreadcrumbState);
+    // const { state, dispatch } = useContext(BreadcrumbsContext);
 
+    // const handleNavigate = (navigateTo: string) => {
+    //     navigate(navigateTo);
+    //     dispatch({ type: ActionType.GoForward, payload: { link: navigateTo } });
+    // };
+
+    console.log(location);
     return (
         <>
             <CssBaseline />

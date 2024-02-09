@@ -24,7 +24,7 @@ export type GoBackward = {
 };
 
 export const InitialBreadcrumbState: Breadcrumbs = {
-    links: ['test'],
+    links: ['/'],
 };
 
 export type BreadcrumbsActions = GoForward | GoBackward;

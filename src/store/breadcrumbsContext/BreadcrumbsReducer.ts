@@ -1,17 +1,18 @@
 import { ActionType, Breadcrumbs, BreadcrumbsActions } from '.';
 
 export const breadcrumbsReducer = (state: Breadcrumbs, action: BreadcrumbsActions) => {
-    const breadcrumbState = { ...state };
-
     switch (action.type) {
         case ActionType.GoForward: {
-            return breadcrumbState.links.push(action.payload.link);
+            const newLinks = [...state.links, action.payload.link];
+            console.log(newLinks);
+            return { ...state, links: newLinks };
         }
 
         case ActionType.GoBackward: {
-            return breadcrumbState.links.pop();
+            const newLinks = state.links.slice(0, -1); // Removes the last item
+            return { ...state, links: newLinks };
         }
         default:
-            return breadcrumbState;
+            return state;
     }
 };

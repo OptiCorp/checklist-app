@@ -4,7 +4,7 @@ import OverViewTabs from '../../components/landingPage/OverViewTabs';
 import { BreadcrumbsContext } from '../../store/breadcrumbsContext';
 
 const LandingPage = () => {
-    const { state, dispatch } = useContext(BreadcrumbsContext);
+    const { state } = useContext(BreadcrumbsContext);
 
     console.log(state.links);
 
