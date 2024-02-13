@@ -13,6 +13,7 @@ import CardWrapper from './CardWrapper';
 import React from 'react';
 import { listTextType } from './NestedList';
 import { useNavigate } from 'react-router-dom';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 interface Props {
     item: listTextType;
@@ -63,12 +64,12 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                         orientation="vertical"
                         sx={{
                             float: 'left',
-                            pl: 14,
+                            pl: 18,
                             borderRightWidth: 3,
                             borderColor: 'darkslategray',
                         }}
                     />
-                    <List component="div" disablePadding sx={{ pl: 16 }}>
+                    <List component="div" disablePadding sx={{ pl: 24 }}>
                         <ListItemButton>
                             <ListItemIcon sx={{ width: '100%' }} onClick={() => navigate('/')}>
                                 <CardWrapper
@@ -96,6 +97,7 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                                                 <b>{item.id}</b>
                                             </Grid>
                                             <Grid item>{item.text}</Grid>
+                                            <AssignmentTurnedInIcon />
                                         </Grid>
                                     }
                                 />
