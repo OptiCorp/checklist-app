@@ -28,9 +28,10 @@ export type listTextType = {
 };
 
 const data: listTextType[] = [
-    { id: 'wp id', text: '5321-1' },
-    { id: 's/n', text: '1143 D12C 12' },
-    { id: 'p/n', text: 'bv 113 eu' },
+    { id: 'id_1', text: 'text_1' },
+    { id: 'id_2', text: 'text_2' },
+    { id: 'id_3', text: 'text_3' },
+    { id: 'id_4', text: 'text_4' },
 ];
 
 const NestedList = () => {

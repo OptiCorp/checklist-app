@@ -1,5 +1,14 @@
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import { ListItemButton, Collapse, List, ListItemIcon, Box, Stack, Grid } from '@mui/material';
+import {
+    ListItemButton,
+    Collapse,
+    List,
+    ListItemIcon,
+    Box,
+    Stack,
+    Grid,
+    Divider,
+} from '@mui/material';
 import CardWrapper from './CardWrapper';
 import React from 'react';
 import { listTextType } from './NestedList';
@@ -29,9 +38,9 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                                 justifyContent={'space-between'}
                             >
                                 <Grid item sx={{ textWrap: 'nowrap' }}>
-                                    <b>awdaw:</b>
+                                    <b>{item.id}</b>
                                 </Grid>
-                                <Grid item>asd alksdnlka</Grid>
+                                <Grid item>{item.text}</Grid>
                             </Grid>
                         }
                         secondChild={
@@ -42,15 +51,24 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                                 justifyContent={'space-between'}
                             >
                                 <Grid item sx={{ textWrap: 'nowrap' }}>
-                                    <b>awdaw:</b>
+                                    <b>{item.id}</b>
                                 </Grid>
-                                <Grid item>asd alksdnlka</Grid>
+                                <Grid item>{item.text}</Grid>
                             </Grid>
                         }
                     />
                 </ListItemButton>
                 <Collapse in={openState || false} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding sx={{ pl: 12 }}>
+                    <Divider
+                        orientation="vertical"
+                        sx={{
+                            float: 'left',
+                            pl: 14,
+                            borderRightWidth: 3,
+                            borderColor: 'darkslategray',
+                        }}
+                    />
+                    <List component="div" disablePadding sx={{ pl: 16 }}>
                         <ListItemButton>
                             <ListItemIcon sx={{ width: '100%' }} onClick={() => navigate('/')}>
                                 <CardWrapper
@@ -62,9 +80,9 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                                             justifyContent={'space-between'}
                                         >
                                             <Grid item sx={{ textWrap: 'nowrap' }}>
-                                                <b>{item.text}</b>
+                                                <b>{item.id}</b>
                                             </Grid>
-                                            <Grid item>asd alksdnlka</Grid>
+                                            <Grid item>{item.text}</Grid>
                                         </Grid>
                                     }
                                     secondChild={
@@ -75,9 +93,9 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                                             justifyContent={'space-between'}
                                         >
                                             <Grid item sx={{ textWrap: 'nowrap' }}>
-                                                <b>awdaw:</b>
+                                                <b>{item.id}</b>
                                             </Grid>
-                                            <Grid item>asd alksdnlka</Grid>
+                                            <Grid item>{item.text}</Grid>
                                         </Grid>
                                     }
                                 />
