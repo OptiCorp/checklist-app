@@ -25,13 +25,14 @@ import PunchesPage from './pages/punch/PunchesPage';
 import PunchDetailsPage from './pages/punch/PunchDetailsPage';
 import PartDetailsPage from './pages/part/PartDetailsPage';
 import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<RootLayout />}>
             <Route element={<LandingPage />} path="/"></Route>
             <Route element={<NewMobilization />} path="newMob"></Route>
-            <Route element={<MobDemobPage />} path="mobdemob/:id"></Route>
+            <Route element={<MobDemobPage />} path="mobdemob" errorElement={<ErrorPage />}></Route>
             <Route element={<ChecklistPage />} path="checklist/:id">
                 <Route element={<PunchesPage />} path="punches">
                     <Route element={<PunchDetailsPage />} path="punchDetails/:id"></Route>

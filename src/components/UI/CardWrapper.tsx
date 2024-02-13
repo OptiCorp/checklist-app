@@ -1,6 +1,7 @@
 import { Card, Divider, Grid, styled } from '@mui/material';
+import { grey } from '@mui/material/colors';
 
-interface Props {
+interface CardWrapperProps {
     firstChild: JSX.Element;
     middleChild?: JSX.Element;
     secondChild: JSX.Element;
@@ -12,11 +13,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: theme.palette.text.primary,
+    backgroundColor: 'lightgrey',
 }));
 
-const CardWrapper = ({ firstChild, secondChild, middleChild }: Props) => {
+const CardWrapper: React.FC<CardWrapperProps> = ({ firstChild, secondChild, middleChild }) => {
     return (
-        <StyledCard>
+        <StyledCard sx={{ width: '100%' }}>
             <Grid container direction={'row'} wrap="nowrap" minHeight={'4rem'}>
                 <Grid justifyContent={'space-between'} item xs={middleChild ? 4 : 6} p={3}>
                     {firstChild}

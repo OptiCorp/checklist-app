@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Router, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CardWrapper from '../UI/CardWrapper';
 import { useContext } from 'react';
@@ -30,12 +30,18 @@ const dummyTextSections: listTextType[] = [
 
 const Mobilization = () => {
     const navigate = useNavigate();
-    const {state} = useLocation();
+    const { state } = useLocation();
     // const { state, dispatch } = useContext(BreadcrumbsContext);
 
     // const handleNavigate = (navigateTo: string) => {
     //     navigate(navigateTo);
     //     dispatch({ type: ActionType.GoForward, payload: { link: navigateTo } });
+    // };
+
+    // const handleClick = () => {
+    //     //navigate(`mobdemod/${id}`);
+    //     navigate(`mobdemob`);
+    //     console.log('okkithankyou');
     // };
 
     console.log(state);
@@ -104,7 +110,10 @@ const Mobilization = () => {
     return (
         <>
             <Box sx={{ mt: 5 }}>
-                <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
+                <Stack
+                    spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}
+                    onClick={() => navigate('mobdemob')}
+                >
                     <CardWrapper
                         firstChild={firstText}
                         secondChild={secondText}
@@ -114,7 +123,11 @@ const Mobilization = () => {
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
                 </Stack>
             </Box>
-            <Button variant="contained" onClick={() => navigate('newMob')} sx={{ float: 'right' }}>
+            <Button
+                variant="contained"
+                onClick={() => navigate('newMob')}
+                sx={{ float: 'right', marginTop: '10px' }}
+            >
                 Create new mob
             </Button>
         </>
