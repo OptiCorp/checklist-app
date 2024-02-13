@@ -13,7 +13,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: theme.palette.text.primary,
-    backgroundColor: 'lightgrey',
+    backgroundColor: ['#F2F2F2'],
 }));
 
 const CardWrapper: React.FC<CardWrapperProps> = ({ firstChild, secondChild, middleChild }) => {
