@@ -1,5 +1,4 @@
-import { Card, Divider, Grid, styled } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { Box, Card, Divider, Grid, styled } from '@mui/material';
 
 interface CardWrapperProps {
     firstChild: JSX.Element;
@@ -20,21 +19,27 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ firstChild, secondChild, midd
     return (
         <StyledCard sx={{ width: '100%' }}>
             <Grid container direction={'row'} wrap="nowrap" minHeight={'4rem'}>
-                <Grid justifyContent={'space-between'} item xs={middleChild ? 4 : 6} p={3}>
-                    {firstChild}
+                <Grid item xs={middleChild ? 4 : 6} p={3}>
+                    <Box width={'90%'} margin={'auto'}>
+                        {firstChild}
+                    </Box>
                 </Grid>
                 {middleChild && (
                     <>
                         <Divider orientation="vertical" flexItem sx={{ my: 0.7 }} />
                         <Grid item xs={4} p={3}>
-                            {middleChild}
+                            <Box width={'90%'} margin={'auto'}>
+                                {middleChild}
+                            </Box>
                         </Grid>
                     </>
                 )}
 
                 <Divider orientation="vertical" flexItem sx={{ my: 0.7 }}></Divider>
                 <Grid item xs={middleChild ? 4 : 6} p={3}>
-                    {secondChild}
+                    <Box width={'90%'} margin={'auto'}>
+                        {secondChild}
+                    </Box>
                 </Grid>
             </Grid>
         </StyledCard>
