@@ -8,6 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import DrawerContent from './DrawerContent';
+import { useNavigate } from 'react-router-dom';
 
 function TopBar() {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -16,6 +17,9 @@ function TopBar() {
         //setAnchorElNav(event.currentTarget);
         setDrawerOpen((prevState) => !prevState);
     };
+
+    const navigate = useNavigate();
+
     //   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     //     setAnchorElUser(event.currentTarget);
     //   };
@@ -35,6 +39,7 @@ function TopBar() {
                     <Toolbar disableGutters>
                         {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
                         <Box
+                            onClick={() => navigate('/')}
                             component="img"
                             sx={{ width: 40, mr: 1 }}
                             alt="logo"

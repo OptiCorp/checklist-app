@@ -66,7 +66,7 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                             float: 'left',
                             pl: 18,
                             borderRightWidth: 3,
-                            borderColor: 'darkslategray',
+                            borderColor: ['#7B8287'],
                         }}
                     />
                     <List component="div" disablePadding sx={{ pl: 24 }}>
