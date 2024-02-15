@@ -35,7 +35,7 @@ const DrawerContent = ({ handleDrawerToggle }: DrawerProps) => {
                         <ListItemIcon>
                             <HomeIcon />
                         </ListItemIcon>
-                        <ListItemText primary={'Home'} />
+                        <ListItemText primary={'Home'} onClick={() => navigate('/')} />
                     </ListItemButton>
                 </ListItem>
             </List>
