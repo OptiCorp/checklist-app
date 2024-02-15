@@ -14,7 +14,7 @@ import List from '@mui/material/List';
 // import CardWrapper from './CardWrapper';
 import styled from 'styled-components';
 // import { Typography, Grid } from '@mui/material';
-import Card from './Card';
+import DropdownCard from './DropdownCard';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -47,7 +47,7 @@ const NestedList = () => {
     return (
         <List>
             {data.map((item, index) => (
-                <Card
+                <DropdownCard
                     key={index}
                     item={item}
                     index={index}
