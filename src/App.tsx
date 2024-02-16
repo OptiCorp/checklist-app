@@ -37,9 +37,8 @@ const router = createBrowserRouter(
                     <Route element={<PunchDetailsPage />} path="punchDetails/:id"></Route>
                 </Route>
             </Route>
-            <Route element={<PartDetailsPage />} path="part/:id">
-                <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
-            </Route>
+            <Route element={<PartDetailsPage />} path="part/:id"></Route>
+            <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
         </Route>
     )
 );
@@ -70,7 +69,6 @@ function App() {
 
     return (
         <ThemeProvider theme={lightTheme}>
-            <GlobalStyles />
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={showDevtools} />
                 {showDevtools && (

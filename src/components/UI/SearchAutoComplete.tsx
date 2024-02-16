@@ -4,12 +4,7 @@ import {
     AutocompleteInputChangeReason,
     Box,
     CircularProgress,
-    Popper,
     TextField,
-    autocompleteClasses,
-    styled,
-    useMediaQuery,
-    useTheme,
 } from '@mui/material';
 
 import React from 'react';
@@ -48,7 +43,7 @@ function SearchAutoComplete<T>({
     renderOption,
     recentOrSearch,
     handleChangeRecentOrSearch,
-    groupBy
+    groupBy,
 }: Props<T>) {
     const [open, setOpen] = React.useState(false);
     const loading = open && searchOptions.length === 0;

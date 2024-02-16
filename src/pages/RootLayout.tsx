@@ -1,4 +1,4 @@
-import { Container, CssBaseline, styled } from '@mui/material';
+import { Box, Container, CssBaseline, styled } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
 import TopBar from '../components/Header/TopBar';
 import { BreadcrumbsContext, InitialBreadcrumbState } from '../store/breadcrumbsContext';
@@ -6,7 +6,8 @@ import { useState, useReducer } from 'react';
 import { breadcrumbsReducer } from '../store/breadcrumbsContext/BreadcrumbsReducer';
 
 const MainContainer = styled(Container)(({ _theme }) => ({
-    marginTop: '1rem',
+    paddingTop: '1rem',
+    flex: 1,
 }));
 
 const RootLayout = () => {
@@ -25,7 +26,7 @@ const RootLayout = () => {
             <TopBar />
             <main>
                 <BreadcrumbsContext.Provider value={{ state, dispatch }}>
-                    <MainContainer maxWidth={'lg'}>
+                    <MainContainer maxWidth={'lg'} sx={{ position: 'relative' }}>
                         <Outlet />
                     </MainContainer>
                 </BreadcrumbsContext.Provider>
