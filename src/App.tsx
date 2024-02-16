@@ -27,7 +27,7 @@ import { lightTheme } from './theme';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route element={<RootLayout />}>
+        <Route element={<RootLayout />} errorElement={<ErrorPage />}>
             <Route element={<LandingPage />} path="/"></Route>
             <Route element={<NewMobilization />} path="newMob"></Route>
             <Route element={<MobDemobPage />} path="mobdemob" errorElement={<ErrorPage />}></Route>

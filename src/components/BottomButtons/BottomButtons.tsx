@@ -1,26 +1,34 @@
-import { Box, useMediaQuery } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { FC } from 'react';
+import ReactDOM from 'react-dom';
 
 interface Props {
     children: JSX.Element[] | JSX.Element;
 }
 
 const BottomButtons: FC<Props> = ({ children }) => {
-    const matches = useMediaQuery('(min-width:600px)');
+    const [domReady, setDomReady] = React.useState(false);
 
-    return (
-        <Box
-            sx={{
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-                px: matches ? '12px' : '8px',
-                py: '1rem',
-            }}
-        >
-            {children}
-        </Box>
-    ); //TODO:
+    React.useEffect(() => {
+        setDomReady(true);
+    }, []);
+
+    return domReady
+        ? ReactDOM.createPortal(
+              <Box
+                  sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginTop: 'auto',
+                      pt: '1rem',
+                  }}
+              >
+                  {children}
+              </Box>,
+              document.getElementById('bottom-buttons')
+          )
+        : null;
+    //const matches = useMediaQuery('(min-width:600px)');
 };
 
 export default BottomButtons;

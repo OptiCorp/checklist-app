@@ -42,11 +42,11 @@ const ChecklistTemplateDetailsMain = ({
             </Stack>
             <BottomButtons>
                 {createOrEdit == 'create' ? (
-                    <Button sx={{ marginTop: 'auto' }} onClick={onCreate} variant="contained">
+                    <Button onClick={onCreate} variant="contained">
                         Create
                     </Button>
                 ) : (
-                    <Button sx={{ marginTop: 'auto' }} onClick={onEdit} variant="contained">
+                    <Button onClick={onEdit} variant="contained">
                         Save
                     </Button>
                 )}

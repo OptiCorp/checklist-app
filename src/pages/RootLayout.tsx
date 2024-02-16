@@ -1,6 +1,7 @@
-import { Container, CssBaseline, styled } from '@mui/material';
+import { Box, Container, CssBaseline, styled } from '@mui/material';
 import { useReducer } from 'react';
 import { Outlet } from 'react-router-dom';
+import Footer from '../components/Footer/Footer';
 import TopBar from '../components/Header/TopBar';
 import { BreadcrumbsContext, InitialBreadcrumbState } from '../store/breadcrumbsContext';
 import { breadcrumbsReducer } from '../store/breadcrumbsContext/BreadcrumbsReducer';
@@ -26,10 +27,15 @@ const RootLayout = () => {
             <TopBar />
             <main>
                 <BreadcrumbsContext.Provider value={{ state, dispatch }}>
-                    <MainContainer maxWidth={'lg'} sx={{ position: 'relative' }}>
+                    <MainContainer
+                        maxWidth={'lg'}
+                        sx={{ display: 'flex', flexDirection: 'column' }}
+                    >
                         <Outlet />
+                        <Box id="bottom-buttons" sx={{ marginTop: 'auto' }}></Box>
                     </MainContainer>
                 </BreadcrumbsContext.Provider>
+                <Footer></Footer>
             </main>
         </>
     );

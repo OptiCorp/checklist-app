@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { listTextType } from '../UI/CardWrapperList';
+import BottomButtons from '../BottomButtons/BottomButtons';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -55,9 +56,15 @@ const MobilizationTab = () => {
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
                 </Stack>
             </Box>
-            <Button variant="contained" onClick={() => navigate('newMob')} sx={{ float: 'right' }}>
-                Create new mob
-            </Button>
+            <BottomButtons>
+                <Button
+                    variant="contained"
+                    onClick={() => navigate('newMob')}
+                    sx={{ marginTop: 'auto' }}
+                >
+                    Create new mob
+                </Button>
+            </BottomButtons>
         </>
     );
 };
