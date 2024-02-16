@@ -1,19 +1,12 @@
-import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import {
-    ListItemButton,
-    Collapse,
-    List,
-    ListItemIcon,
-    Box,
-    Stack,
-    Grid,
-    Divider,
-} from '@mui/material';
-import CardWrapper from './CardWrapper';
-import React from 'react';
-import { listTextType } from './NestedList';
-import { useNavigate } from 'react-router-dom';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import { Box, Collapse, Divider, List, ListItemButton, ListItemIcon, Stack } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import CardWrapper from './CardWrapper';
+import CardWrapperList from './CardWrapperList';
+import { listTextType } from './NestedList';
 
 interface Props {
     item: listTextType;
@@ -32,30 +25,15 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                     {openState ? <ExpandLess /> : <ExpandMore />}
                     <CardWrapper
                         firstChild={
-                            <Grid
-                                component={'li'}
-                                container
-                                wrap="nowrap"
-                                justifyContent={'space-between'}
-                            >
-                                <Grid item sx={{ textWrap: 'nowrap' }}>
-                                    <b>{item.id}</b>
-                                </Grid>
-                                <Grid item>{item.text}</Grid>
-                            </Grid>
+                            <CardWrapperList id={item.id} text={item.text}></CardWrapperList>
                         }
                         secondChild={
-                            <Grid
-                                component={'li'}
-                                container
-                                wrap="nowrap"
-                                justifyContent={'space-between'}
-                            >
-                                <Grid item sx={{ textWrap: 'nowrap' }}>
-                                    <b>{item.id}</b>
-                                </Grid>
-                                <Grid item>{item.text}</Grid>
-                            </Grid>
+                            <Box display={'flex'} alignItems={'center'}>
+                                <Typography variant="caption" component="span">
+                                    Go to checklist
+                                </Typography>
+                                <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
+                            </Box>
                         }
                     />
                 </ListItemButton>
@@ -74,31 +52,22 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                             <ListItemIcon sx={{ width: '100%' }} onClick={() => navigate('/')}>
                                 <CardWrapper
                                     firstChild={
-                                        <Grid
-                                            component={'li'}
-                                            container
-                                            wrap="nowrap"
-                                            justifyContent={'space-between'}
-                                        >
-                                            <Grid item sx={{ textWrap: 'nowrap' }}>
-                                                <b>{item.id}</b>
-                                            </Grid>
-                                            <Grid item>{item.text}</Grid>
-                                        </Grid>
+                                        <CardWrapperList
+                                            id={item.id}
+                                            text={item.text}
+                                        ></CardWrapperList>
                                     }
                                     secondChild={
-                                        <Grid
-                                            component={'li'}
-                                            container
-                                            wrap="nowrap"
-                                            justifyContent={'space-between'}
-                                        >
-                                            <Grid item sx={{ textWrap: 'nowrap' }}>
-                                                <b>{item.id}</b>
-                                            </Grid>
-                                            <Grid item>{item.text}</Grid>
-                                            <AssignmentTurnedInIcon />
-                                        </Grid>
+                                        // <CardWrapperList
+                                        //     id={item.id}
+                                        //     text={item.text}
+                                        // ></CardWrapperList>
+                                        <Box display={'flex'} alignItems={'center'}>
+                                            <Typography variant="caption" component="span">
+                                                Go to checklist
+                                            </Typography>
+                                            <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
+                                        </Box>
                                     }
                                 />
                             </ListItemIcon>

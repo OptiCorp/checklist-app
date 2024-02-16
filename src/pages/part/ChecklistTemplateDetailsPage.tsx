@@ -1,8 +1,7 @@
-import React, { useCallback, useState } from 'react';
-import { PartType } from '../../utils/types';
-import { Box } from '@mui/material';
-import PartTopHeader from '../../components/Part/PartTopHeader';
+import { useState } from 'react';
 import ChecklistTemplateDetailsMain from '../../components/Part/ChecklistTemplateDetailsMain';
+import PartTopHeader from '../../components/Part/PartTopHeader';
+import { PartType } from '../../utils/types';
 
 export type Part = {
     partId: string;

@@ -1,6 +1,5 @@
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
-import { useIsAuthenticated } from '@azure/msal-react';
 import { ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -12,20 +11,19 @@ import {
     createRoutesFromElements,
 } from 'react-router-dom';
 import { msalInstance } from './msalConfig';
+import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 import LandingPage from './pages/LandingPage/LandingPage';
-import RootLayout from './pages/RootLayout';
 import { Login } from './pages/Login/Login';
-import GlobalStyles from './style/GlobalStyles';
+import RootLayout from './pages/RootLayout';
+import MobDemobPage from './pages/mobDeMob/MobDemobPage';
+import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
+import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
+import PartDetailsPage from './pages/part/PartDetailsPage';
+import PunchDetailsPage from './pages/punch/PunchDetailsPage';
+import PunchesPage from './pages/punch/PunchesPage';
 import { queryClient } from './tanstackQuery';
 import { lightTheme } from './theme';
-import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
-import MobDemobPage from './pages/mobDeMob/MobDemobPage';
-import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
-import PunchesPage from './pages/punch/PunchesPage';
-import PunchDetailsPage from './pages/punch/PunchDetailsPage';
-import PartDetailsPage from './pages/part/PartDetailsPage';
-import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
-import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter(
     createRoutesFromElements(

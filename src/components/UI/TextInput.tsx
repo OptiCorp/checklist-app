@@ -1,6 +1,6 @@
-import { Box, CircularProgress, IconButton, InputAdornment, TextField } from '@mui/material';
-import React, { ChangeEvent } from 'react';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
+import { ChangeEvent } from 'react';
 
 interface Props {
     placeHolder: string;
