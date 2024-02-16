@@ -1,10 +1,10 @@
 import HistoryIcon from '@mui/icons-material/History';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, FormControl, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import CardWrapper from '../../../components/UI/CardWrapper';
+import CardWrapperList, { listTextType } from '../../../components/UI/CardWrapperList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
-import { StyledUl, listTextType } from '../../../components/landingPage/Mobilization';
 import { Film, RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
 
 const top5Films: Film[] = [
@@ -40,13 +40,6 @@ const NewMobilization = () => {
 
     const itemRenderOption = (props: React.HTMLAttributes<HTMLLIElement>, option: Film) => (
         <Box component="li" sx={{ '& > svg': { mr: 2, flexShrink: 0 } }} {...props}>
-            {/* <img
-            loading="lazy"
-            width="20"
-            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-            alt=""
-        /> */}
             {recentOrSearch == 'search' && <SearchIcon fontSize="small" />}
             {recentOrSearch == 'recent' && <HistoryIcon fontSize="small" />}
             {option.title}
@@ -57,45 +50,19 @@ const NewMobilization = () => {
     const getOptionLabelItems = (option: Film) => option.title;
 
     const firstText = (
-        <Typography variant="caption">
-            <StyledUl>
-                {dummyTextSections.map((item, i) => (
-                    <Grid
-                        key={i}
-                        component={'li'}
-                        container
-                        wrap="nowrap"
-                        justifyContent={'space-between'}
-                    >
-                        <Grid item sx={{ textWrap: 'nowrap' }}>
-                            <b>{item.id}:</b>
-                        </Grid>
-                        <Grid item>{item.text} alksdnlka</Grid>
-                    </Grid>
-                ))}
-            </StyledUl>
-        </Typography>
+        <>
+            {dummyTextSections.map((item, i) => (
+                <CardWrapperList key={i} id={item.id} text={item.text} />
+            ))}
+        </>
     );
 
     const secondText = (
-        <Typography variant="caption">
-            <StyledUl>
-                {dummyTextSections.map((item, i) => (
-                    <Grid
-                        key={i}
-                        component={'li'}
-                        container
-                        wrap="nowrap"
-                        justifyContent={'space-between'}
-                    >
-                        <Grid item sx={{ textWrap: 'nowrap' }}>
-                            <b>{item.id}:</b>
-                        </Grid>
-                        <Grid item>{item.text} alksdnlka</Grid>
-                    </Grid>
-                ))}
-            </StyledUl>
-        </Typography>
+        <>
+            {dummyTextSections.map((item, i) => (
+                <CardWrapperList key={i} id={item.id} text={item.text} />
+            ))}
+        </>
     );
     return (
         <>
