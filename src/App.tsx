@@ -20,8 +20,8 @@ import MobDemobPage from './pages/mobDeMob/MobDemobPage';
 import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
 import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
 import PartDetailsPage from './pages/part/PartDetailsPage';
-import PunchDetailsPage from './pages/punch/PunchDetailsPage';
-import PunchesPage from './pages/punch/PunchesPage';
+import PunchDetailsPage from './pages/punch/PunchDetails/PunchDetailsPage';
+import PunchesPage from './pages/punch/Punches/PunchesPage';
 import { queryClient } from './tanstackQuery';
 import { lightTheme } from './theme';
 
@@ -29,13 +29,18 @@ const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<RootLayout />} errorElement={<ErrorPage />}>
             <Route element={<LandingPage />} path="/"></Route>
-            <Route element={<NewMobilization />} path="newMob"></Route>
-            <Route element={<MobDemobPage />} path="mobdemob" errorElement={<ErrorPage />}></Route>
-            <Route element={<ChecklistPage />} path="checklist/:id">
-                <Route element={<PunchesPage />} path="punches">
-                    <Route element={<PunchDetailsPage />} path="punchDetails/:id"></Route>
-                </Route>
-            </Route>
+            <Route element={<NewMobilization />} path="newMob/"></Route>
+            <Route
+                element={<MobDemobPage />}
+                path="mobdemob/:id"
+                errorElement={<ErrorPage />}
+            ></Route>
+            <Route element={<ChecklistPage />} path="checklist/:checklistItemId"></Route>
+            <Route element={<PunchesPage />} path="checklist/:checklistItemId/punches"></Route>
+            <Route
+                element={<PunchDetailsPage />}
+                path="checklist/:checklistItemId/:punchId"
+            ></Route>
             <Route element={<PartDetailsPage />} path="part/:id"></Route>
             <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
         </Route>

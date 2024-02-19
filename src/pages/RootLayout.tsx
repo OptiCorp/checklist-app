@@ -20,7 +20,6 @@ const RootLayout = () => {
     //     dispatch({ type: ActionType.GoForward, payload: { link: navigateTo } });
     // };
 
-    console.log(location);
     return (
         <>
             <CssBaseline />

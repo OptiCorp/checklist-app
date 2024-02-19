@@ -27,7 +27,6 @@ const BottomButtons: FC<Props> = ({ children }) => {
               document.getElementById('bottom-buttons')!
           )
         : null;
-    //const matches = useMediaQuery('(min-width:600px)');
 };
 
 export default BottomButtons;

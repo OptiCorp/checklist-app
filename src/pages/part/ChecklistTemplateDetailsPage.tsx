@@ -1,21 +1,31 @@
 import { useState } from 'react';
 import ChecklistTemplateDetailsMain from '../../components/Part/ChecklistTemplateDetailsMain';
 import PartTopHeader from '../../components/Part/PartTopHeader';
-import { PartType } from '../../utils/types';
+import { BaseEntities, PartType } from '../../utils/types';
 
 export type CreateOrEdit = 'create' | 'edit';
 
-export type Part = {
+export type PartOf = {
     partId: string;
+    type: PartType;
+};
+
+export interface Part extends BaseEntities {
+    itemId: string;
     type: PartType;
     wpId: string;
     serialNumber: string;
     name: string;
     partTemplateId: string;
     hasChecklistTemplate: boolean;
-};
+    partOf?: PartOf;
+}
+
 const dummyPart: Part = {
-    partId: '31232',
+    itemId: '31232',
+    id: 'aslkd-12-lsad-a',
+    created: new Date(),
+    lastModified: new Date(),
     hasChecklistTemplate: true,
     name: 'Geir2.0',
     partTemplateId: '9391293',

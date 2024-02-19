@@ -16,7 +16,7 @@ const PartTopHeader = ({ part, showAddChecklistTemplateButton }: Props) => {
                     {/* <Typography variant="body1"> */}
                     <Box>
                         <Box>
-                            <b>part-Id</b>: {part.partId}
+                            <b>part-Id</b>: {part.id}
                         </Box>
                         <Box>
                             <b>part name</b>: {part.name}
