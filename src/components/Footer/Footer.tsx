@@ -1,10 +1,16 @@
-import { Box, Divider, Paper, Typography } from '@mui/material';
+import { Box, Divider, Paper, Typography, styled } from '@mui/material';
+
+const PaperFooter = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    color: theme.palette.text.secondary,
+    lineHeight: '60px',
+}));
 
 const Footer = () => {
     return (
         <Box marginTop={'1rem'}>
             <Divider sx={{ bgcolor: 'black', opacity: 0.6 }}></Divider>
-            <Paper
+            <PaperFooter
                 sx={{
                     bottom: 0,
                     left: 0,
@@ -13,12 +19,14 @@ const Footer = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     minHeight: '2rem',
-                    bgcolor: '#e6e6e6',
+                    gap: 2,
                 }}
                 elevation={3}
             >
-                <Typography variant="body1">WP</Typography>
-            </Paper>
+                <Typography variant="caption">©</Typography>
+                <Typography variant="caption">2024</Typography>
+                <Typography variant="caption">WellPartner</Typography>
+            </PaperFooter>
         </Box>
     );
 };

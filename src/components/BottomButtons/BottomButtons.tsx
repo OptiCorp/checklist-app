@@ -19,13 +19,12 @@ const BottomButtons: FC<Props> = ({ children }) => {
                   sx={{
                       display: 'flex',
                       justifyContent: 'flex-end',
-                      marginTop: 'auto',
-                      pt: '1rem',
+                      gap: '1rem',
                   }}
               >
                   {children}
               </Box>,
-              document.getElementById('bottom-buttons')
+              document.getElementById('bottom-buttons')!
           )
         : null;
     //const matches = useMediaQuery('(min-width:600px)');
