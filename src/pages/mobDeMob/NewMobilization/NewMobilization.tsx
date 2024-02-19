@@ -6,6 +6,7 @@ import CardWrapper from '../../../components/UI/CardWrapper';
 import CardWrapperList, { listTextType } from '../../../components/UI/CardWrapperList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
 import { Film, RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
+import BottomButtons from '../../../components/BottomButtons/BottomButtons';
 
 const top5Films: Film[] = [
     { title: 'Forrest Gump', year: 1994 },
@@ -132,9 +133,12 @@ const NewMobilization = () => {
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
                 </Stack>
             </Box>
-            <Button variant="contained" sx={{ float: 'right' }}>
-                Save
-            </Button>
+
+            <BottomButtons>
+                <Button variant="contained" sx={{ float: 'right' }}>
+                    Save
+                </Button>
+            </BottomButtons>
         </>
     );
 };

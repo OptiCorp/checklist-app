@@ -3,6 +3,8 @@ import ChecklistTemplateDetailsMain from '../../components/Part/ChecklistTemplat
 import PartTopHeader from '../../components/Part/PartTopHeader';
 import { PartType } from '../../utils/types';
 
+export type CreateOrEdit = 'create' | 'edit';
+
 export type Part = {
     partId: string;
     type: PartType;
@@ -23,6 +25,7 @@ const dummyPart: Part = {
 };
 
 const ChecklistTemplateDetailsPage = () => {
+    //const [createOrEdit, setCreateOrEdit] = useState<CreateOrEdit>('create');
     const [textFields, setTextFields] = useState([
         { text: 'first one here' },
         { text: 'second here' },
