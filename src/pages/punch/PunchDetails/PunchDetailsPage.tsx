@@ -1,10 +1,8 @@
-import { Box, FormControl, FormControlLabel, Grid, Stack, Switch, Typography } from '@mui/material';
-import React, { ChangeEvent } from 'react';
-import { Punch, PunchDetails } from '../Punches/PunchesPage';
-import { Part } from '../../part/ChecklistTemplateDetailsPage';
-import TextInput from '../../../components/UI/TextInput';
-import PunchDetailsMain from '../../../components/Punch/PunchDetails/PunchDetailsMain';
+import React from 'react';
 import { PunchDetailsHeader } from '../../../components/Punch/PunchDetails/PunchDetailsHeader';
+import PunchDetailsMain from '../../../components/Punch/PunchDetails/PunchDetailsMain';
+import { Part } from '../../part/ChecklistTemplateDetailsPage';
+import { Punch, PunchDetails } from '../Punches/PunchesPage';
 
 const dummyPunch: Punch = {
     id: 'sakj-sd1',

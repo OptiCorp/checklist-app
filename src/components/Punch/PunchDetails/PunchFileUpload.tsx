@@ -23,7 +23,7 @@ const VisuallyHiddenInput = styled('input')({
 const PunchFileUpload: FC<Props> = ({ editMode, imageListWidth, fileUpload }) => {
     return (
         <Box width={imageListWidth} display={'flex'} justifyContent={'center'}>
-            <Tooltip title="Add image">
+            <Tooltip title="Upload images">
                 <IconButton color="primary" disabled={!editMode} component={'label'}>
                     <AddCircleIcon fontSize="medium"></AddCircleIcon>
                     <VisuallyHiddenInput

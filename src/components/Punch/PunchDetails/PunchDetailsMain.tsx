@@ -1,30 +1,14 @@
-import {
-    Box,
-    Button,
-    FormControl,
-    FormControlLabel,
-    Grid,
-    IconButton,
-    Stack,
-    Switch,
-    Tooltip,
-    Typography,
-    styled,
-} from '@mui/material';
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
-import TextInput from '../../UI/TextInput';
+import { Box, Button, FormControl, Stack, Typography } from '@mui/material';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { PunchDetails } from '../../../pages/punch/Punches/PunchesPage';
 import BottomButtons from '../../BottomButtons/BottomButtons';
+import TextInput from '../../UI/TextInput';
 import PunchImages from './PunchImages';
-import PunchFileUpload from './PunchFileUpload';
-import { forEach } from 'lodash';
 
 interface Props {
     punchDetails: PunchDetails;
     editMode: boolean;
 }
-
-const imageListWidth = 300;
 
 const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
     const [title, setTitle] = useState(punchDetails.punch.title);
@@ -81,6 +65,18 @@ const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
                     return prev;
                 }
             });
+        } else {
+            const toDeleteIndex = imageUrls.findIndex((f) => f == file.url);
+            if (toDeleteIndex !== -1) {
+                //TODO: call api to delete image
+                setImageUrls((prev) => {
+                    const updatedPreviews = [
+                        ...prev.slice(0, toDeleteIndex),
+                        ...prev.slice(toDeleteIndex + 1),
+                    ];
+                    return updatedPreviews;
+                });
+            }
         }
     };
 
