@@ -1,6 +1,5 @@
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
-import { useIsAuthenticated } from '@azure/msal-react';
 import { ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -12,35 +11,38 @@ import {
     createRoutesFromElements,
 } from 'react-router-dom';
 import { msalInstance } from './msalConfig';
+import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 import LandingPage from './pages/LandingPage/LandingPage';
-import RootLayout from './pages/RootLayout';
 import { Login } from './pages/Login/Login';
-import GlobalStyles from './style/GlobalStyles';
+import RootLayout from './pages/RootLayout';
+import MobDemobPage from './pages/mobDeMob/MobDemobPage';
+import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
+import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
+import PartDetailsPage from './pages/part/PartDetailsPage';
+import PunchDetailsPage from './pages/punch/PunchDetails/PunchDetailsPage';
+import PunchesPage from './pages/punch/Punches/PunchesPage';
 import { queryClient } from './tanstackQuery';
 import { lightTheme } from './theme';
-import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
-import MobDemobPage from './pages/mobDeMob/MobDemobPage';
-import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
-import PunchesPage from './pages/punch/PunchesPage';
-import PunchDetailsPage from './pages/punch/PunchDetailsPage';
-import PartDetailsPage from './pages/part/PartDetailsPage';
-import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
-import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route element={<RootLayout />}>
+        <Route element={<RootLayout />} errorElement={<ErrorPage />}>
             <Route element={<LandingPage />} path="/"></Route>
-            <Route element={<NewMobilization />} path="newMob"></Route>
-            <Route element={<MobDemobPage />} path="mobdemob" errorElement={<ErrorPage />}></Route>
-            <Route element={<ChecklistPage />} path="checklist">
-                <Route element={<PunchesPage />} path="punches">
-                    <Route element={<PunchDetailsPage />} path="punchDetails/:id"></Route>
-                </Route>
-            </Route>
-            <Route element={<PartDetailsPage />} path="part/:id">
-                <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
-            </Route>
+            <Route element={<NewMobilization />} path="newMob/"></Route>
+            <Route
+                element={<MobDemobPage />}
+                path="mobdemob/:id"
+                errorElement={<ErrorPage />}
+            ></Route>
+            <Route element={<ChecklistPage />} path="checklist/:checklistItemId"></Route>
+            <Route element={<PunchesPage />} path="checklist/:checklistItemId/punches"></Route>
+            <Route
+                element={<PunchDetailsPage />}
+                path="checklist/:checklistItemId/:punchId"
+            ></Route>
+            <Route element={<PartDetailsPage />} path="part/:id"></Route>
+            <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
         </Route>
     )
 );
@@ -71,7 +73,6 @@ function App() {
 
     return (
         <ThemeProvider theme={lightTheme}>
-            <GlobalStyles />
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={showDevtools} />
                 {showDevtools && (

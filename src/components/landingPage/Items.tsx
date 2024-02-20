@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import CardWrapper from '../UI/CardWrapper';
-import { StyledUl } from './Mobilization';
+import { StyledUl } from './MobilizationTab';
 
 const Items = () => {
     const firstText = (

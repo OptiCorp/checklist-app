@@ -3,7 +3,7 @@ import NestedList from '../../components/UI/NestedList';
 const MobDemobPage = () => {
     return (
         <>
-        <h1>mobdemob</h1>
+            <h1>mobdemob</h1>
             <NestedList />
         </>
     );

@@ -19,7 +19,7 @@ const GlobalStyles = createGlobalStyle`
    body, :root, html {
         margin: 0;
         width: 100%;
-
+        min-height: 100vh;
         font-family: 'Archivo', sans-serif;
         font-size: 1rem;
         background-color: ${COLORS.white};
@@ -30,13 +30,24 @@ const GlobalStyles = createGlobalStyle`
     }
     .wrapper {
     padding: '8px';
-    grid-template-columns: 1fr ;
+    grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;
     display: grid;
     overflow-x: hidden;
-
   }
-
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  body {
+    
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
 body::-webkit-scrollbar {
     display: none;

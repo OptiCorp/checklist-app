@@ -2,11 +2,9 @@ import { Box, Tab, Tabs } from '@mui/material';
 import React, { useState } from 'react';
 import SearchInput from '../UI/SearchInput';
 import Items from './Items';
-import Mobilization from './Mobilization';
 
 import { debounce } from 'lodash';
-
-//TODO: missing scroll on the autocomplete
+import MobilizationTab from './MobilizationTab';
 
 type Tabs = 'Mob' | 'DeMob' | 'Items';
 
@@ -20,13 +18,10 @@ export type RecentOrSearch = 'recent' | 'search';
 const OverViewTabs = () => {
     const [value, setValue] = React.useState<Tabs>('Mob');
     const [inputSearch, setInputSearch] = useState('');
-    // const [mobOptions, setMobOptions] = React.useState<readonly Film[]>([]);
-    // const [deMobOptions, setDeMobOptions] = React.useState<readonly Film[]>([]);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: Tabs) => {
         console.log(event);
         setValue(newValue);
-        //setInputSearch('');
     };
 
     const debouncedSearch = React.useRef(
@@ -43,8 +38,6 @@ const OverViewTabs = () => {
 
     return (
         <>
-            {/* <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'InactiveBorder' }}> */}
-
             <Box>
                 <Tabs
                     value={value}
@@ -66,8 +59,8 @@ const OverViewTabs = () => {
                 ></SearchInput>
             </Box>
             <Box sx={{ mt: 5 }}>
-                {value == 'Mob' && <Mobilization></Mobilization>}
-                {value == 'DeMob' && <Mobilization></Mobilization>}
+                {value == 'Mob' && <MobilizationTab></MobilizationTab>}
+                {value == 'DeMob' && <MobilizationTab></MobilizationTab>}
                 {value == 'Items' && <Items></Items>}
             </Box>
         </>
