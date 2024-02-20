@@ -1,5 +1,5 @@
-import PunchesMain from '../../../components/Punch/PunchesMain';
-import PunchesPageHeader from '../../../components/Punch/PunchesPageHeader';
+import PunchesMain from '../../../components/Punch/Punches/PunchesMain';
+import PunchesPageHeader from '../../../components/Punch/Punches/PunchesPageHeader';
 import { BaseEntities } from '../../../utils/types';
 import { Part } from '../../part/ChecklistTemplateDetailsPage';
 
@@ -27,9 +27,15 @@ export interface Punch extends BaseEntities {
     imagUrls: string[];
 }
 
-export type Punches = {
+export type PunchesDetails = {
     sasToken: string;
     punches: Punch[];
+    itemTemplate: Part;
+};
+
+export type PunchDetails = {
+    sasToken: string;
+    punch: Punch;
     itemTemplate: Part;
 };
 
@@ -54,7 +60,7 @@ const dummyPunches: Punch[] = [
     },
 ];
 
-const punches: Punches = {
+const punches: PunchesDetails = {
     itemTemplate: dummyPart,
     punches: dummyPunches,
     sasToken: 'sometokej',

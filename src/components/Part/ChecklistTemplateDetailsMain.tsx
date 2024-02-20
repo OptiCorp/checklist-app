@@ -34,6 +34,7 @@ const ChecklistTemplateDetailsMain = ({
                         placeHolder="Is the part pretty?"
                         IconClick={() => textFieldRemove(index)}
                         value={field.text}
+                        includeClearIcon={true}
                     ></TextInput>
                 ))}
                 <Button variant="contained" onClick={textFieldAdd}>

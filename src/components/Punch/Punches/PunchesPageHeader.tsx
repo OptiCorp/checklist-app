@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
-import { Part } from '../../pages/part/ChecklistTemplateDetailsPage';
+import { Part } from '../../../pages/part/ChecklistTemplateDetailsPage';
 
 interface Props {
     title: string;
