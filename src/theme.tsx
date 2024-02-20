@@ -23,8 +23,8 @@ export const lightTheme = createTheme({
             },
         },
     },
-    shape: {
-        borderRadius: 0,
-    },
+    // shape: {
+    //     borderRadius: 0,
+    // },
     spacing: 4,
 });
