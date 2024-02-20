@@ -71,7 +71,10 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                     />
                     <List component="div" disablePadding sx={{ pl: 24 }}>
                         <ListItemButton>
-                            <ListItemIcon sx={{ width: '100%' }} onClick={() => navigate('/')}>
+                            <ListItemIcon
+                                sx={{ width: '100%' }}
+                                onClick={() => navigate('/checklist')}
+                            >
                                 <CardWrapper
                                     firstChild={
                                         <Grid
@@ -81,7 +84,7 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                                             justifyContent={'space-between'}
                                         >
                                             <Grid item sx={{ textWrap: 'nowrap' }}>
-                                                <b>{item.id}</b>
+                                                <b>weeee</b>
                                             </Grid>
                                             <Grid item>{item.text}</Grid>
                                         </Grid>

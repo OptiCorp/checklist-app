@@ -33,7 +33,7 @@ const router = createBrowserRouter(
             <Route element={<LandingPage />} path="/"></Route>
             <Route element={<NewMobilization />} path="newMob"></Route>
             <Route element={<MobDemobPage />} path="mobdemob" errorElement={<ErrorPage />}></Route>
-            <Route element={<ChecklistPage />} path="checklist/:id">
+            <Route element={<ChecklistPage />} path="checklist">
                 <Route element={<PunchesPage />} path="punches">
                     <Route element={<PunchDetailsPage />} path="punchDetails/:id"></Route>
                 </Route>
