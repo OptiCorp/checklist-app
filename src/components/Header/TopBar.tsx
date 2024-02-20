@@ -41,7 +41,7 @@ function TopBar() {
                         <Box
                             onClick={() => navigate('/')}
                             component="img"
-                            sx={{ width: 40, mr: 1 }}
+                            sx={{ width: 40, mr: 1, cursor: 'pointer' }}
                             alt="logo"
                             src={'/WP_1.svg'}
                         />
