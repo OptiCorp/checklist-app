@@ -1,25 +1,9 @@
 import { useState } from 'react';
 import ChecklistTemplateDetailsMain from '../../components/Part/ChecklistTemplateDetailsMain';
 import PartTopHeader from '../../components/Part/PartTopHeader';
-import { BaseEntities, PartType } from '../../utils/types';
+import { Part } from '../../utils/types';
 
 export type CreateOrEdit = 'create' | 'edit';
-
-export type PartOf = {
-    partId: string;
-    type: PartType;
-};
-
-export interface Part extends BaseEntities {
-    itemId: string;
-    type: PartType;
-    wpId: string;
-    serialNumber: string;
-    name: string;
-    partTemplateId: string;
-    hasChecklistTemplate: boolean;
-    partOf?: PartOf;
-}
 
 const dummyPart: Part = {
     itemId: '31232',

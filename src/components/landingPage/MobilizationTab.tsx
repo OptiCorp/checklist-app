@@ -1,9 +1,10 @@
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, IconButton, Stack, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { listTextType } from '../UI/CardWrapperList';
 import BottomButtons from '../BottomButtons/BottomButtons';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -51,6 +52,14 @@ const MobilizationTab = () => {
                         firstChild={firstText}
                         secondChild={secondText}
                         middleChild={middleText}
+                        borderColor="secondary.main"
+                        TopRightActionButton={
+                            <IconButton
+                                sx={{ position: 'absolute', top: 0, right: 0, zIndex: 10000 }}
+                            >
+                                <ModeEditOutlineIcon color="primary" />
+                            </IconButton>
+                        }
                     ></CardWrapper>
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>

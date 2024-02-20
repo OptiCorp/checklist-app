@@ -4,8 +4,8 @@ import { ChangeEvent, FC, useEffect, useState } from 'react';
 import PunchFileUpload from './PunchFileUpload';
 
 interface Props {
-    urls: string[];
-    uploadedFiles: string[];
+    savedFileUrls: string[];
+    uploadedFiles: { file: File; url: string }[];
     editMode: boolean;
     removeImage: (file: { url: string; isSaved: boolean }) => void;
     uploadImages: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -20,15 +20,21 @@ function srcset(image: string, width: number) {
     };
 }
 
-const PunchImages: FC<Props> = ({ urls, editMode, uploadedFiles, removeImage, uploadImages }) => {
+const PunchImages: FC<Props> = ({
+    savedFileUrls,
+    editMode,
+    uploadedFiles,
+    removeImage,
+    uploadImages,
+}) => {
     const [fileUrls, setFileUrls] = useState<{ url: string; isSaved: boolean }[]>([]);
 
     useEffect(() => {
-        const savedUrls = urls.map((url) => ({ url: url, isSaved: true }));
-        const uploadedUrls = uploadedFiles.map((url) => ({ url: url, isSaved: false }));
+        const savedUrls = savedFileUrls.map((url) => ({ url: url, isSaved: true }));
+        const uploadedUrls = uploadedFiles.map((file) => ({ url: file.url, isSaved: false }));
 
         setFileUrls([...savedUrls, ...uploadedUrls]);
-    }, [urls, uploadedFiles]);
+    }, [savedFileUrls, uploadedFiles]);
 
     return (
         <>

@@ -30,7 +30,7 @@ const TextInput = ({
                 onChange={onChange}
                 sx={{ bgcolor: '#e0e0e0' }}
                 value={value}
-                multiline
+                type="text"
                 rows={rows}
                 maxRows={rows ? undefined : 3}
                 disabled={disabled}

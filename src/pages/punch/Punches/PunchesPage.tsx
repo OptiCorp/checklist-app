@@ -1,7 +1,6 @@
 import PunchesMain from '../../../components/Punch/Punches/PunchesMain';
 import PunchesPageHeader from '../../../components/Punch/Punches/PunchesPageHeader';
-import { BaseEntities } from '../../../utils/types';
-import { Part } from '../../part/ChecklistTemplateDetailsPage';
+import { Part, Punch } from '../../../utils/types';
 
 const dummyPart: Part = {
     type: 'item',
@@ -19,13 +18,6 @@ const dummyPart: Part = {
         type: 'assembly',
     },
 };
-
-export interface Punch extends BaseEntities {
-    title: string;
-    checklistItemId: string;
-    description: string;
-    imagUrls: string[];
-}
 
 export type PunchesDetails = {
     sasToken: string;

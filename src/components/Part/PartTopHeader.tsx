@@ -1,6 +1,6 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { Part } from '../../pages/part/ChecklistTemplateDetailsPage';
+import { Part } from '../../utils/types';
 
 interface Props {
     part: Part;
