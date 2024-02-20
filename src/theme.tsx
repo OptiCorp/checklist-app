@@ -22,6 +22,13 @@ export const lightTheme = createTheme({
                 },
             },
         },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 0,
+                },
+            },
+        },
     },
     // shape: {
     //     borderRadius: 0,

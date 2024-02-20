@@ -20,7 +20,7 @@ import { Punch } from '../../../pages/punch/Punches/PunchesPage';
 //     imageUrls: string[];
 // };
 
-const PunchPaper = styled(Card)(({ theme }) => ({
+const PunchCard = styled(Card)(({ theme }) => ({
     ...theme.typography.body2,
 
     // lineHeight: '60px',
@@ -46,7 +46,7 @@ const PunchesMain: FC<Props> = ({ punches, sasToken }) => {
             <Typography variant="h4">Add punches</Typography>
             <Stack spacing={2} sx={{ marginTop: '0.5rem' }}>
                 {punches.map((punch) => (
-                    <PunchPaper
+                    <PunchCard
                         key={punch.id}
                         sx={{
                             width: '60%',
@@ -63,7 +63,7 @@ const PunchesMain: FC<Props> = ({ punches, sasToken }) => {
                         <IconButton sx={{ position: 'absolute', right: 0 }} onClick={handleDelete}>
                             <DeleteIcon color="secondary"></DeleteIcon>
                         </IconButton>
-                    </PunchPaper>
+                    </PunchCard>
                 ))}
             </Stack>
             <Button
