@@ -49,7 +49,10 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                     />
                     <List component="div" disablePadding sx={{ pl: 24 }}>
                         <ListItemButton>
-                            <ListItemIcon sx={{ width: '100%' }} onClick={() => navigate('/')}>
+                            <ListItemIcon
+                                sx={{ width: '100%' }}
+                                onClick={() => navigate('/checklist')}
+                            >
                                 <CardWrapper
                                     firstChild={
                                         <CardWrapperList
