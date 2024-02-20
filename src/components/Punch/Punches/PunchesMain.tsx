@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Punch } from '../../../pages/punch/Punches/PunchesPage';
+import { Punch } from '../../../utils/types';
 
 // export type Punch = {
 //     id: string;

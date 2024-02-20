@@ -1,8 +1,8 @@
 import React from 'react';
 import { PunchDetailsHeader } from '../../../components/Punch/PunchDetails/PunchDetailsHeader';
 import PunchDetailsMain from '../../../components/Punch/PunchDetails/PunchDetailsMain';
-import { Part } from '../../part/ChecklistTemplateDetailsPage';
-import { Punch, PunchDetails } from '../Punches/PunchesPage';
+import { Part, Punch } from '../../../utils/types';
+import { PunchDetails } from '../Punches/PunchesPage';
 
 const dummyPunch: Punch = {
     id: 'sakj-sd1',

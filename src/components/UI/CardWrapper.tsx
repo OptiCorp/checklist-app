@@ -4,6 +4,8 @@ interface CardWrapperProps {
     firstChild: JSX.Element;
     middleChild?: JSX.Element;
     secondChild: JSX.Element;
+    borderColor?: string;
+    TopRightActionButton?: JSX.Element;
 }
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -15,9 +17,17 @@ const StyledCard = styled(Card)(({ theme }) => ({
     backgroundColor: ['#F2F2F2'],
 }));
 
-const CardWrapper: React.FC<CardWrapperProps> = ({ firstChild, secondChild, middleChild }) => {
+const CardWrapper: React.FC<CardWrapperProps> = ({
+    firstChild,
+    secondChild,
+    middleChild,
+    borderColor,
+    TopRightActionButton,
+}) => {
     return (
-        <StyledCard sx={{ width: '100%' }}>
+        <StyledCard
+            sx={{ width: '100%', borderColor: borderColor ?? 'inherit', position: 'relative' }}
+        >
             <Grid container direction={'row'} wrap="nowrap" minHeight={'4rem'}>
                 <Grid item xs={middleChild ? 4 : 6} p={3}>
                     <Box width={'90%'} margin={'auto'}>
@@ -42,6 +52,7 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ firstChild, secondChild, midd
                     </Box>
                 </Grid>
             </Grid>
+            {TopRightActionButton}
         </StyledCard>
     );
 };

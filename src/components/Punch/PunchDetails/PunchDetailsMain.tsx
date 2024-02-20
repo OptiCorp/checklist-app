@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Stack, Typography } from '@mui/material';
+import { Box, Button, FormControl, Stack, TextField, Typography } from '@mui/material';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { PunchDetails } from '../../../pages/punch/Punches/PunchesPage';
 import BottomButtons from '../../BottomButtons/BottomButtons';
@@ -12,8 +12,9 @@ interface Props {
 
 const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
     const [title, setTitle] = useState(punchDetails.punch.title);
-    const [imageUrls, setImageUrls] = useState<string[]>(punchDetails.punch.imagUrls);
-    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const [imageFiles, setImageFiles] = useState<{ file: File; url: string }[]>([]);
+    const [savedImageUrls, setImageUrls] = useState<string[]>(punchDetails.punch.imagUrls);
+    //const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const [description, setDescription] = useState(punchDetails.punch.description);
 
     const handleTitleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,25 +36,25 @@ const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const files = e.currentTarget.files;
         if (!files) return;
-        const urls: string[] = [];
+        const newFiles: { file: File; url: string }[] = [];
         for (const file of files) {
             const objectUrl = URL.createObjectURL(file);
-            urls.push(objectUrl);
+            newFiles.push({ file: file, url: objectUrl });
         }
-        setImagePreviews((prevUrls) => [...prevUrls, ...urls]);
+        setImageFiles((prev) => [...prev, ...newFiles]);
     };
 
     useEffect(() => {
         return () => {
             // Clean up by revoking Object URLs when component unmounts
-            imagePreviews.forEach((url) => URL.revokeObjectURL(url));
+            imageFiles.forEach((item) => URL.revokeObjectURL(item.url));
         };
-    }, [imageUrls]);
+    }, [savedImageUrls]);
 
     const handleRemoveImage = (file: { url: string; isSaved: boolean }) => {
         if (!file.isSaved) {
-            setImagePreviews((prev) => {
-                const toDeleteIndex = prev.findIndex((f) => f == file.url);
+            setImageFiles((prev) => {
+                const toDeleteIndex = prev.findIndex((f) => f.url == file.url);
                 if (toDeleteIndex !== -1) {
                     const updatedPreviews = [
                         ...prev.slice(0, toDeleteIndex),
@@ -66,7 +67,7 @@ const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
                 }
             });
         } else {
-            const toDeleteIndex = imageUrls.findIndex((f) => f == file.url);
+            const toDeleteIndex = savedImageUrls.findIndex((f) => f == file.url);
             if (toDeleteIndex !== -1) {
                 //TODO: call api to delete image
                 setImageUrls((prev) => {
@@ -85,39 +86,34 @@ const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
             <Box marginTop={3}>
                 <Typography variant="h4">Details</Typography>
                 <FormControl variant="standard" fullWidth margin="dense">
-                    <Stack spacing={3}>
-                        <Box>
-                            <Typography component="label" variant="caption">
-                                Title
-                            </Typography>
-                            <TextInput
-                                placeHolder={'some title'}
-                                onChange={handleTitleChange}
-                                value={title}
-                                includeClearIcon={false}
-                                disabled={!editMode}
-                            ></TextInput>
-                        </Box>
-                        <Box>
-                            <Typography component="label" variant="caption">
-                                Description
-                            </Typography>
-                            <TextInput
-                                placeHolder={'some description'}
-                                onChange={handleDescriptionChange}
-                                value={description}
-                                includeClearIcon={false}
-                                rows={3}
-                                disabled={!editMode}
-                            ></TextInput>
-                        </Box>
+                    <Stack spacing={4}>
+                        <TextField
+                            label={'Title'}
+                            variant={'filled'}
+                            color="primary"
+                            type="text"
+                            size="small"
+                            value={title}
+                            onChange={handleTitleChange}
+                            disabled={!editMode}
+                        ></TextField>
+                        <TextField
+                            label={'Description'}
+                            variant={'filled'}
+                            color="primary"
+                            type="text"
+                            size="small"
+                            value={description}
+                            onChange={handleDescriptionChange}
+                            disabled={!editMode}
+                        ></TextField>
                     </Stack>
                 </FormControl>
             </Box>
             <PunchImages
-                urls={imageUrls}
+                savedFileUrls={savedImageUrls}
                 editMode={editMode}
-                uploadedFiles={imagePreviews}
+                uploadedFiles={imageFiles}
                 removeImage={handleRemoveImage}
                 uploadImages={handleFileUpload}
             ></PunchImages>

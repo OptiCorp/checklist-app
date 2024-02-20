@@ -127,6 +127,7 @@ const NewMobilization = () => {
                 />
             </Box>
             <Box sx={{ mt: 5 }}>
+                <Typography variant="h4">Added items</Typography>
                 <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
                     <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
