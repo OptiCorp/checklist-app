@@ -9,19 +9,11 @@ export const StyledUl = styled.ul`
     margin: 0;
 `;
 
-export type listTextType = {
-    id: string;
-    text: string;
-};
+interface Props {
+    somethingHere: { topCard: JSX.Element; subCards: JSX.Element[] }[];
+}
 
-const data: listTextType[] = [
-    { id: 'id_1', text: 'text_1' },
-    { id: 'id_2', text: 'text_2' },
-    { id: 'id_3', text: 'text_3' },
-    { id: 'id_4', text: 'text_4' },
-];
-
-const NestedList = () => {
+const NestedList: React.FC<Props> = ({ somethingHere }) => {
     const [open, setOpen] = React.useState<boolean[]>([]);
 
     const handleClick = (index: number) => {
@@ -33,13 +25,14 @@ const NestedList = () => {
     };
     return (
         <List>
-            {data.map((item, index) => (
+            {somethingHere.map((item, index) => (
                 <DropdownCard
                     key={index}
-                    item={item}
                     index={index}
                     openState={open[index]}
                     handleClick={handleClick}
+                    topCard={item.topCard}
+                    subCards={item.subCards}
                 />
             ))}
         </List>
