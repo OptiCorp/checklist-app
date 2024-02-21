@@ -1,10 +1,11 @@
-import { Box, Button, ListItemButton, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, ListItemButton, Typography } from '@mui/material';
 import CardWrapper from '../../components/UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../../components/UI/CardWrapperList';
 import NestedList from '../../components/UI/NestedList';
 import { Part } from '../../utils/types';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const dummyPart: Part = {
     type: 'item',
@@ -26,6 +27,7 @@ const dummyPart: Part = {
 const mockParts: Part[] = [dummyPart, dummyPart, dummyPart];
 
 const MobDemobPage = () => {
+    const [isMobilization, setIsMobilization] = useState(false);
     const navigate = useNavigate();
 
     const TopPartCard = (
@@ -51,7 +53,7 @@ const MobDemobPage = () => {
 
     const SubPartCardList = mockParts.map((part, index) => {
         return (
-            <ListItemButton onClick={() => navigate('/')} key={index}>
+            <ListItemButton onClick={() => navigate('/mobdemob/alsdkm')} key={index}>
                 <CardWrapper
                     firstChild={
                         <StyledUl>
@@ -65,7 +67,12 @@ const MobDemobPage = () => {
                                 <Typography variant="caption" component="span">
                                     Go to checklist
                                 </Typography>
-                                <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
+                                <IconButton
+                                    onClick={() => navigate('checklist/id')}
+                                    sx={{ flexBasis: '15%', color: 'primary.main' }}
+                                >
+                                    <AssignmentTurnedInIcon />
+                                </IconButton>
                             </Box>
                         </StyledUl>
                     }
@@ -91,7 +98,40 @@ const MobDemobPage = () => {
 
     return (
         <>
-            <h1>mobdemob</h1>
+            <Box marginTop={'2rem'}>
+                <Grid container>
+                    <Grid item flexGrow={1}>
+                        <Typography variant="h4">
+                            {isMobilization ? 'Mobilization' : dummyPart.type.toUpperCase()}
+                        </Typography>
+                        {/* <Typography variant="body1"> */}
+                        {!isMobilization ? (
+                            <Box>
+                                <Box>
+                                    <b>part-Id</b>: {dummyPart.id}
+                                </Box>
+                                <Box>
+                                    <b>part name</b>: {dummyPart.name}
+                                </Box>
+                            </Box>
+                        ) : (
+                            'asdl-asdkas-dak'
+                        )}
+                        {/* </Typography> */}
+                    </Grid>
+                    {dummyPart.partOf && (
+                        <Grid item display={'flex'} flexDirection={'column'} gap={2}>
+                            <Box>
+                                <b>Part Of</b>:
+                            </Box>
+                            <Box>
+                                <b>{dummyPart.partOf?.type.toUpperCase()}</b>
+                            </Box>
+                            <Box>{dummyPart.partOf?.partId}</Box>
+                        </Grid>
+                    )}
+                </Grid>
+            </Box>
             <NestedList somethingHere={partCardWithPartCards} />
         </>
     );

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ChecklistTemplateDetailsMain from '../../components/Part/ChecklistTemplateDetailsMain';
 import PartTopHeader from '../../components/Part/PartTopHeader';
 import { Part } from '../../utils/types';
+import { useNavigate } from 'react-router-dom';
 
 export type CreateOrEdit = 'create' | 'edit';
 
@@ -19,6 +20,7 @@ const dummyPart: Part = {
 };
 
 const ChecklistTemplateDetailsPage = () => {
+    const navigate = useNavigate();
     //const [createOrEdit, setCreateOrEdit] = useState<CreateOrEdit>('create');
     const [textFields, setTextFields] = useState([
         { text: 'first one here' },
@@ -57,6 +59,7 @@ const ChecklistTemplateDetailsPage = () => {
     const handleCreate = () => {
         console.log('creating....');
         console.log(textFields);
+        navigate(-1);
     };
 
     const handleEdit = () => {

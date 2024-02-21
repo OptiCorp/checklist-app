@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { listTextType } from '../UI/CardWrapperList';
+import { MouseEventHandler, MouseEvent } from 'react';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -44,11 +45,17 @@ const MobilizationTab = () => {
         </StyledUl>
     );
 
+    const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        navigate('/newMob');
+    };
+
     return (
         <>
             <Box sx={{ mt: 5 }}>
                 <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
                     <CardWrapper
+                        onClick={() => navigate('/mobdemob/someId')} //todo:
                         firstChild={firstText}
                         secondChild={secondText}
                         middleChild={middleText}
@@ -56,6 +63,7 @@ const MobilizationTab = () => {
                         TopRightActionButton={
                             <IconButton
                                 sx={{ position: 'absolute', top: 0, right: 0, zIndex: 10000 }}
+                                onClick={handleEditClick}
                             >
                                 <ModeEditOutlineIcon color="primary" />
                             </IconButton>

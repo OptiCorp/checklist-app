@@ -6,6 +6,7 @@ interface CardWrapperProps {
     secondChild: JSX.Element;
     borderColor?: string;
     TopRightActionButton?: JSX.Element;
+    onClick?: () => void;
 }
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -23,10 +24,17 @@ const CardWrapper: React.FC<CardWrapperProps> = ({
     middleChild,
     borderColor,
     TopRightActionButton,
+    onClick,
 }) => {
     return (
         <StyledCard
-            sx={{ width: '100%', borderColor: borderColor ?? 'inherit', position: 'relative' }}
+            sx={{
+                width: '100%',
+                borderColor: borderColor ?? 'inherit',
+                position: 'relative',
+                cursor: onClick != undefined ? 'pointer' : undefined,
+            }}
+            onClick={onClick}
         >
             <Grid container direction={'row'} wrap="nowrap" minHeight={'4rem'}>
                 <Grid item xs={middleChild ? 4 : 6} p={3}>
