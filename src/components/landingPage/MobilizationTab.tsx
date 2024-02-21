@@ -1,10 +1,10 @@
-import { Box, Button, IconButton, Stack, useTheme } from '@mui/material';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import { Box, Button, IconButton, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import BottomButtons from '../BottomButtons/BottomButtons';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { listTextType } from '../UI/CardWrapperList';
-import BottomButtons from '../BottomButtons/BottomButtons';
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 
 export const StyledUl = styled.ul`
     list-style-type: none;

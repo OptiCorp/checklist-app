@@ -2,7 +2,6 @@ import { Box, Button, FormControl, Stack, TextField, Typography } from '@mui/mat
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { PunchDetails } from '../../../pages/punch/Punches/PunchesPage';
 import BottomButtons from '../../BottomButtons/BottomButtons';
-import TextInput from '../../UI/TextInput';
 import PunchImages from './PunchImages';
 
 interface Props {
