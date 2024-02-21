@@ -1,38 +1,21 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import { Box, Collapse, Divider, List, ListItemButton, ListItemIcon, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Box, Collapse, Divider, List, ListItemButton } from '@mui/material';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import CardWrapper from './CardWrapper';
-import CardWrapperList from './CardWrapperList';
-import { listTextType } from './NestedList';
 
 interface Props {
-    item: listTextType;
+    topCard: JSX.Element;
+    subCards: JSX.Element[];
     index: number;
     openState: boolean;
     handleClick: (index: number) => void;
 }
 
-const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
-    const navigate = useNavigate();
-
+const Card: React.FC<Props> = ({ topCard, subCards, index, openState, handleClick }) => {
     return (
         <Box>
             <ListItemButton onClick={() => handleClick(index)}>
                 {openState ? <ExpandLess /> : <ExpandMore />}
-                <CardWrapper
-                    firstChild={<CardWrapperList id={item.id} text={item.text}></CardWrapperList>}
-                    secondChild={
-                        <Box display={'flex'} alignItems={'center'}>
-                            <Typography variant="caption" component="span">
-                                Go to checklist
-                            </Typography>
-                            <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
-                        </Box>
-                    }
-                />
+                {topCard}
             </ListItemButton>
             <Collapse in={openState || false} timeout="auto" unmountOnExit>
                 <Divider
@@ -45,30 +28,9 @@ const Card: React.FC<Props> = ({ item, index, openState, handleClick }) => {
                     }}
                 />
                 <List component="div" disablePadding sx={{ pl: 24 }}>
-                    <ListItemButton>
-                        <ListItemIcon sx={{ width: '100%' }} onClick={() => navigate('/')}>
-                            <CardWrapper
-                                firstChild={
-                                    <CardWrapperList
-                                        id={item.id}
-                                        text={item.text}
-                                    ></CardWrapperList>
-                                }
-                                secondChild={
-                                    // <CardWrapperList
-                                    //     id={item.id}
-                                    //     text={item.text}
-                                    // ></CardWrapperList>
-                                    <Box display={'flex'} alignItems={'center'}>
-                                        <Typography variant="caption" component="span">
-                                            Go to checklist
-                                        </Typography>
-                                        <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
-                                    </Box>
-                                }
-                            />
-                        </ListItemIcon>
-                    </ListItemButton>
+                    {subCards.map((item) => {
+                        return item;
+                    })}
                 </List>
             </Collapse>
         </Box>
