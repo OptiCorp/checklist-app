@@ -16,7 +16,8 @@ function srcset(image: string, width: number) {
         // src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
         // srcSet: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format&dpr=2 2x`,
         src: `${image}`,
-        srcSet: `${image}?w=${width}&fit=crop&auto=format&dpr=2 2x`,
+        //srcSet: `${image}?w=${width}&fit=crop&auto=format&dpr=2 2x`,
+        srcSet: `${image}`,
     };
 }
 
