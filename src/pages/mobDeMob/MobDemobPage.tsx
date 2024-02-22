@@ -1,4 +1,13 @@
-import { Box, Button, Grid, IconButton, ListItemButton, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    ListItemButton,
+    Switch,
+    Typography,
+} from '@mui/material';
 import CardWrapper from '../../components/UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../../components/UI/CardWrapperList';
 import NestedList from '../../components/UI/NestedList';
@@ -6,6 +15,7 @@ import { Part } from '../../utils/types';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import React from 'react';
 
 const dummyPart1: Part = {
     type: 'assembly',
@@ -61,7 +71,12 @@ const dummyPart3: Part = {
 const mockParts: Part[] = [dummyPart2, dummyPart3];
 
 const MobDemobPage = () => {
-    const [isMobilization, setIsMobilization] = useState(true);
+    const [isExpanded, setIsExpanded] = React.useState(false);
+
+    const handleEditModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsExpanded(event.target.checked);
+    };
+    const [isMobilization, setIsMobilization] = useState(false);
     const navigate = useNavigate();
 
     // const handleCardClick = (route: string) => {
@@ -71,6 +86,10 @@ const MobDemobPage = () => {
     const handleChecklistClick = (e: React.MouseEvent<HTMLButtonElement>, callBack: () => void) => {
         e.stopPropagation();
         callBack();
+    };
+
+    const handleExpandChange = (val: boolean) => {
+        setIsExpanded(val);
     };
 
     const TopPartCard = (
@@ -180,6 +199,18 @@ const MobDemobPage = () => {
                     </Grid>
                     {!isMobilization && dummyPart1.partOf && (
                         <Grid item display={'flex'} flexDirection={'column'} gap={2}>
+                            <FormControlLabel
+                                value="end"
+                                control={
+                                    <Switch
+                                        color="primary"
+                                        checked={isExpanded}
+                                        onChange={handleEditModeChange}
+                                    />
+                                }
+                                label={isExpanded ? 'Unexpand all' : 'Expand all'}
+                                labelPlacement="top"
+                            />
                             <Box>
                                 <b>Part Of</b>:
                             </Box>
@@ -191,7 +222,11 @@ const MobDemobPage = () => {
                     )}
                 </Grid>
             </Box>
-            <NestedList somethingHere={partCardWithPartCards} />
+            <NestedList
+                somethingHere={partCardWithPartCards}
+                allExpanded={isExpanded}
+                changeExpand={handleExpandChange}
+            />
         </>
     );
 };

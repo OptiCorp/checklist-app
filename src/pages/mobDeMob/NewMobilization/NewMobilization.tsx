@@ -19,25 +19,8 @@ import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
 import { Film, RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
 import { Part } from '../../../utils/types';
 
-const top5Films: Film[] = [
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    {
-        title: 'The Lord of the Rings: The Two Towers',
-        year: 2002,
-    },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    {
-        title: 'Star Wars: Episode IV - A New Hope',
-        year: 1977,
-    },
-];
-
-const dummyPart: Part = {
-    type: 'item',
+const dummyPart1: Part = {
+    type: 'assembly',
     itemId: 'alsk-as9as-dk',
     hasChecklistTemplate: true,
     created: new Date(),
@@ -53,35 +36,69 @@ const dummyPart: Part = {
     },
 };
 
-const mockParts: Part[] = [dummyPart, dummyPart, dummyPart];
+const dummyPart2: Part = {
+    type: 'assembly',
+    itemId: 'ølko-as9as-dk',
+    hasChecklistTemplate: true,
+    created: new Date(),
+    lastModified: new Date(),
+    name: 'Bolt2.0',
+    id: 'asdonal-asdlma-das',
+    serialNumber: 'asuiabs-daisd-adas',
+    partTemplateId: 'okda-asjda-adh',
+    wpId: 'aow-adnas-dasd',
+    partOf: {
+        partId: 'alsk-as9as-dk',
+        type: 'item',
+    },
+};
+
+const dummyPart3: Part = {
+    type: 'item',
+    itemId: 'poasd-sadl-as9as-drrr',
+    hasChecklistTemplate: true,
+    created: new Date(),
+    lastModified: new Date(),
+    name: 'Bolt2.0',
+    id: 'lkdf-asjdb-sdi3',
+    serialNumber: 'qwoie-qweiqna-kasnda',
+    partTemplateId: 'okda-asjda-adh',
+    wpId: 'aow-adnas-dasd',
+    partOf: {
+        partId: 'alsk-as9as-dk',
+        type: 'item',
+    },
+};
+
+const mockParts: Part[] = [dummyPart1, dummyPart2, dummyPart3];
 
 const NewMobilization = () => {
     const navigate = useNavigate();
-    const [itemsOptions, setItemsOptions] = useState<readonly Film[]>([]);
+    const [itemsOptions, setItemsOptions] = useState<readonly Part[]>([]);
     const [recentOrSearch, setRecentOrSearch] = useState<RecentOrSearch>('recent');
 
     const handleRecentOrSearch = (newOne: RecentOrSearch) => {
         setRecentOrSearch(newOne);
     };
 
-    const itemRenderOption = (props: React.HTMLAttributes<HTMLLIElement>, option: Film) => (
+    const itemRenderOption = (props: React.HTMLAttributes<HTMLLIElement>, option: Part) => (
         <Box component="li" sx={{ '& > svg': { mr: 2, flexShrink: 0 } }} {...props}>
             {recentOrSearch == 'search' && <SearchIcon fontSize="small" />}
             {recentOrSearch == 'recent' && <HistoryIcon fontSize="small" />}
-            {option.title}
+            {option.itemId}
         </Box>
     );
 
-    const ItemsSearch = (option: Film, value: Film) => option.title === value.title;
-    const getOptionLabelItems = (option: Film) => option.title;
+    const ItemsSearch = (option: Part, value: Part) => option.itemId === value.itemId;
+    const getOptionLabelItems = (option: Part) => option.itemId;
 
     const TopPartCard = (
         <CardWrapper
             onClick={() => navigate(`/part/soemeid`)}
             firstChild={
                 <StyledUl>
-                    <CardWrapperList id={'Item-ID'} text={dummyPart.itemId} />
-                    <CardWrapperList id={'Item name'} text={dummyPart.name} />
+                    <CardWrapperList id={'Item-ID'} text={dummyPart1.itemId} />
+                    <CardWrapperList id={'Item name'} text={dummyPart1.name} />
                 </StyledUl>
             }
             secondChild={
@@ -180,20 +197,25 @@ const NewMobilization = () => {
                 </Stack>
             </FormControl>
             <Box>
+                <Typography variant="h4">Add units, assemblies or items</Typography>
                 <SearchAutoComplete
-                    initOption={top5Films}
+                    initOption={mockParts}
                     searchOptions={itemsOptions}
                     setOptions={setItemsOptions}
                     getOptionLabel={getOptionLabelItems}
                     isEqualToFunction={ItemsSearch}
-                    placeHolder="Search: item name"
+                    placeHolder="Search: itemId"
                     renderOption={itemRenderOption}
                     recentOrSearch={recentOrSearch}
                     handleChangeRecentOrSearch={handleRecentOrSearch}
-                    groupBy={(option) => option.year.toString()}
+                    groupBy={(option) => option.type.toString()}
                 />
             </Box>
-            <NestedList somethingHere={partCardWithPartCards} />
+            <NestedList
+                somethingHere={partCardWithPartCards}
+                allExpanded={false}
+                changeExpand={() => {}}
+            />
             {/* <Box sx={{ mt: 5 }}>
                 <Typography variant="h4">Added items</Typography>
                 <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
