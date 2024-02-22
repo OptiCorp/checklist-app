@@ -1,11 +1,12 @@
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import { Box, Button, IconButton, Stack } from '@mui/material';
+import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Mobilization } from '../../utils/types';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { listTextType } from '../UI/CardWrapperList';
-import { MouseEventHandler, MouseEvent } from 'react';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -13,37 +14,42 @@ export const StyledUl = styled.ul`
     margin: 0;
 `;
 
-const dummyTextSections: listTextType[] = [
-    { id: 'wp id', text: '5321-1' },
-    { id: 's/n', text: '1143 D12C 12' },
-    { id: 'p/n', text: 'bv 113 eu' },
+const mockMobilizations: Mobilization[] = [
+    {
+        id: 'da-sada-sdlasmd',
+        created: new Date(),
+        lastModified: new Date(),
+        costumer: 'Equinor',
+        partsCount: 3,
+        checklistCount: 14,
+        status: 'NotReady',
+        checklistCountDone: 3,
+    },
+    {
+        id: 'fgh-ddas-asdaww',
+        created: new Date(),
+        lastModified: new Date(),
+        costumer: 'Equinor',
+        partsCount: 22,
+        checklistCount: 22,
+        status: 'NotReady',
+        checklistCountDone: 22,
+    },
+    {
+        id: 'wer-sada-sdlasmd',
+        created: new Date(),
+        lastModified: new Date(),
+        costumer: 'Equinor',
+        partsCount: 14,
+        checklistCount: 14,
+        status: 'NotReady',
+        checklistCountDone: 8,
+    },
 ];
 
 const MobilizationTab = () => {
     const navigate = useNavigate();
     //const { state } = useLocation();
-
-    const firstText = (
-        <StyledUl>
-            {dummyTextSections.map((item, i) => (
-                <CardWrapperList key={i} id={item.id} text={item.text} />
-            ))}
-        </StyledUl>
-    );
-    const middleText = (
-        <StyledUl>
-            {dummyTextSections.map((item, i) => (
-                <CardWrapperList key={i} id={item.id} text={item.text} />
-            ))}
-        </StyledUl>
-    );
-    const secondText = (
-        <StyledUl>
-            {dummyTextSections.map((item, i) => (
-                <CardWrapperList key={i} id={item.id} text={item.text} />
-            ))}
-        </StyledUl>
-    );
 
     const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
@@ -54,31 +60,53 @@ const MobilizationTab = () => {
         <>
             <Box sx={{ mt: 5 }}>
                 <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
-                    <CardWrapper
-                        onClick={() => navigate('/mobdemob/someId')} //todo:
-                        firstChild={firstText}
-                        secondChild={secondText}
-                        middleChild={middleText}
-                        borderColor="secondary.main"
-                        TopRightActionButton={
-                            <IconButton
-                                sx={{ position: 'absolute', top: 0, right: 0, zIndex: 10000 }}
-                                onClick={handleEditClick}
-                            >
-                                <ModeEditOutlineIcon color="primary" />
-                            </IconButton>
-                        }
-                    ></CardWrapper>
-                    <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
-                    <CardWrapper firstChild={firstText} secondChild={secondText}></CardWrapper>
+                    {mockMobilizations.map((mob) => {
+                        return (
+                            <CardWrapper
+                                key={mob.id}
+                                onClick={() => navigate('/mobdemob/someId')} //todo:
+                                firstChild={
+                                    <StyledUl>
+                                        <CardWrapperList id={'mob-ID'} text={mob.id} />
+                                        <CardWrapperList
+                                            id={'Checklist Done'}
+                                            text={`${mob.checklistCountDone}`}
+                                        />
+                                        <CardWrapperList
+                                            id={'Checklists Count'}
+                                            text={`${mob.checklistCount}`}
+                                        />
+                                    </StyledUl>
+                                }
+                                secondChild={
+                                    <StyledUl>
+                                        <CardWrapperList id={'Costumer'} text={mob.costumer} />
+                                    </StyledUl>
+                                }
+                                borderColor={
+                                    mob.checklistCount != mob.checklistCountDone
+                                        ? 'secondary.main'
+                                        : 'primary.main'
+                                }
+                                TopRightActionButton={
+                                    <IconButton
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 0,
+                                        }}
+                                        onClick={handleEditClick}
+                                    >
+                                        <ModeEditOutlineIcon color="primary" />
+                                    </IconButton>
+                                }
+                            ></CardWrapper>
+                        );
+                    })}
                 </Stack>
             </Box>
             <BottomButtons>
-                <Button
-                    variant="contained"
-                    onClick={() => navigate('newMob')}
-                    sx={{ marginTop: 'auto' }}
-                >
+                <Button variant="contained" onClick={() => navigate('newMob')}>
                     Create new mob
                 </Button>
             </BottomButtons>

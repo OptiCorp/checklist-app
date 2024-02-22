@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React, { useState } from 'react';
 import SearchInput from '../UI/SearchInput';
-import Items from './Items';
+import ItemsTab from './ItemsTab';
 
 import { debounce } from 'lodash';
 import MobilizationTab from './MobilizationTab';
@@ -14,6 +14,8 @@ export interface Film {
 }
 
 export type RecentOrSearch = 'recent' | 'search';
+
+
 
 const OverViewTabs = () => {
     const [value, setValue] = React.useState<Tabs>('Mob');
@@ -61,7 +63,7 @@ const OverViewTabs = () => {
             <Box sx={{ mt: 5 }}>
                 {value == 'Mob' && <MobilizationTab></MobilizationTab>}
                 {value == 'DeMob' && <MobilizationTab></MobilizationTab>}
-                {value == 'Items' && <Items></Items>}
+                {value == 'Items' && <ItemsTab></ItemsTab>}
             </Box>
         </>
     );

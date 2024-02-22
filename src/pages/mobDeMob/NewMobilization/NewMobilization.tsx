@@ -10,15 +10,14 @@ import {
     Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import BottomButtons from '../../../components/BottomButtons/BottomButtons';
 import CardWrapper from '../../../components/UI/CardWrapper';
-import CardWrapperList, { StyledUl, listTextType } from '../../../components/UI/CardWrapperList';
+import CardWrapperList, { StyledUl } from '../../../components/UI/CardWrapperList';
+import NestedList from '../../../components/UI/NestedList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
 import { Film, RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
-import BottomButtons from '../../../components/BottomButtons/BottomButtons';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { Part } from '../../../utils/types';
-import { useNavigate } from 'react-router-dom';
-import NestedList from '../../../components/UI/NestedList';
 
 const top5Films: Film[] = [
     { title: 'Forrest Gump', year: 1994 },
@@ -111,12 +110,7 @@ const NewMobilization = () => {
                     }
                     secondChild={
                         <StyledUl>
-                            <Box display={'flex'} alignItems={'center'}>
-                                <Typography variant="caption" component="span">
-                                    Go to checklist
-                                </Typography>
-                                <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
-                            </Box>
+                            <Box display={'flex'} alignItems={'center'}></Box>
                         </StyledUl>
                     }
                 ></CardWrapper>
