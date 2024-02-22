@@ -30,3 +30,18 @@ export interface Punch extends BaseEntities {
     description: string;
     imagUrls: string[];
 }
+
+export interface PartChecklists extends BaseEntities {
+    PartOfMobId: string;
+    Punches: Punch[];
+}
+
+export type MobilizationStatus = 'NotReady' | 'Ready';
+
+export interface Mobilization extends BaseEntities {
+    status: MobilizationStatus;
+    partsCount: number;
+    checklistCountDone: number;
+    checklistCount: number;
+    costumer: string;
+}

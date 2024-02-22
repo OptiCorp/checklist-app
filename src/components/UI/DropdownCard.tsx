@@ -7,13 +7,13 @@ interface Props {
     subCards: JSX.Element[];
     index: number;
     openState: boolean;
-    handleClick: (index: number) => void;
+    handleDropClick: (index: number) => void;
 }
 
-const Card: React.FC<Props> = ({ topCard, subCards, index, openState, handleClick }) => {
+const Card: React.FC<Props> = ({ topCard, subCards, index, openState, handleDropClick }) => {
     return (
         <Box>
-            <ListItemButton onClick={() => handleClick(index)}>
+            <ListItemButton onClick={() => handleDropClick(index)}>
                 {openState ? <ExpandLess /> : <ExpandMore />}
                 {topCard}
             </ListItemButton>
