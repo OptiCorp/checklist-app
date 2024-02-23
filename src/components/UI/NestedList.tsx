@@ -2,7 +2,6 @@ import * as React from 'react';
 import List from '@mui/material/List';
 import styled from 'styled-components';
 import DropdownCard from './DropdownCard';
-import { useNavigate } from 'react-router-dom';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
