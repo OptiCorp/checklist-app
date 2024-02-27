@@ -61,6 +61,14 @@ const mockParts: Part[] = [dummyPart1, dummyPart2, dummyPart3];
 
 const ItemsTab = () => {
     const navigate = useNavigate();
+
+    const handleEditChecklistTemplateClick = (
+        e: React.MouseEvent<HTMLButtonElement>,
+        navigateTo: string
+    ) => {
+        e.stopPropagation();
+        navigate(navigateTo);
+    };
     return (
         <>
             <Box sx={{ mt: 5 }}>
@@ -69,11 +77,12 @@ const ItemsTab = () => {
                         return (
                             <CardWrapper
                                 key={part.id}
-                                //todo:
+                                onClick={() => navigate(`/part/${part.id}`)}
                                 firstChild={
                                     <StyledUl>
                                         <CardWrapperList id={'item-ID'} text={part.id} />
                                         <CardWrapperList id={'srn'} text={`${part.serialNumber}`} />
+                                        <CardWrapperList id={'type'} text={`${part.type}`} />
                                     </StyledUl>
                                 }
                                 secondChild={
@@ -84,7 +93,12 @@ const ItemsTab = () => {
                                             </Typography>
                                             <IconButton
                                                 sx={{ color: 'primary.main' }}
-                                                onClick={() => navigate('/checklistTemplate')}
+                                                onClick={(e) =>
+                                                    handleEditChecklistTemplateClick(
+                                                        e,
+                                                        '/checklistTemplate'
+                                                    )
+                                                }
                                             >
                                                 <ModeEditOutlineIcon />
                                             </IconButton>

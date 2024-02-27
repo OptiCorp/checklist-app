@@ -1,11 +1,9 @@
-import { Box, IconButton, Stack, Typography } from '@mui/material';
-import React from 'react';
-import TextInput from '../UI/TextInput';
-import SearchInput from '../UI/SearchInput';
-import CardWrapper from '../UI/CardWrapper';
+import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { PartChecklists, Punch } from '../../utils/types';
+import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../UI/CardWrapperList';
+import SearchInput from '../UI/SearchInput';
 
 //TODO: get input search field and list checklistTemplates to see history for the part.
 //TODO: when no checklistTemplate, show missing checklistTemplate

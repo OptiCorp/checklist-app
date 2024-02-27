@@ -36,7 +36,7 @@ export interface PartChecklists extends BaseEntities {
     Punches: Punch[];
 }
 
-export type MobilizationStatus = 'NotReady' | 'Ready';
+export type MobilizationStatus = 'NotReady' | 'Ready' | 'Completed' | 'Started';
 
 export interface Mobilization extends BaseEntities {
     status: MobilizationStatus;

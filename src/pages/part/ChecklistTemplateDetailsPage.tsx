@@ -70,7 +70,7 @@ const ChecklistTemplateDetailsPage = () => {
 
     return (
         <>
-            <PartTopHeader part={dummyPart} showAddChecklistTemplateButton={false}></PartTopHeader>
+            <PartTopHeader part={dummyPart}></PartTopHeader>
             <ChecklistTemplateDetailsMain
                 createOrEdit="create"
                 textFields={textFields}

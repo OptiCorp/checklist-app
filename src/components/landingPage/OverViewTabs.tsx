@@ -15,8 +15,6 @@ export interface Film {
 
 export type RecentOrSearch = 'recent' | 'search';
 
-
-
 const OverViewTabs = () => {
     const [value, setValue] = React.useState<Tabs>('Mob');
     const [inputSearch, setInputSearch] = useState('');

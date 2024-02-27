@@ -1,14 +1,13 @@
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { Part } from '../../utils/types';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
     part: Part;
-    showAddChecklistTemplateButton: boolean;
+    children?: JSX.Element;
 }
 
-const PartTopHeader = ({ part, showAddChecklistTemplateButton }: Props) => {
+const PartTopHeader = ({ part, children }: Props) => {
     const navigate = useNavigate();
     return (
         <Box marginTop={'2rem'}>
@@ -26,18 +25,7 @@ const PartTopHeader = ({ part, showAddChecklistTemplateButton }: Props) => {
                     </Box>
                     {/* </Typography> */}
                 </Grid>
-                <Grid item>
-                    {showAddChecklistTemplateButton && (
-                        <Button
-                            variant="contained"
-                            size="small"
-                            startIcon={<AddCircleOutlineOutlinedIcon />}
-                            onClick={() => navigate('/checklistTemplate')}
-                        >
-                            <Typography variant="body2">Add checklist template</Typography>
-                        </Button>
-                    )}
-                </Grid>
+                <Grid item>{children}</Grid>
             </Grid>
         </Box>
     );

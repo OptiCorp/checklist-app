@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import { useContext } from 'react';
 import OverViewTabs from '../../components/landingPage/OverViewTabs';
 import { BreadcrumbsContext } from '../../store/breadcrumbsContext';
@@ -10,7 +9,6 @@ const LandingPage = () => {
 
     return (
         <>
-            <Typography variant="body1">Welcome Gudrun</Typography>
             <OverViewTabs></OverViewTabs>
         </>
     );
