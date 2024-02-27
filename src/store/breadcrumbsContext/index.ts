@@ -1,33 +1,60 @@
 import { Dispatch, createContext } from 'react';
 
+export class DynamicBreadcrumbNameMap {
+    private map: Record<string, string> = {};
+
+
+    constructor() {
+        // Initialize with any default entries if needed
+        this.addEntry('/inbox', 'Inbox');
+        this.addEntry('/trash', 'Trash');
+        // ... add more initial entries as desired
+    }
+
+    addEntry(path: string, name: string): void {
+        // You can add any logic here to handle IDs if needed
+        // For demonstration purposes, I'll just use the provided name directly
+        this.map[path] = name;
+    }
+
+    updateEntry(path: string, newName: string): void {
+        // Update an existing entry (or add a new one if not already present)
+        this.map[path] = newName;
+    }
+
+    getEntry(path: string): string | undefined {
+        return this.map[path];
+    }
+}
+
 export interface Breadcrumbs {
-    links: string[];
+    map: Record<string, string>;
 }
 
 export enum ActionType {
-    GoForward,
-    GoBackward,
+    ReplaceEntry,
+    GetEntry,
 }
 
-export type GoForward = {
-    type: ActionType.GoForward;
+export type ReplaceEntry = {
+    type: ActionType.ReplaceEntry;
     payload: {
-        link: string;
+        path: string;
     };
 };
 
-export type GoBackward = {
-    type: ActionType.GoBackward;
+export type GetEntry = {
+    type: ActionType.GetEntry;
     payload: {
-        link: string;
+        path: string;
     };
 };
 
 export const InitialBreadcrumbState: Breadcrumbs = {
-    links: ['/'],
+    map: { '/': 'home' },
 };
 
-export type BreadcrumbsActions = GoForward | GoBackward;
+export type BreadcrumbsActions = ReplaceEntry | GetEntry;
 
 export const BreadcrumbsContext = createContext<{
     state: Breadcrumbs;

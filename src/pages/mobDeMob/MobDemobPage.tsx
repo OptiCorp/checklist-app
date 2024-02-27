@@ -1,6 +1,6 @@
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import {
     Box,
-    Button,
     FormControlLabel,
     Grid,
     IconButton,
@@ -8,14 +8,12 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CardWrapper from '../../components/UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../../components/UI/CardWrapperList';
 import NestedList from '../../components/UI/NestedList';
 import { Part } from '../../utils/types';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import React from 'react';
 
 const dummyPart1: Part = {
     type: 'assembly',
@@ -109,7 +107,9 @@ const MobDemobPage = () => {
                         </Typography>
                         <IconButton
                             onClick={(e) =>
-                                handleChecklistClick(e, () => navigate('/checklist/id'))
+                                handleChecklistClick(e, () =>
+                                    navigate(`/checklist/${dummyPart1.itemId}`)
+                                )
                             }
                             sx={{ color: 'primary.main' }}
                         >
@@ -145,7 +145,9 @@ const MobDemobPage = () => {
                                 </Typography>
                                 <IconButton
                                     onClick={(e) =>
-                                        handleChecklistClick(e, () => navigate('/checklist/id'))
+                                        handleChecklistClick(e, () =>
+                                            navigate(`/checklist/${part.itemId}`)
+                                        )
                                     }
                                     sx={{ color: 'primary.main' }}
                                 >
@@ -176,7 +178,7 @@ const MobDemobPage = () => {
 
     return (
         <>
-            <Box marginTop={'2rem'}>
+            <Box>
                 <Grid container>
                     <Grid item flexGrow={1}>
                         <Typography variant="h4">
@@ -198,7 +200,7 @@ const MobDemobPage = () => {
                         {/* </Typography> */}
                     </Grid>
                     {!isMobilization && dummyPart1.partOf && (
-                        <Grid item display={'flex'} flexDirection={'column'} gap={2}>
+                        <Grid item display={'flex'} flexDirection={'column'} gap={1}>
                             <FormControlLabel
                                 value="end"
                                 control={
@@ -209,7 +211,7 @@ const MobDemobPage = () => {
                                     />
                                 }
                                 label={isExpanded ? 'Unexpand all' : 'Expand all'}
-                                labelPlacement="top"
+                                labelPlacement="start"
                             />
                             <Box>
                                 <b>Part Of</b>:

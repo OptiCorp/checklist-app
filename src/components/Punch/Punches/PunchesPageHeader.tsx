@@ -10,7 +10,7 @@ interface Props {
 
 const PunchesPageHeader = ({ part, title, checklistItemId, mobilizationId }: Props) => {
     return (
-        <Box marginTop={'2rem'}>
+        <Box>
             <Typography variant="h4">{title.toUpperCase()}</Typography>
             <Grid container marginTop={'0.5rem'}>
                 <Grid item flexGrow={1} display={'flex'} flexDirection={'column'} gap={2}>

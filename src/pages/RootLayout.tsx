@@ -3,7 +3,7 @@ import { useReducer } from 'react';
 import { Outlet } from 'react-router-dom';
 import Footer from '../components/Footer/Footer';
 import TopBar from '../components/Header/TopBar';
-import { BreadcrumbsContext, InitialBreadcrumbState } from '../store/breadcrumbsContext';
+import { BreadcrumbsContext, DynamicBreadcrumbNameMap, InitialBreadcrumbState } from '../store/breadcrumbsContext';
 import { breadcrumbsReducer } from '../store/breadcrumbsContext/BreadcrumbsReducer';
 
 const MainContainer = styled(Container)(({ _theme }) => ({

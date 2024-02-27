@@ -16,7 +16,7 @@ import CardWrapper from '../../../components/UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../../../components/UI/CardWrapperList';
 import NestedList from '../../../components/UI/NestedList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
-import { Film, RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
+import { RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
 import { Part } from '../../../utils/types';
 
 const dummyPart1: Part = {
@@ -226,7 +226,11 @@ const NewMobilization = () => {
             </Box> */}
 
             <BottomButtons>
-                <Button variant="contained" sx={{ marginTop: 'auto' }}>
+                <Button
+                    variant="contained"
+                    sx={{ marginTop: 'auto' }}
+                    onClick={() => navigate('/')}
+                >
                     Save
                 </Button>
             </BottomButtons>

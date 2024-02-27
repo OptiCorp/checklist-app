@@ -3,10 +3,11 @@ import { Box, Button, IconButton, Stack } from '@mui/material';
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Mobilization } from '../../utils/types';
+import { Mobilization, MobilizationStatus } from '../../utils/types';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import CardWrapper from '../UI/CardWrapper';
-import CardWrapperList, { listTextType } from '../UI/CardWrapperList';
+import CardWrapperList from '../UI/CardWrapperList';
+import PreviewIcon from '@mui/icons-material/Preview';
 
 export const StyledUl = styled.ul`
     list-style-type: none;
@@ -22,8 +23,8 @@ const mockMobilizations: Mobilization[] = [
         costumer: 'Equinor',
         partsCount: 3,
         checklistCount: 14,
-        status: 'NotReady',
-        checklistCountDone: 3,
+        status: 'Ready',
+        checklistCountDone: 0,
     },
     {
         id: 'fgh-ddas-asdaww',
@@ -32,7 +33,7 @@ const mockMobilizations: Mobilization[] = [
         costumer: 'Equinor',
         partsCount: 22,
         checklistCount: 22,
-        status: 'NotReady',
+        status: 'Completed',
         checklistCountDone: 22,
     },
     {
@@ -43,7 +44,17 @@ const mockMobilizations: Mobilization[] = [
         partsCount: 14,
         checklistCount: 14,
         status: 'NotReady',
-        checklistCountDone: 8,
+        checklistCountDone: 0,
+    },
+    {
+        id: 'aos-wqiueq-qppsla',
+        created: new Date(),
+        lastModified: new Date(),
+        costumer: 'Equinor',
+        partsCount: 14,
+        checklistCount: 14,
+        status: 'Started',
+        checklistCountDone: 0,
     },
 ];
 
@@ -54,6 +65,18 @@ const MobilizationTab = () => {
     const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         navigate('/newMob');
+    };
+
+    const handleViewClick = (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        navigate('/newMob');
+    };
+
+    const GetCardBorderColor = (status: MobilizationStatus) => {
+        if (status == 'Completed') return 'green';
+        else if (status == 'Ready') return 'orange';
+        else if (status == 'NotReady') return 'secondary.main';
+        else if (status == 'Started') return 'orange';
     };
 
     return (
@@ -76,6 +99,7 @@ const MobilizationTab = () => {
                                             id={'Checklists Count'}
                                             text={`${mob.checklistCount}`}
                                         />
+                                        <CardWrapperList id={'Status'} text={`${mob.status}`} />
                                     </StyledUl>
                                 }
                                 secondChild={
@@ -83,22 +107,31 @@ const MobilizationTab = () => {
                                         <CardWrapperList id={'Costumer'} text={mob.costumer} />
                                     </StyledUl>
                                 }
-                                borderColor={
-                                    mob.checklistCount != mob.checklistCountDone
-                                        ? 'secondary.main'
-                                        : 'primary.main'
-                                }
+                                borderColor={GetCardBorderColor(mob.status)}
                                 TopRightActionButton={
-                                    <IconButton
-                                        sx={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            right: 0,
-                                        }}
-                                        onClick={handleEditClick}
-                                    >
-                                        <ModeEditOutlineIcon color="primary" />
-                                    </IconButton>
+                                    mob.status !== 'Completed' && mob.status !== 'Started' ? (
+                                        <IconButton
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 0,
+                                            }}
+                                            onClick={handleEditClick}
+                                        >
+                                            <ModeEditOutlineIcon color="primary" />
+                                        </IconButton>
+                                    ) : (
+                                        <IconButton
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 0,
+                                            }}
+                                            onClick={handleViewClick}
+                                        >
+                                            <PreviewIcon color="primary" />
+                                        </IconButton>
+                                    )
                                 }
                             ></CardWrapper>
                         );
