@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
 
+
 const ChecklistPage = () => {
     const navigate = useNavigate();
 
@@ -102,7 +103,7 @@ const ChecklistPage = () => {
             <Box paddingTop={'25px'}>
                 <Button
                     variant="outlined"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/checklist/someid/punches')}
                     sx={{
                         background: 'white',
                         color: 'red',
@@ -114,7 +115,7 @@ const ChecklistPage = () => {
                 </Button>
             </Box>
             <BottomButtons>
-                <Button variant="outlined" onClick={() => navigate('/')}>
+                <Button variant="outlined" onClick={() => navigate(-1)}>
                     Back
                 </Button>
                 <Button variant="contained" onClick={() => navigate('/')}>

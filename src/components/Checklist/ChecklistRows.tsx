@@ -9,19 +9,24 @@ type taskType = {
 const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber }: taskType) => {
     const label = { inputProps: { 'aria-label': 'Switch demo' } };
     return (
-        <Grid component={'li'} container wrap="nowrap" paddingTop={'2rem'} paddingLeft={'5px'}>
-            <Grid item xs={1} sx={{ paddingTop: '8px' }}>
+        <Grid
+            component={'li'}
+            container
+            wrap="nowrap"
+            paddingTop={'2rem'}
+            paddingLeft={'5px'}
+            alignItems={'center'}
+        >
+            <Grid item xs={1}>
                 <Typography component="p">{taskNumber + 1}</Typography>
             </Grid>
             <Grid item xs={3} sx={{ paddingLeft: '12px' }}>
-                <Switch {...label} defaultChecked />
+                <Switch {...label} />
             </Grid>
             <Grid item xs={5}>
                 <Box>
                     {' '}
-                    <Typography component={'p'} sx={{ paddingBottom: '25px' }}>
-                        {taskText}
-                    </Typography>
+                    <Typography component={'p'}>{taskText}</Typography>
                 </Box>
             </Grid>
             <Grid item xs={3} sx={{ paddingRight: '5px' }}>
