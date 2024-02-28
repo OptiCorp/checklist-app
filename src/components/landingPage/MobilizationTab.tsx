@@ -17,7 +17,7 @@ export const StyledUl = styled.ul`
 
 const mockMobilizations: Mobilization[] = [
     {
-        id: 'da-sada-sdlasmd',
+        id: 'cf741149-e788-4dc9-ae04-a18209cdd111',
         created: new Date(),
         lastModified: new Date(),
         costumer: 'Equinor',
@@ -67,9 +67,9 @@ const MobilizationTab = () => {
         navigate('/newMob');
     };
 
-    const handleViewClick = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleViewClick = (e: MouseEvent<HTMLButtonElement>, mobId: string) => {
         e.stopPropagation();
-        navigate('/newMob');
+        navigate(`/mobdemob/${mobId}`);
     };
 
     const GetCardBorderColor = (status: MobilizationStatus) => {
@@ -127,7 +127,7 @@ const MobilizationTab = () => {
                                                 top: 0,
                                                 right: 0,
                                             }}
-                                            onClick={handleViewClick}
+                                            onClick={(e) => handleViewClick(e, mob.id)}
                                         >
                                             <PreviewIcon color="primary" />
                                         </IconButton>

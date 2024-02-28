@@ -4,12 +4,13 @@ import {
     Box,
     Button,
     FormControl,
+    IconButton,
     ListItemButton,
     Stack,
     TextField,
     Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomButtons from '../../../components/BottomButtons/BottomButtons';
 import CardWrapper from '../../../components/UI/CardWrapper';
@@ -18,6 +19,24 @@ import NestedList from '../../../components/UI/NestedList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
 import { RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
 import { Part } from '../../../utils/types';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const assebmlyAddable: Part = {
+    type: 'assembly',
+    itemId: 'lkdf-asj1-asdalk123',
+    hasChecklistTemplate: true,
+    created: new Date(),
+    lastModified: new Date(),
+    name: 'Hex bolt',
+    id: '912-129312-3128371',
+    serialNumber: 'glokfn-131lk2-12k3m',
+    partTemplateId: 'lsk-alsd',
+    wpId: 'alk alsd',
+    partOf: {
+        partId: '12343-asd-dd-a',
+        type: 'assembly',
+    },
+};
 
 const dummyPart1: Part = {
     type: 'assembly',
@@ -25,7 +44,7 @@ const dummyPart1: Part = {
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
-    name: 'Bob2.0',
+    name: 'Bracket',
     id: '42342-42342-12311',
     serialNumber: 'asdlømad',
     partTemplateId: 'lsk-alsd',
@@ -42,7 +61,7 @@ const dummyPart2: Part = {
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
-    name: 'Bolt2.0',
+    name: 'Pipe Clamp',
     id: 'asdonal-asdlma-das',
     serialNumber: 'asuiabs-daisd-adas',
     partTemplateId: 'okda-asjda-adh',
@@ -59,7 +78,7 @@ const dummyPart3: Part = {
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
-    name: 'Bolt2.0',
+    name: 'Carriage Bolt',
     id: 'lkdf-asjdb-sdi3',
     serialNumber: 'qwoie-qweiqna-kasnda',
     partTemplateId: 'okda-asjda-adh',
@@ -72,10 +91,17 @@ const dummyPart3: Part = {
 
 const mockParts: Part[] = [dummyPart1, dummyPart2, dummyPart3];
 
+const addableParts: Part[] = [assebmlyAddable];
+
+//TODO: there should be no state that has JSX.ELements.
+
 const NewMobilization = () => {
     const navigate = useNavigate();
     const [itemsOptions, setItemsOptions] = useState<readonly Part[]>([]);
     const [recentOrSearch, setRecentOrSearch] = useState<RecentOrSearch>('recent');
+    const [partCardWithPartCards, setPartCardWithPartCards] = useState<
+        { topCard: JSX.Element; subCards: JSX.Element[] }[]
+    >([]);
 
     const handleRecentOrSearch = (newOne: RecentOrSearch) => {
         setRecentOrSearch(newOne);
@@ -95,6 +121,17 @@ const NewMobilization = () => {
     const TopPartCard = (
         <CardWrapper
             onClick={() => navigate(`/part/soemeid`)}
+            TopRightActionButton={
+                <IconButton
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                    }}
+                >
+                    <DeleteIcon color="primary" />
+                </IconButton>
+            }
             firstChild={
                 <StyledUl>
                     <CardWrapperList id={'Item-ID'} text={dummyPart1.itemId} />
@@ -135,20 +172,67 @@ const NewMobilization = () => {
         );
     });
 
-    const partCardWithPartCards: { topCard: JSX.Element; subCards: JSX.Element[] }[] = [
-        {
-            topCard: TopPartCard,
-            subCards: SubPartCardList,
-        },
-        {
-            topCard: TopPartCard,
-            subCards: SubPartCardList,
-        },
-        {
-            topCard: TopPartCard,
-            subCards: SubPartCardList,
-        },
-    ];
+    useEffect(() => {
+        setPartCardWithPartCards([
+            {
+                topCard: TopPartCard,
+                subCards: SubPartCardList,
+            },
+            {
+                topCard: TopPartCard,
+                subCards: SubPartCardList,
+            },
+            {
+                topCard: TopPartCard,
+                subCards: SubPartCardList,
+            },
+        ]);
+    }, []);
+
+    const handlePartGotClicked = (item: Part | null) => {
+        if (item) {
+            console.log(item);
+            setPartCardWithPartCards((prev) => {
+                const newPart: { topCard: JSX.Element; subCards: JSX.Element[] } = {
+                    topCard: (
+                        <CardWrapper
+                            onClick={() => navigate(`/part/${item.id}`)}
+                            TopRightActionButton={
+                                <IconButton
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        right: 0,
+                                    }}
+                                >
+                                    <DeleteIcon color="primary" />
+                                </IconButton>
+                            }
+                            firstChild={
+                                <StyledUl>
+                                    <CardWrapperList id={'Item-ID'} text={item.itemId} />
+                                    <CardWrapperList id={'Item name'} text={item.name} />
+                                </StyledUl>
+                            }
+                            secondChild={
+                                <StyledUl>
+                                    {/* <Box display={'flex'} alignItems={'center'}>
+                                <Typography variant="caption" component="span">
+                                    Go to checklist
+                                </Typography>
+                                <AssignmentTurnedInIcon sx={{ flexBasis: '15%' }} />
+                            </Box> */}
+                                </StyledUl>
+                            }
+                        />
+                    ),
+                    subCards: [],
+                };
+                return [...prev, newPart];
+            });
+        }
+    };
+
     return (
         <>
             <Box>
@@ -199,7 +283,7 @@ const NewMobilization = () => {
             <Box>
                 <Typography variant="h4">Add units, assemblies or items</Typography>
                 <SearchAutoComplete
-                    initOption={mockParts}
+                    initOption={addableParts}
                     searchOptions={itemsOptions}
                     setOptions={setItemsOptions}
                     getOptionLabel={getOptionLabelItems}
@@ -209,6 +293,7 @@ const NewMobilization = () => {
                     recentOrSearch={recentOrSearch}
                     handleChangeRecentOrSearch={handleRecentOrSearch}
                     groupBy={(option) => option.type.toString()}
+                    oneGotClicked={handlePartGotClicked}
                 />
             </Box>
             <NestedList
@@ -226,12 +311,11 @@ const NewMobilization = () => {
             </Box> */}
 
             <BottomButtons>
-                <Button
-                    variant="contained"
-                    sx={{ marginTop: 'auto' }}
-                    onClick={() => navigate('/')}
-                >
+                <Button variant="contained" onClick={() => navigate('/')}>
                     Save
+                </Button>
+                <Button variant="contained" onClick={() => navigate('/')}>
+                    Mark as ready
                 </Button>
             </BottomButtons>
         </>

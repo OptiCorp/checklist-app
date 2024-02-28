@@ -118,7 +118,7 @@ const ChecklistPage = () => {
                 <Button variant="outlined" onClick={() => navigate(-1)}>
                     Back
                 </Button>
-                <Button variant="contained" onClick={() => navigate('/')}>
+                <Button variant="contained" onClick={() => navigate(-1)}>
                     Mark as complete
                 </Button>
             </BottomButtons>

@@ -31,6 +31,7 @@ interface Props<T> {
     recentOrSearch: RecentOrSearch;
     handleChangeRecentOrSearch: (newOne: RecentOrSearch) => void;
     groupBy?: (option: T) => string;
+    oneGotClicked: (item: T | null) => void;
 }
 
 function SearchAutoComplete<T>({
@@ -44,6 +45,7 @@ function SearchAutoComplete<T>({
     recentOrSearch,
     handleChangeRecentOrSearch,
     groupBy,
+    oneGotClicked
 }: Props<T>) {
     const [open, setOpen] = React.useState(false);
     const loading = open && searchOptions.length === 0;
@@ -108,6 +110,9 @@ function SearchAutoComplete<T>({
             // defaultValue={top100Films[8]}
             getOptionLabel={getOptionLabel}
             renderOption={renderOption}
+            onChange={(event: any, newValue: T | null) => {
+                oneGotClicked(newValue);
+            }}
             groupBy={groupBy}
             renderInput={(params) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>

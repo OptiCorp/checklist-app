@@ -3,6 +3,7 @@ import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { PunchDetails } from '../../../pages/punch/Punches/PunchesPage';
 import BottomButtons from '../../BottomButtons/BottomButtons';
 import PunchImages from './PunchImages';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     punchDetails: PunchDetails;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
+    const navigate = useNavigate();
     const [title, setTitle] = useState(punchDetails.punch.title);
     const [imageFiles, setImageFiles] = useState<{ file: File; url: string }[]>([]);
     const [savedImageUrls, setImageUrls] = useState<string[]>(punchDetails.punch.imagUrls);
@@ -117,7 +119,7 @@ const PunchDetailsMain: FC<Props> = ({ punchDetails, editMode }) => {
                 uploadImages={handleFileUpload}
             ></PunchImages>
             <BottomButtons>
-                <Button variant="contained" disabled={!editMode}>
+                <Button variant="contained" disabled={!editMode} onClick={() => navigate(-1)}>
                     Save
                 </Button>
             </BottomButtons>
