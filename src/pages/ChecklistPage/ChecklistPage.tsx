@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
@@ -37,24 +37,34 @@ const ChecklistPage = () => {
     return (
         <>
             <Box sx={{ mt: 5 }}>
-                <Typography variant="h4" sx={{ marginTop: '2rem', marginBottom: '0rem' }}>
-                    Checklist
-                </Typography>
+                <Grid container>
+                    <Grid item flexGrow={1}>
+                        <Typography variant="h4">Checklist</Typography>
+                        {/* <Typography variant="body1"> */}
 
-                <Box>
-                    <Typography
-                        variant="h6"
-                        sx={{ marginTop: '0rem', float: 'left', textAlign: 'left' }}
-                    >
-                        <b>ID: </b>
-                    </Typography>
-                </Box>
-                <Typography
-                    variant="h6"
-                    sx={{ marginTop: '0rem', float: 'right', textAlign: 'right' }}
-                >
-                    <b>Part of:</b>
-                </Typography>
+                        <Box>
+                            <Box>
+                                <b>part-Id: ølko-as9as-dk</b>
+                            </Box>
+                            <Box>
+                                <b>part name: Bolt 2.0</b>
+                            </Box>
+                        </Box>
+
+                        {/* </Typography> */}
+                    </Grid>
+
+                    {/* <Grid item display={'flex'} flexDirection={'column'} gap={1}>
+                        
+                        <Box>
+                            <b>Part Of</b>:
+                        </Box>
+                        <Box>
+                            <b>{dummyPart1.partOf?.type.toUpperCase()}</b>
+                        </Box>
+                        <Box>{dummyPart1.partOf?.partId}</Box>
+                    </Grid> */}
+                </Grid>
             </Box>
 
             <Box sx={{ paddingTop: '4rem' }}>
