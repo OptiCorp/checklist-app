@@ -10,20 +10,20 @@ const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber }: taskType) =
     const switchlabel = { inputProps: { 'aria-label': 'Switch' } };
     const checkboxlabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
-    const [isSwitchToggled, setSwitchToggled] = useState(false);
-    const [isCheckboxChecked, setCheckboxChecked] = useState(false);
+    const [disabledToggle, setDisabledToggle] = useState(false);
+    const [disabledCheckbox, setDisabledCheckbox] = useState(false);
 
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSwitchToggled(event.target.checked);
+        setDisabledToggle(event.target.checked);
         if (event.target.checked) {
-            setCheckboxChecked(false);
+            setDisabledCheckbox(true);
         }
     };
 
     const handleSCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckboxChecked(event.target.checked);
+        setDisabledCheckbox(event.target.checked);
         if (event.target.checked) {
-            setSwitchToggled(false);
+            setDisabledToggle(true);
         }
     };
 
@@ -33,7 +33,7 @@ const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber }: taskType) =
                 <Typography component="p">{taskNumber + 1}</Typography>
             </Grid>
             <Grid item xs={3} sx={{ paddingLeft: '12px' }}>
-                <Switch {...switchlabel} checked={isSwitchToggled} onChange={handleSwitchChange} />
+                <Switch {...switchlabel} disabled={disabledToggle} onChange={handleSwitchChange} />
             </Grid>
             <Grid item xs={5}>
                 <Box>
@@ -46,7 +46,7 @@ const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber }: taskType) =
             <Grid item xs={3} sx={{ paddingRight: '5px' }}>
                 <Checkbox
                     {...checkboxlabel}
-                    checked={isCheckboxChecked}
+                    disabled={disabledCheckbox}
                     onChange={handleSCheckboxChange}
                     sx={{ float: 'right' }}
                 />
