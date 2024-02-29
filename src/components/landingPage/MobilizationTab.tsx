@@ -110,25 +110,11 @@ const MobilizationTab = () => {
                                 borderColor={GetCardBorderColor(mob.status)}
                                 TopRightActionButton={
                                     mob.status !== 'Completed' && mob.status !== 'Started' ? (
-                                        <IconButton
-                                            sx={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 0,
-                                            }}
-                                            onClick={handleEditClick}
-                                        >
+                                        <IconButton onClick={handleEditClick}>
                                             <ModeEditOutlineIcon color="primary" />
                                         </IconButton>
                                     ) : (
-                                        <IconButton
-                                            sx={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 0,
-                                            }}
-                                            onClick={handleViewClick}
-                                        >
+                                        <IconButton onClick={handleViewClick}>
                                             <PreviewIcon color="primary" />
                                         </IconButton>
                                     )

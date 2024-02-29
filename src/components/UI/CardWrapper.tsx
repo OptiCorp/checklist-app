@@ -60,7 +60,15 @@ const CardWrapper: React.FC<CardWrapperProps> = ({
                     </Box>
                 </Grid>
             </Grid>
-            {TopRightActionButton}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                }}
+            >
+                {TopRightActionButton}
+            </Box>
         </StyledCard>
     );
 };
