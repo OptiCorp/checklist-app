@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 type taskType = {
     taskText: string;
     taskNumber: number;
+    onCompletionChange: (isChecked: boolean) => void;
 };
 
-const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber }: taskType) => {
+const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber, onCompletionChange }) => {
     const switchlabel = { inputProps: { 'aria-label': 'Switch' } };
     const checkboxlabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
@@ -14,17 +15,21 @@ const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber }: taskType) =
     const [disabledCheckbox, setDisabledCheckbox] = useState(false);
 
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDisabledToggle(event.target.checked);
-        if (event.target.checked) {
+        const isChecked = event.target.checked;
+        setDisabledToggle(isChecked);
+        if (isChecked) {
             setDisabledCheckbox(true);
         }
+        onCompletionChange(isChecked);
     };
 
     const handleSCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDisabledCheckbox(event.target.checked);
-        if (event.target.checked) {
+        const isChecked = event.target.checked;
+        setDisabledCheckbox(isChecked);
+        if (isChecked) {
             setDisabledToggle(true);
         }
+        onCompletionChange(isChecked);
     };
 
     return (
