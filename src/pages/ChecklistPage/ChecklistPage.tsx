@@ -2,6 +2,7 @@ import { Box, Button, Divider, FormControlLabel, Grid, Switch, Typography } from
 import { useNavigate } from 'react-router-dom';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
+import { useState } from 'react';
 
 const ChecklistPage = () => {
     const navigate = useNavigate();
@@ -33,6 +34,18 @@ const ChecklistPage = () => {
         'The part is clean and free from dirt or debris.',
     ];
 
+    const [taskCompletionStatus, setTaskCompletionStatus] = useState<boolean[]>(
+        Array(mockChecklist.length).fill(false)
+    );
+
+    const handleTaskCompletion = (index: number, isCompleted: boolean) => {
+        const newTaskCompletionStatus = [...taskCompletionStatus];
+        newTaskCompletionStatus[index] = isCompleted;
+        setTaskCompletionStatus(newTaskCompletionStatus);
+    };
+
+    const allTasksCompleted = taskCompletionStatus.every((status) => status);
+
     return (
         <>
             <Box sx={{ mt: 5 }}>
@@ -49,20 +62,7 @@ const ChecklistPage = () => {
                                 <b>part name: Bolt 2.0</b>
                             </Box>
                         </Box>
-
-                        {/* </Typography> */}
                     </Grid>
-
-                    {/* <Grid item display={'flex'} flexDirection={'column'} gap={1}>
-                        
-                        <Box>
-                            <b>Part Of</b>:
-                        </Box>
-                        <Box>
-                            <b>{dummyPart1.partOf?.type.toUpperCase()}</b>
-                        </Box>
-                        <Box>{dummyPart1.partOf?.partId}</Box>
-                    </Grid> */}
                 </Grid>
             </Box>
 
@@ -107,7 +107,7 @@ const ChecklistPage = () => {
                 />
             </Box>
             <Box>
-                <ChecklistTaskList tasks={mockChecklist} />
+                <ChecklistTaskList tasks={mockChecklist} onTaskCompletion={handleTaskCompletion} />
             </Box>
             <Box paddingTop={'25px'}>
                 <Button
@@ -127,7 +127,11 @@ const ChecklistPage = () => {
                 <Button variant="outlined" onClick={() => navigate('/')}>
                     Back
                 </Button>
-                <Button variant="contained" onClick={() => navigate('/')}>
+                <Button
+                    variant="contained"
+                    onClick={() => navigate('/')}
+                    disabled={!allTasksCompleted}
+                >
                     Mark as complete
                 </Button>
             </BottomButtons>
