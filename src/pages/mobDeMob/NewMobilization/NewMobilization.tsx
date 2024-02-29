@@ -17,9 +17,9 @@ import CardWrapperList, { StyledUl } from '../../../components/UI/CardWrapperLis
 import NestedList from '../../../components/UI/NestedList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
 import { RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
-import { Part } from '../../../utils/types';
+import { Item } from '../../../utils/types';
 
-const dummyPart1: Part = {
+const dummyItem1: Item = {
     type: 'assembly',
     itemId: 'alsk-as9as-dk',
     hasChecklistTemplate: true,
@@ -28,15 +28,15 @@ const dummyPart1: Part = {
     name: 'Bob2.0',
     id: '42342-42342-12311',
     serialNumber: 'asdlømad',
-    partTemplateId: 'lsk-alsd',
+    itemTemplateId: 'lsk-alsd',
     wpId: 'alk alsd',
     partOf: {
-        partId: '12343-asd-dd-a',
+        itemId: '12343-asd-dd-a',
         type: 'assembly',
     },
 };
 
-const dummyPart2: Part = {
+const dummyItem2: Item = {
     type: 'assembly',
     itemId: 'ølko-as9as-dk',
     hasChecklistTemplate: true,
@@ -45,15 +45,15 @@ const dummyPart2: Part = {
     name: 'Bolt2.0',
     id: 'asdonal-asdlma-das',
     serialNumber: 'asuiabs-daisd-adas',
-    partTemplateId: 'okda-asjda-adh',
+    itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
     partOf: {
-        partId: 'alsk-as9as-dk',
+        itemId: 'alsk-as9as-dk',
         type: 'item',
     },
 };
 
-const dummyPart3: Part = {
+const dummyItem3: Item = {
     type: 'item',
     itemId: 'poasd-sadl-as9as-drrr',
     hasChecklistTemplate: true,
@@ -62,26 +62,26 @@ const dummyPart3: Part = {
     name: 'Bolt2.0',
     id: 'lkdf-asjdb-sdi3',
     serialNumber: 'qwoie-qweiqna-kasnda',
-    partTemplateId: 'okda-asjda-adh',
+    itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
     partOf: {
-        partId: 'alsk-as9as-dk',
+        itemId: 'alsk-as9as-dk',
         type: 'item',
     },
 };
 
-const mockParts: Part[] = [dummyPart1, dummyPart2, dummyPart3];
+const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3];
 
 const NewMobilization = () => {
     const navigate = useNavigate();
-    const [itemsOptions, setItemsOptions] = useState<readonly Part[]>([]);
+    const [itemsOptions, setItemsOptions] = useState<readonly Item[]>([]);
     const [recentOrSearch, setRecentOrSearch] = useState<RecentOrSearch>('recent');
 
     const handleRecentOrSearch = (newOne: RecentOrSearch) => {
         setRecentOrSearch(newOne);
     };
 
-    const itemRenderOption = (props: React.HTMLAttributes<HTMLLIElement>, option: Part) => (
+    const itemRenderOption = (props: React.HTMLAttributes<HTMLLIElement>, option: Item) => (
         <Box component="li" sx={{ '& > svg': { mr: 2, flexShrink: 0 } }} {...props}>
             {recentOrSearch == 'search' && <SearchIcon fontSize="small" />}
             {recentOrSearch == 'recent' && <HistoryIcon fontSize="small" />}
@@ -89,16 +89,16 @@ const NewMobilization = () => {
         </Box>
     );
 
-    const ItemsSearch = (option: Part, value: Part) => option.itemId === value.itemId;
-    const getOptionLabelItems = (option: Part) => option.itemId;
+    const ItemsSearch = (option: Item, value: Item) => option.itemId === value.itemId;
+    const getOptionLabelItems = (option: Item) => option.itemId;
 
-    const TopPartCard = (
+    const TopItemCard = (
         <CardWrapper
-            onClick={() => navigate(`/part/soemeid`)}
+            onClick={() => navigate(`/item/soemeid`)}
             firstChild={
                 <StyledUl>
-                    <CardWrapperList id={'Item-ID'} text={dummyPart1.itemId} />
-                    <CardWrapperList id={'Item name'} text={dummyPart1.name} />
+                    <CardWrapperList id={'Item-ID'} text={dummyItem1.itemId} />
+                    <CardWrapperList id={'Item name'} text={dummyItem1.name} />
                 </StyledUl>
             }
             secondChild={
@@ -114,15 +114,15 @@ const NewMobilization = () => {
         />
     );
 
-    const SubPartCardList = mockParts.map((part, index) => {
+    const SubItemCardList = mockItems.map((item, index) => {
         return (
             <ListItemButton key={index}>
                 <CardWrapper
-                    onClick={() => navigate(`/part/someotherid`)}
+                    onClick={() => navigate(`/item/someotherid`)}
                     firstChild={
                         <StyledUl>
-                            <CardWrapperList id={'Item-ID'} text={part.itemId} />
-                            <CardWrapperList id={'Item name'} text={part.name} />
+                            <CardWrapperList id={'Item-ID'} text={item.itemId} />
+                            <CardWrapperList id={'Item name'} text={item.name} />
                         </StyledUl>
                     }
                     secondChild={
@@ -135,18 +135,18 @@ const NewMobilization = () => {
         );
     });
 
-    const partCardWithPartCards: { topCard: JSX.Element; subCards: JSX.Element[] }[] = [
+    const itemCardWithItemCards: { topCard: JSX.Element; subCards: JSX.Element[] }[] = [
         {
-            topCard: TopPartCard,
-            subCards: SubPartCardList,
+            topCard: TopItemCard,
+            subCards: SubItemCardList,
         },
         {
-            topCard: TopPartCard,
-            subCards: SubPartCardList,
+            topCard: TopItemCard,
+            subCards: SubItemCardList,
         },
         {
-            topCard: TopPartCard,
-            subCards: SubPartCardList,
+            topCard: TopItemCard,
+            subCards: SubItemCardList,
         },
     ];
     return (
@@ -180,7 +180,7 @@ const NewMobilization = () => {
                         size="small"
                     ></TextField>
                     <TextField
-                        label={'Costumer'}
+                        label={'Customer'}
                         variant={'filled'}
                         color="primary"
                         type="text"
@@ -199,7 +199,7 @@ const NewMobilization = () => {
             <Box>
                 <Typography variant="h4">Add units, assemblies or items</Typography>
                 <SearchAutoComplete
-                    initOption={mockParts}
+                    initOption={mockItems}
                     searchOptions={itemsOptions}
                     setOptions={setItemsOptions}
                     getOptionLabel={getOptionLabelItems}
@@ -212,7 +212,7 @@ const NewMobilization = () => {
                 />
             </Box>
             <NestedList
-                somethingHere={partCardWithPartCards}
+                somethingHere={itemCardWithItemCards}
                 allExpanded={false}
                 changeExpand={() => {}}
             />

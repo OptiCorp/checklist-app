@@ -18,8 +18,8 @@ import { Login } from './pages/Login/Login';
 import RootLayout from './pages/RootLayout';
 import MobDemobPage from './pages/mobDeMob/MobDemobPage';
 import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
-import ChecklistTemplateDetailsPage from './pages/part/ChecklistTemplateDetailsPage';
-import PartDetailsPage from './pages/part/PartDetailsPage';
+import ChecklistTemplateDetailsPage from './pages/item/ChecklistTemplateDetailsPage';
+import ItemDetailsPage from './pages/item/ItemDetailsPage';
 import PunchDetailsPage from './pages/punch/PunchDetails/PunchDetailsPage';
 import PunchesPage from './pages/punch/Punches/PunchesPage';
 import { queryClient } from './tanstackQuery';
@@ -41,7 +41,7 @@ const router = createBrowserRouter(
                 element={<PunchDetailsPage />}
                 path="checklist/:checklistItemId/:punchId"
             ></Route>
-            <Route element={<PartDetailsPage />} path="part/:id"></Route>
+            <Route element={<ItemDetailsPage />} path="item/:id"></Route>
             <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
         </Route>
     )

@@ -1,8 +1,8 @@
 import PunchesMain from '../../../components/Punch/Punches/PunchesMain';
 import PunchesPageHeader from '../../../components/Punch/Punches/PunchesPageHeader';
-import { Part, Punch } from '../../../utils/types';
+import { Item, Punch } from '../../../utils/types';
 
-const dummyPart: Part = {
+const dummyItem: Item = {
     type: 'item',
     itemId: 'alsk-as9as-dk',
     hasChecklistTemplate: true,
@@ -11,10 +11,10 @@ const dummyPart: Part = {
     name: 'Bob2.0',
     id: '42342-42342-12311',
     serialNumber: 'asdlømad',
-    partTemplateId: 'lsk-alsd',
+    itemTemplateId: 'lsk-alsd',
     wpId: 'alk alsd',
     partOf: {
-        partId: '12343-asd-dd-a',
+        itemId: '12343-asd-dd-a',
         type: 'assembly',
     },
 };
@@ -22,13 +22,13 @@ const dummyPart: Part = {
 export type PunchesDetails = {
     sasToken: string;
     punches: Punch[];
-    itemTemplate: Part;
+    itemTemplate: Item;
 };
 
 export type PunchDetails = {
     sasToken: string;
     punch: Punch;
-    itemTemplate: Part;
+    itemTemplate: Item;
 };
 
 const dummyPunches: Punch[] = [
@@ -53,7 +53,7 @@ const dummyPunches: Punch[] = [
 ];
 
 const punches: PunchesDetails = {
-    itemTemplate: dummyPart,
+    itemTemplate: dummyItem,
     punches: dummyPunches,
     sasToken: 'sometokej',
 };
@@ -65,7 +65,7 @@ const PunchesPage = () => {
                 title="Punches"
                 checklistItemId="123-1231-3"
                 mobilizationId="12312k-asdlada"
-                part={punches.itemTemplate}
+                item={punches.itemTemplate}
             ></PunchesPageHeader>
             <PunchesMain punches={punches.punches} sasToken={punches.sasToken} />
         </>

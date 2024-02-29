@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import ChecklistTemplateDetailsMain from '../../components/Part/ChecklistTemplateDetailsMain';
-import PartTopHeader from '../../components/Part/PartTopHeader';
-import { Part } from '../../utils/types';
+import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
+import ItemTopHeader from '../../components/Item/ItemTopHeader';
+import { Item } from '../../utils/types';
 import { useNavigate } from 'react-router-dom';
 
 export type CreateOrEdit = 'create' | 'edit';
 
-const dummyPart: Part = {
+const dummyItem: Item = {
     itemId: '31232',
     id: 'aslkd-12-lsad-a',
     created: new Date(),
     lastModified: new Date(),
     hasChecklistTemplate: true,
-    name: 'Geir2.0',
-    partTemplateId: '9391293',
+    name: 'Hydraulic Arm',
+    itemTemplateId: '9391293',
     serialNumber: '131233',
     type: 'item',
     wpId: '1231232',
@@ -70,7 +70,7 @@ const ChecklistTemplateDetailsPage = () => {
 
     return (
         <>
-            <PartTopHeader part={dummyPart}></PartTopHeader>
+            <ItemTopHeader item={dummyItem}></ItemTopHeader>
             <ChecklistTemplateDetailsMain
                 createOrEdit="create"
                 textFields={textFields}

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
+import { Box, Button, Divider,Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
@@ -56,10 +56,10 @@ const ChecklistPage = () => {
 
                         <Box>
                             <Box>
-                                <b>part-Id: ølko-as9as-dk</b>
+                                <b>item-Id: ølko-as9as-dk</b>
                             </Box>
                             <Box>
-                                <b>part name: Bolt 2.0</b>
+                                <b>item name: Bolt 2.0</b>
                             </Box>
                         </Box>
                     </Grid>
