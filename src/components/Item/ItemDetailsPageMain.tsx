@@ -1,11 +1,11 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { PartChecklists, Punch } from '../../utils/types';
+import { ItemChecklists, Punch } from '../../utils/types';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../UI/CardWrapperList';
 import SearchInput from '../UI/SearchInput';
 
-//TODO: get input search field and list checklistTemplates to see history for the part.
+//TODO: get input search field and list checklistTemplates to see history for the item.
 //TODO: when no checklistTemplate, show missing checklistTemplate
 const dummyPunches: Punch[] = [
     {
@@ -28,7 +28,7 @@ const dummyPunches: Punch[] = [
     },
 ];
 
-const mockChecklistParts: PartChecklists[] = [
+const mockChecklistItems: ItemChecklists[] = [
     {
         created: new Date(),
         id: 'asldas-dklskd1-dasd-sald',
@@ -45,10 +45,10 @@ const mockChecklistParts: PartChecklists[] = [
     },
 ];
 
-const PartDetailsPageMain = () => {
+const ItemDetailsPageMain = () => {
     const navigate = useNavigate();
 
-    const checklistElements = mockChecklistParts.map((pc) => {
+    const checklistElements = mockChecklistItems.map((pc) => {
         return (
             <CardWrapper
                 key={pc.id}
@@ -79,4 +79,4 @@ const PartDetailsPageMain = () => {
     );
 };
 
-export default PartDetailsPageMain;
+export default ItemDetailsPageMain;

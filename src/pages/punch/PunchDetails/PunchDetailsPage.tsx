@@ -1,7 +1,7 @@
 import React from 'react';
 import { PunchDetailsHeader } from '../../../components/Punch/PunchDetails/PunchDetailsHeader';
 import PunchDetailsMain from '../../../components/Punch/PunchDetails/PunchDetailsMain';
-import { Part, Punch } from '../../../utils/types';
+import { Item, Punch } from '../../../utils/types';
 import { PunchDetails } from '../Punches/PunchesPage';
 
 const dummyPunch: Punch = {
@@ -18,7 +18,7 @@ const dummyPunch: Punch = {
     ],
 };
 
-const dummyPart: Part = {
+const dummyItem: Item = {
     type: 'item',
     itemId: 'alsk-as9as-dk',
     hasChecklistTemplate: true,
@@ -27,17 +27,17 @@ const dummyPart: Part = {
     name: 'Bob2.0',
     id: '42342-42342-12311',
     serialNumber: 'asdlømad',
-    partTemplateId: 'lsk-alsd',
+    itemTemplateId: 'lsk-alsd',
     wpId: 'alk alsd',
     partOf: {
-        partId: '12343-asd-dd-a',
+        itemId: '12343-asd-dd-a',
         type: 'assembly',
     },
 };
 
 const dummyPunchDetails: PunchDetails = {
     sasToken: '',
-    itemTemplate: dummyPart,
+    itemTemplate: dummyItem,
     punch: dummyPunch,
 };
 

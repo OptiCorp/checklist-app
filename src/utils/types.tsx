@@ -1,4 +1,4 @@
-export type PartType = 'item' | 'subAssembly' | 'assembly' | 'unit';
+export type ItemType = 'item' | 'subAssembly' | 'assembly' | 'unit';
 
 export type BaseEntities = {
     id: string;
@@ -9,17 +9,17 @@ export type BaseEntities = {
 };
 
 export type PartOf = {
-    partId: string;
-    type: PartType;
+    itemId: string;
+    type: ItemType;
 };
 
-export interface Part extends BaseEntities {
+export interface Item extends BaseEntities {
     itemId: string;
-    type: PartType;
+    type: ItemType;
     wpId: string;
     serialNumber: string;
     name: string;
-    partTemplateId: string;
+    itemTemplateId: string;
     hasChecklistTemplate: boolean;
     partOf?: PartOf;
 }
@@ -31,7 +31,7 @@ export interface Punch extends BaseEntities {
     imagUrls: string[];
 }
 
-export interface PartChecklists extends BaseEntities {
+export interface ItemChecklists extends BaseEntities {
     PartOfMobId: string;
     Punches: Punch[];
 }
@@ -40,8 +40,8 @@ export type MobilizationStatus = 'NotReady' | 'Ready' | 'Completed' | 'Started';
 
 export interface Mobilization extends BaseEntities {
     status: MobilizationStatus;
-    partsCount: number;
+    itemsCount: number;
     checklistCountDone: number;
     checklistCount: number;
-    costumer: string;
+    customer: string;
 }

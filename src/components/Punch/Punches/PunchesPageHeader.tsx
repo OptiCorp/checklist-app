@@ -1,14 +1,14 @@
 import { Box, Grid, Typography } from '@mui/material';
-import { Part } from '../../../utils/types';
+import { Item } from '../../../utils/types';
 
 interface Props {
     title: string;
-    part: Part;
+    item: Item;
     checklistItemId: string;
     mobilizationId: string;
 }
 
-const PunchesPageHeader = ({ part, title, checklistItemId, mobilizationId }: Props) => {
+const PunchesPageHeader = ({ item: item, title, checklistItemId, mobilizationId }: Props) => {
     return (
         <Box>
             <Typography variant="h4">{title.toUpperCase()}</Typography>
@@ -17,13 +17,13 @@ const PunchesPageHeader = ({ part, title, checklistItemId, mobilizationId }: Pro
                     {/* <Typography variant="body1"> */}
 
                     <Box>
-                        <b>part-Id</b>: {part.id}
+                        <b>item-Id</b>: {item.id}
                     </Box>
                     <Box>
-                        <b>part name</b>: {part.name}
+                        <b>item name</b>: {item.name}
                     </Box>
                     <Box>
-                        <b>part type</b>: {part.type.toUpperCase()}
+                        <b>item type</b>: {item.type.toUpperCase()}
                     </Box>
                     <Box>
                         <b>Checklist-Id</b>: {checklistItemId}
@@ -39,9 +39,9 @@ const PunchesPageHeader = ({ part, title, checklistItemId, mobilizationId }: Pro
                         <b>Part Of</b>:
                     </Box>
                     <Box>
-                        <b>{part.partOf?.type.toUpperCase()}</b>
+                        <b>{item.partOf?.type.toUpperCase()}</b>
                     </Box>
-                    <Box>{part.partOf?.partId}</Box>
+                    <Box>{item.partOf?.itemId}</Box>
                 </Grid>
             </Grid>
         </Box>

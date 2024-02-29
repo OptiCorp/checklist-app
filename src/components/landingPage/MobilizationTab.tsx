@@ -20,8 +20,8 @@ const mockMobilizations: Mobilization[] = [
         id: 'da-sada-sdlasmd',
         created: new Date(),
         lastModified: new Date(),
-        costumer: 'Equinor',
-        partsCount: 3,
+        customer: 'Equinor',
+        itemsCount: 3,
         checklistCount: 14,
         status: 'Ready',
         checklistCountDone: 0,
@@ -30,8 +30,8 @@ const mockMobilizations: Mobilization[] = [
         id: 'fgh-ddas-asdaww',
         created: new Date(),
         lastModified: new Date(),
-        costumer: 'Equinor',
-        partsCount: 22,
+        customer: 'Equinor',
+        itemsCount: 22,
         checklistCount: 22,
         status: 'Completed',
         checklistCountDone: 22,
@@ -40,8 +40,8 @@ const mockMobilizations: Mobilization[] = [
         id: 'wer-sada-sdlasmd',
         created: new Date(),
         lastModified: new Date(),
-        costumer: 'Equinor',
-        partsCount: 14,
+        customer: 'Equinor',
+        itemsCount: 14,
         checklistCount: 14,
         status: 'NotReady',
         checklistCountDone: 0,
@@ -50,8 +50,8 @@ const mockMobilizations: Mobilization[] = [
         id: 'aos-wqiueq-qppsla',
         created: new Date(),
         lastModified: new Date(),
-        costumer: 'Equinor',
-        partsCount: 14,
+        customer: 'Equinor',
+        itemsCount: 14,
         checklistCount: 14,
         status: 'Started',
         checklistCountDone: 0,
@@ -104,7 +104,7 @@ const MobilizationTab = () => {
                                 }
                                 secondChild={
                                     <StyledUl>
-                                        <CardWrapperList id={'Costumer'} text={mob.costumer} />
+                                        <CardWrapperList id={'Customer'} text={mob.customer} />
                                     </StyledUl>
                                 }
                                 borderColor={GetCardBorderColor(mob.status)}

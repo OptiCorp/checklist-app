@@ -1,26 +1,24 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
-import { Part } from '../../utils/types';
-import { useNavigate } from 'react-router-dom';
+import { Box, Grid, Typography } from '@mui/material';
+import { Item } from '../../utils/types';
 
 interface Props {
-    part: Part;
+    item: Item;
     children?: JSX.Element;
 }
 
-const PartTopHeader = ({ part, children }: Props) => {
-    const navigate = useNavigate();
+const ItemTopHeader = ({ item: item, children }: Props) => {
     return (
         <Box marginTop={'2rem'}>
             <Grid container>
                 <Grid item flexGrow={1}>
-                    <Typography variant="h4">{part.type.toUpperCase()}</Typography>
+                    <Typography variant="h4">{item.type.toUpperCase()}</Typography>
                     {/* <Typography variant="body1"> */}
                     <Box>
                         <Box>
-                            <b>part-Id</b>: {part.id}
+                            <b>item-Id</b>: {item.id}
                         </Box>
                         <Box>
-                            <b>part name</b>: {part.name}
+                            <b>item name</b>: {item.name}
                         </Box>
                     </Box>
                     {/* </Typography> */}
@@ -31,4 +29,4 @@ const PartTopHeader = ({ part, children }: Props) => {
     );
 };
 
-export default PartTopHeader;
+export default ItemTopHeader;
