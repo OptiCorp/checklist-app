@@ -37,11 +37,23 @@ export interface ItemChecklists extends BaseEntities {
 }
 
 export type MobilizationStatus = 'NotReady' | 'Ready' | 'Completed' | 'Started';
+type MobilizationType = 'Mobilization' | 'Demobilization';
 
 export interface Mobilization extends BaseEntities {
     status: MobilizationStatus;
-    itemsCount: number;
+    itemsCount?: number;
+    type: MobilizationType;
     checklistCountDone: number;
     checklistCount: number;
-    customer: string;
+    title: string;
+    customer?: string;
+}
+
+export interface PaginatedList<T> {
+    items: T[];
+    pageNumber: number;
+    pageSize: number;
+    totalCount: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
 }

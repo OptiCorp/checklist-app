@@ -3,7 +3,6 @@ import { Dispatch, createContext } from 'react';
 export class DynamicBreadcrumbNameMap {
     private map: Record<string, string> = {};
 
-
     constructor() {
         // Initialize with any default entries if needed
         this.addEntry('/inbox', 'Inbox');

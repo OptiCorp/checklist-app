@@ -17,24 +17,11 @@ export type RecentOrSearch = 'recent' | 'search';
 
 const OverViewTabs = () => {
     const [value, setValue] = React.useState<Tabs>('Mob');
-    const [inputSearch, setInputSearch] = useState('');
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: Tabs) => {
         console.log(event);
         setValue(newValue);
     };
-
-    const debouncedSearch = React.useRef(
-        debounce((criteria: string) => {
-            setInputSearch(criteria);
-        }, 300)
-    ).current;
-
-    function handleSearchChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        debouncedSearch(e.target.value);
-    }
-
-    console.log(inputSearch);
 
     return (
         <>
@@ -50,13 +37,6 @@ const OverViewTabs = () => {
                     <Tab value="DeMob" label="DeMob" />
                     <Tab value="Items" label="Items" />
                 </Tabs>
-            </Box>
-            <Box sx={{ mt: 5 }}>
-                <SearchInput
-                    loading={false}
-                    placeHolder="Search: id, name"
-                    onChange={handleSearchChange}
-                ></SearchInput>
             </Box>
             <Box sx={{ mt: 5 }}>
                 {value == 'Mob' && <MobilizationTab></MobilizationTab>}
