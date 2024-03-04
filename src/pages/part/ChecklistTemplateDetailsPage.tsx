@@ -12,7 +12,7 @@ const dummyPart: Part = {
     created: new Date(),
     lastModified: new Date(),
     hasChecklistTemplate: true,
-    name: 'Geir2.0',
+    name: 'Hexa Bolt',
     partTemplateId: '9391293',
     serialNumber: '131233',
     type: 'item',

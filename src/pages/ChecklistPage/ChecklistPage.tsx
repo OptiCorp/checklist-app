@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
 
-
 const ChecklistPage = () => {
     const navigate = useNavigate();
 
@@ -36,7 +35,7 @@ const ChecklistPage = () => {
 
     return (
         <>
-            <Box sx={{ mt: 5 }}>
+            <Box>
                 <Grid container>
                     <Grid item flexGrow={1}>
                         <Typography variant="h4">Checklist</Typography>
@@ -67,14 +66,8 @@ const ChecklistPage = () => {
                 </Grid>
             </Box>
 
-            <Box sx={{ paddingTop: '4rem' }}>
-                <Grid
-                    component={'li'}
-                    container
-                    wrap="nowrap"
-                    paddingTop={'2rem'}
-                    paddingLeft={'5px'}
-                >
+            <Box sx={{ mt: '2rem' }}>
+                <Grid component={'li'} container wrap="nowrap" paddingLeft={'5px'}>
                     <Grid item xs={1}>
                         <Typography component="p">
                             <b>#</b>

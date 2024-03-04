@@ -136,6 +136,7 @@ const NewMobilization = () => {
                 <StyledUl>
                     <CardWrapperList id={'Item-ID'} text={dummyPart1.itemId} />
                     <CardWrapperList id={'Item name'} text={dummyPart1.name} />
+                    <CardWrapperList id={'type'} text={dummyPart1.type} />
                 </StyledUl>
             }
             secondChild={
@@ -160,6 +161,7 @@ const NewMobilization = () => {
                         <StyledUl>
                             <CardWrapperList id={'Item-ID'} text={part.itemId} />
                             <CardWrapperList id={'Item name'} text={part.name} />
+                            <CardWrapperList id={'type'} text={part.type} />
                         </StyledUl>
                     }
                     secondChild={

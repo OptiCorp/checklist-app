@@ -22,7 +22,7 @@ const mockMobilizations: Mobilization[] = [
         lastModified: new Date(),
         costumer: 'Equinor',
         partsCount: 3,
-        checklistCount: 14,
+        checklistCount: 9,
         status: 'Ready',
         checklistCountDone: 0,
     },

@@ -31,7 +31,7 @@ const dummyPunches: Punch[] = [
 const mockChecklistParts: PartChecklists[] = [
     {
         created: new Date(),
-        id: 'asldas-dklskd1-dasd-sald',
+        id: '42342-42342-12311',
         PartOfMobId: 'adka-ldaslkd-asd',
         Punches: dummyPunches,
         lastModified: new Date(),

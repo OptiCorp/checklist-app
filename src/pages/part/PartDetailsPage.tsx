@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 
 const dummyPart: Part = {
     itemId: '31232',
-    id: 'aslkd-12-lsad-a',
+    id: '42342-42342-12311',
     created: new Date(),
     lastModified: new Date(),
     hasChecklistTemplate: true,
-    name: 'Geir2.0',
+    name: 'Hexa Bolt',
     partTemplateId: '9391293',
     serialNumber: '131233',
     type: 'item',
