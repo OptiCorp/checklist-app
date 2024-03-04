@@ -17,6 +17,7 @@ const BottomButtons: FC<Props> = ({ children }) => {
         ? ReactDOM.createPortal(
               <Box
                   sx={{
+                      mt: '1rem',
                       display: 'flex',
                       justifyContent: 'flex-end',
                       gap: '1rem',
