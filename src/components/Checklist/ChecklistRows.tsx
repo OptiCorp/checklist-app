@@ -1,58 +1,62 @@
-import { Grid, Typography, Switch, Box, Checkbox } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Checkbox, Grid, Switch, Typography } from '@mui/material';
+import React from 'react';
+import { completeType } from '../../pages/ChecklistPage/ChecklistPage';
 
 type taskType = {
     taskText: string;
     taskNumber: number;
-    onCompletionChange: (isChecked: boolean) => void;
+    onCompletionChange: (isChecked: boolean, type: completeType) => void;
+    checked: boolean;
+    notApplicable: boolean;
+    overrideDisabled: boolean;
 };
 
-const ChecklistRows: React.FC<taskType> = ({ taskText, taskNumber, onCompletionChange }) => {
+const ChecklistRows: React.FC<taskType> = ({
+    taskText,
+    taskNumber,
+    onCompletionChange,
+    checked,
+    notApplicable,
+    overrideDisabled,
+}) => {
     const switchlabel = { inputProps: { 'aria-label': 'Switch' } };
     const checkboxlabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
-    const [disabledToggle, setDisabledToggle] = useState(false);
-    const [disabledCheckbox, setDisabledCheckbox] = useState(false);
-
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const isChecked = event.target.checked;
-        setDisabledToggle(isChecked);
-        if (isChecked) {
-            setDisabledCheckbox(true);
-        }
-        onCompletionChange(isChecked);
+        onCompletionChange(isChecked, 'na');
     };
 
-    const handleSCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const isChecked = event.target.checked;
-        setDisabledCheckbox(isChecked);
-        if (isChecked) {
-            setDisabledToggle(true);
-        }
-        onCompletionChange(isChecked);
+        onCompletionChange(isChecked, 'check');
     };
 
+    console.log(overrideDisabled);
     return (
-        <Grid component={'li'} container wrap="nowrap" paddingTop={'2rem'} paddingLeft={'5px'}>
-            <Grid item xs={1} sx={{ paddingTop: '8px' }}>
+        <Grid container wrap="nowrap" alignItems={'center'} marginTop={'1rem'}>
+            <Grid item xs={1}>
                 <Typography component="p">{taskNumber + 1}</Typography>
             </Grid>
-            <Grid item xs={3} sx={{ paddingLeft: '12px' }}>
-                <Switch {...switchlabel} disabled={disabledToggle} onChange={handleSwitchChange} />
+            <Grid item xs={2}>
+                <Switch
+                    {...switchlabel}
+                    disabled={checked || overrideDisabled}
+                    onChange={handleSwitchChange}
+                    checked={notApplicable}
+                />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={8}>
                 <Box>
-                    {' '}
-                    <Typography component={'p'} sx={{ paddingBottom: '25px' }}>
-                        {taskText}
-                    </Typography>
+                    <Typography component={'p'}>{taskText}</Typography>
                 </Box>
             </Grid>
-            <Grid item xs={3} sx={{ paddingRight: '5px' }}>
+            <Grid item xs={1}>
                 <Checkbox
                     {...checkboxlabel}
-                    disabled={disabledCheckbox}
-                    onChange={handleSCheckboxChange}
+                    disabled={notApplicable || overrideDisabled}
+                    onChange={handleCheckboxChange}
+                    checked={checked}
                     sx={{ float: 'right' }}
                 />
             </Grid>

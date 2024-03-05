@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Mobilization, PaginatedList } from './utils/types';
+import { Checklist, Mobilization, PaginatedList } from './utils/types';
 
 export const axiosClient = axios.create({
     baseURL: 'https://localhost:7040/api/',
@@ -15,6 +15,13 @@ export async function getFromChecklistApi<T>(
         signal: signal,
     });
 }
+
+// export async function post<T>(url: string): Promise<AxiosResponse<T>> {
+//     return axiosClient<null, AxiosResponse<T>>({
+//         url: url,
+//         method: 'POST',
+//     });
+// }
 
 export const getAllMobilizations = async ({
     pageNumber,
@@ -44,6 +51,21 @@ export const searchAllMobilizations = async ({
 }) => {
     return getFromChecklistApi<PaginatedList<Mobilization>>(
         `Mobilizations/GetBySearch?title=${title}&PageNumber=${pageNumber}&PageSize=${pageSize}`,
+        signal
+    );
+};
+
+export const getSingleChecklist = async ({
+    signal,
+    mobilizationId,
+    checklistId,
+}: {
+    signal: AbortSignal;
+    mobilizationId: string;
+    checklistId: string;
+}) => {
+    return getFromChecklistApi<Checklist>(
+        `Mobilizations/${mobilizationId}/GetChecklist/${checklistId}`,
         signal
     );
 };

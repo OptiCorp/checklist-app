@@ -1,139 +1,218 @@
-import { Box, Button, Divider,Grid, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Button } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { axiosClient, getSingleChecklist } from '../../api';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
+import ChecklistHeader from '../../components/Checklist/ChecklistHeader';
+import ChecklistHeaderLoading from '../../components/Checklist/ChecklistHeaderLoading';
+import ChecklistTableHeader from '../../components/Checklist/ChecklistTableHeader';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
-import { useState } from 'react';
+import { queryClient } from '../../tanstackQuery';
+import { Checklist, ChecklistStatus } from '../../utils/types';
+
+export type completeType = 'check' | 'na';
 
 const ChecklistPage = () => {
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const paths = pathname.split('/');
+    const mobilizationId = paths[1];
+    const checklistId = paths[3];
 
-    // const mockChecklist: string[] = [
-    //     'The part is the correct size and type for its intended use.',
-    //     'The part is free from cracks or fractures.',
-    //     'The part fits correctly in its designated place.',
-    //     'The part is not deformed or bent.',
-    //     'The part is clean and free from dirt or debris.',
-    //     "The part's surface finish meets the required specifications.",
-    //     "The part's edges are smooth and free from burrs.",
-    //     "The part's installation does not impede the function of adjacent parts.",
-    //     'The part is secure and does not move when force is applied.',
-    //     "The part's markings (if any) are clear and correct.",
-    //     'The part does not show signs of excessive wear or tear.',
-    //     "The part's temperature is within the acceptable range during operation.",
-    //     "The part's weight is within the acceptable range.",
-    //     "The part's color (if applicable) is consistent and correct.",
-    //     "The part's material is appropriate for its function and environment.",
-    //     "The part's electrical conductivity (if applicable) is within the acceptable range.",
-    // ];
+    const { data: checklistData, isPending: checklistDataPending } = useQuery({
+        queryKey: ['checklist', mobilizationId, checklistId],
+        queryFn: async ({ signal }) =>
+            getSingleChecklist({ signal, mobilizationId, checklistId }).then((res) => res.data),
+    });
 
-    const mockChecklist: string[] = [
-        'The part is the correct size and type for its intended use.',
-        'The part is free from cracks or fractures.',
-        'The part fits correctly in its designated place.',
-        'The part is not deformed or bent.',
-        'The part is clean and free from dirt or debris.',
-    ];
+    const { mutate: checkMutate, isPending: checkIsPending } = useMutation({
+        mutationFn: ({ questionId, value }: { questionId: string; value: boolean }) => {
+            return axiosClient.post(
+                `mobilizations/${mobilizationId}/ChecklistQuestionCheckedUpdate/${questionId}/${value}`
+            );
+        },
+        onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {
+            await queryClient.cancelQueries({
+                queryKey: ['checklist', mobilizationId, checklistId],
+            });
 
-    const [taskCompletionStatus, setTaskCompletionStatus] = useState<boolean[]>(
-        Array(mockChecklist.length).fill(false)
-    );
+            const previousChecklist = queryClient.getQueryData<Checklist>([
+                'checklist',
+                mobilizationId,
+                checklistId,
+            ]);
 
-    const handleTaskCompletion = (index: number, isCompleted: boolean) => {
-        const newTaskCompletionStatus = [...taskCompletionStatus];
-        newTaskCompletionStatus[index] = isCompleted;
-        setTaskCompletionStatus(newTaskCompletionStatus);
+            //optimistically update to new value
+            const { questions } = { ...previousChecklist };
+
+            const q = questions?.find((c) => c.id == questionId);
+            if (q) q.checked = value;
+
+            queryClient.setQueryData<Checklist>(
+                ['checklist', mobilizationId, checklistId],
+                (old) => (old ? { ...old, questions: questions ?? [] } : undefined)
+            );
+
+            return { previousChecklist };
+        },
+        onError: (err, some, context) => {
+            queryClient.setQueryData(
+                ['checklist', mobilizationId, checklistId],
+                context?.previousChecklist
+            );
+        },
+        onSettled: async () => {
+            return await queryClient.invalidateQueries({
+                queryKey: ['checklist', mobilizationId, checklistId],
+            });
+        },
+    });
+
+    const { mutate: naMutate, isPending: naIsPending } = useMutation({
+        mutationFn: ({ questionId, value }: { questionId: string; value: boolean }) => {
+            return axiosClient.post(
+                `mobilizations/${mobilizationId}/ChecklistQuestionNotApplicableUpdate/${questionId}/${value}`
+            );
+        },
+        onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {
+            await queryClient.cancelQueries({
+                queryKey: ['checklist', mobilizationId, checklistId],
+            });
+
+            const previousChecklist = queryClient.getQueryData<Checklist>([
+                'checklist',
+                mobilizationId,
+                checklistId,
+            ]);
+
+            const { questions } = { ...previousChecklist };
+            const q = questions?.find((c) => c.id == questionId);
+            if (q) q.notApplicable = value;
+
+            queryClient.setQueryData<Checklist>(
+                ['checklist', mobilizationId, checklistId],
+                (old) => (old ? { ...old, questions: questions ?? [] } : undefined)
+            );
+
+            return { previousChecklist };
+        },
+        onError: (err, some, context) => {
+            queryClient.setQueryData(
+                ['checklist', mobilizationId, checklistId],
+                context?.previousChecklist
+            );
+        },
+        onSettled: async () => {
+            return await queryClient.invalidateQueries({
+                queryKey: ['checklist', mobilizationId, checklistId],
+            });
+        },
+    });
+
+    const { mutate: statusMutate, isPending: statusIsPending } = useMutation({
+        mutationFn: ({ checklistId, status }: { checklistId: string; status: ChecklistStatus }) => {
+            return axiosClient.put(
+                `mobilizations/${mobilizationId}/ChecklistStatus/${checklistId}/${status}`
+            );
+        },
+        onMutate: async ({
+            checklistId,
+            status,
+        }: {
+            checklistId: string;
+            status: ChecklistStatus;
+        }) => {
+            await queryClient.cancelQueries({
+                queryKey: ['checklist', mobilizationId, checklistId],
+            });
+
+            const previousChecklist = queryClient.getQueryData<Checklist>([
+                'checklist',
+                mobilizationId,
+                checklistId,
+            ]);
+
+            queryClient.setQueryData<Checklist>([mobilizationId, checklistId], (old) =>
+                old ? { ...old, status: status } : undefined
+            );
+
+            return { previousChecklist };
+        },
+        onError: (err, some, context) => {
+            queryClient.setQueryData(
+                ['checklist', mobilizationId, checklistId],
+                context?.previousChecklist
+            );
+        },
+        onSettled: async () => {
+            return await queryClient.invalidateQueries({
+                queryKey: ['checklist', mobilizationId, checklistId],
+            });
+        },
+    });
+
+    const handleTaskCompletion = (questionId: string, isCompleted: boolean, type: completeType) => {
+        if (type == 'check') {
+            checkMutate({ questionId: questionId, value: isCompleted });
+        } else if (type == 'na') {
+            naMutate({ questionId: questionId, value: isCompleted });
+        }
     };
 
-    const allTasksCompleted = taskCompletionStatus.every((status) => status);
+    const updateChecklistStatus = (status: ChecklistStatus) => {
+        statusMutate({ checklistId, status });
+    };
 
+    const pending = checklistDataPending || naIsPending || checkIsPending;
+    const allQuestionsMarked = checklistData?.questions.every((q) => q.checked || q.notApplicable);
+
+    const isCompleted = checklistData ? checklistData.status === ChecklistStatus.Completed : false;
     return (
         <>
-            <Box sx={{ mt: 5 }}>
-                <Grid container>
-                    <Grid item flexGrow={1}>
-                        <Typography variant="h4">Checklist</Typography>
-                        {/* <Typography variant="body1"> */}
-
-                        <Box>
-                            <Box>
-                                <b>item-Id: ølko-as9as-dk</b>
-                            </Box>
-                            <Box>
-                                <b>item name: Bolt 2.0</b>
-                            </Box>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </Box>
-
-            <Box sx={{ paddingTop: '4rem' }}>
-                <Grid
-                    component={'li'}
-                    container
-                    wrap="nowrap"
-                    paddingTop={'2rem'}
-                    paddingLeft={'5px'}
-                >
-                    <Grid item xs={1}>
-                        <Typography component="p">
-                            <b>#</b>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={3} sx={{ paddingLeft: '25px' }}>
-                        <Typography component="p">
-                            {' '}
-                            <b>N/A</b>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={5}>
-                        <Typography component="p">
-                            {' '}
-                            <b>Task</b>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={3} sx={{ paddingRight: '10px' }}>
-                        <Typography component="p" sx={{ float: 'right' }}>
-                            <b>Check</b>
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <Divider
-                    orientation="horizontal"
-                    sx={{
-                        width: '100%',
-
-                        borderColor: ['#7B8287'],
-                    }}
-                />
+            {checklistData && !checklistDataPending && (
+                <ChecklistHeader
+                    id={checklistData.id}
+                    itemId={checklistData.itemId}
+                    punchCount={checklistData.punchesCount}
+                    status={ChecklistStatus[checklistData.status]}
+                ></ChecklistHeader>
+            )}
+            {checklistDataPending && <ChecklistHeaderLoading />}
+            <ChecklistTableHeader />
+            <Box>
+                {checklistData && (
+                    <ChecklistTaskList
+                        allDisabled={isCompleted}
+                        isLoading={checklistDataPending}
+                        tasks={checklistData.questions}
+                        onTaskCompletion={handleTaskCompletion}
+                    />
+                )}
             </Box>
             <Box>
-                <ChecklistTaskList tasks={mockChecklist} onTaskCompletion={handleTaskCompletion} />
-            </Box>
-            <Box paddingTop={'25px'}>
-                <Button
-                    variant="outlined"
-                    onClick={() => navigate('/')}
-                    sx={{
-                        background: 'white',
-                        color: 'red',
-                        borderColor: 'red',
-                        borderWidth: '1px',
-                    }}
-                >
-                    Add punch
-                </Button>
+                {!checklistDataPending && (
+                    <Button variant="outlined" onClick={() => navigate('/')} color="secondary">
+                        Add punch
+                    </Button>
+                )}
             </Box>
             <BottomButtons>
-                <Button variant="outlined" onClick={() => navigate('/')}>
+                <Button variant="outlined" onClick={() => navigate(-1)}>
                     Back
                 </Button>
-                <Button
+                <LoadingButton
+                    loading={statusIsPending}
                     variant="contained"
-                    onClick={() => navigate('/')}
-                    disabled={!allTasksCompleted}
+                    onClick={() =>
+                        !isCompleted
+                            ? updateChecklistStatus(ChecklistStatus.Completed)
+                            : updateChecklistStatus(ChecklistStatus.InProgress)
+                    }
+                    disabled={pending || !allQuestionsMarked}
                 >
-                    Mark as complete
-                </Button>
+                    {!isCompleted ? 'Mark as complete' : 'Mark as inprogress'}
+                </LoadingButton>
             </BottomButtons>
         </>
     );

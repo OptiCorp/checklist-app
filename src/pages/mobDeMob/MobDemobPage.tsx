@@ -25,6 +25,7 @@ const dummyItem1: Item = {
     id: '42342-42342-12311',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
+    checklistId: '4a86b51e-05aa-42c4-d930-08dc39ed4402',
     wpId: 'alk alsd',
     partOf: {
         itemId: '12343-asd-dd-a',
@@ -38,6 +39,7 @@ const dummyItem2: Item = {
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
+    checklistId: 'fd1abfc8-e49e-4799-d931-08dc39ed4402',
     name: 'Bolt2.0',
     id: 'asdonal-asdlma-das',
     serialNumber: 'asuiabs-daisd-adas',
@@ -58,6 +60,7 @@ const dummyItem3: Item = {
     name: 'Bolt2.0',
     id: 'lkdf-asjdb-sdi3',
     serialNumber: 'qwoie-qweiqna-kasnda',
+    checklistId: 'aa5fb6ec-9156-4c99-d932-08dc39ed4402',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
     partOf: {
@@ -108,7 +111,7 @@ const MobDemobPage = () => {
                         <IconButton
                             onClick={(e) =>
                                 handleChecklistClick(e, () =>
-                                    navigate(`/checklist/${dummyItem1.itemId}`)
+                                    navigate(`/mobId/checklist/${dummyItem1.checklistId}`)
                                 )
                             }
                             sx={{ color: 'primary.main' }}
@@ -146,7 +149,7 @@ const MobDemobPage = () => {
                                 <IconButton
                                     onClick={(e) =>
                                         handleChecklistClick(e, () =>
-                                            navigate(`/checklist/${item.itemId}`)
+                                            navigate(`/mobId/checklist/${dummyItem1.checklistId}`)
                                         )
                                     }
                                     sx={{ color: 'primary.main' }}
