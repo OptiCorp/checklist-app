@@ -4,7 +4,7 @@ export type BaseEntities = {
     id: string;
     created: Date;
     createdBy?: string;
-    lastModified: Date;
+    lastModified?: Date;
     lastModifiedBy?: string;
 };
 
@@ -21,6 +21,7 @@ export interface Item extends BaseEntities {
     name: string;
     itemTemplateId: string;
     hasChecklistTemplate: boolean;
+    checklistId?: string; //TODO: this should probably not be here later
     partOf?: PartOf;
 }
 
@@ -56,4 +57,26 @@ export interface PaginatedList<T> {
     totalCount: number;
     hasPreviousPage: boolean;
     hasNextPage: boolean;
+}
+
+export interface ChecklistQuestion extends BaseEntities {
+    checked: boolean;
+    notApplicable: boolean;
+    question: string;
+    questionTemplateId: string;
+}
+
+export enum ChecklistStatus {
+    NotStarted,
+    InProgress,
+    Completed,
+}
+
+export interface Checklist extends BaseEntities {
+    itemId: string;
+    itemTemplateId: string;
+    questions: ChecklistQuestion[];
+    punchesCount: number;
+    completionPercent: number;
+    status: ChecklistStatus;
 }
