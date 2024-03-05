@@ -198,7 +198,7 @@ const ChecklistPage = () => {
                 )}
             </Box>
             <BottomButtons>
-                <Button variant="outlined" onClick={() => navigate('/')}>
+                <Button variant="outlined" onClick={() => navigate(-1)}>
                     Back
                 </Button>
                 <LoadingButton
