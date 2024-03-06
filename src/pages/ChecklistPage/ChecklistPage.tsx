@@ -5,11 +5,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { axiosClient, getSingleChecklist } from '../../api';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistHeader from '../../components/Checklist/ChecklistHeader';
-import ChecklistHeaderLoading from '../../components/Checklist/ChecklistHeaderLoading';
+import ChecklistHeaderLoading from '../../components/UI/PageHeaderLoading';
 import ChecklistTableHeader from '../../components/Checklist/ChecklistTableHeader';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
 import { queryClient } from '../../tanstackQuery';
 import { Checklist, ChecklistStatus } from '../../utils/types';
+import PageHeaderLoading from '../../components/UI/PageHeaderLoading';
 
 export type completeType = 'check' | 'na';
 
@@ -178,7 +179,7 @@ const ChecklistPage = () => {
                     status={ChecklistStatus[checklistData.status]}
                 ></ChecklistHeader>
             )}
-            {checklistDataPending && <ChecklistHeaderLoading />}
+            {checklistDataPending && <PageHeaderLoading lines={4} />}
             <ChecklistTableHeader />
             <Box>
                 {checklistData && (
@@ -192,7 +193,11 @@ const ChecklistPage = () => {
             </Box>
             <Box>
                 {!checklistDataPending && (
-                    <Button variant="outlined" onClick={() => navigate('/')} color="secondary">
+                    <Button
+                        variant="outlined"
+                        onClick={() => navigate('/checklist/somechecklistId/punches')}
+                        color="secondary"
+                    >
                         Add punch
                     </Button>
                 )}

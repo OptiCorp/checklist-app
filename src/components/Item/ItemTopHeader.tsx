@@ -8,7 +8,7 @@ interface Props {
 
 const ItemTopHeader = ({ item: item, children }: Props) => {
     return (
-        <Box marginTop={'2rem'}>
+        <Box marginTop={5}>
             <Grid container>
                 <Grid item flexGrow={1}>
                     <Typography variant="h4">{item.type.toUpperCase()}</Typography>

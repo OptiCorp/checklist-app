@@ -42,7 +42,10 @@ const router = createBrowserRouter(
                 path="checklist/:checklistItemId/:punchId"
             ></Route>
             <Route element={<ItemDetailsPage />} path="item/:id"></Route>
-            <Route element={<ChecklistTemplateDetailsPage />} path="checklistTemplate"></Route>
+            <Route
+                element={<ChecklistTemplateDetailsPage />}
+                path=":itemId/checklistTemplate"
+            ></Route>
         </Route>
     )
 );

@@ -1,6 +1,6 @@
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { Box, Button, IconButton, Pagination, Stack } from '@mui/material';
+import { Box, Button, CircularProgress, IconButton, Pagination, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { MouseEvent, useRef, useState } from 'react';
@@ -118,7 +118,7 @@ const MobilizationTab = () => {
         debouncedSearch(inpText);
     }
 
-    const { data: paginatedMobilizations } = useQuery({
+    const { data: paginatedMobilizations, isPending: mobsIsPending } = useQuery({
         queryKey: [
             'mobilizations',
             {
@@ -134,7 +134,7 @@ const MobilizationTab = () => {
             }).then((res) => res.data),
     });
 
-    const { data: paginatedMobsBySearch, isLoading: searchIsLoading } = useQuery({
+    const { data: paginatedMobsBySearch, isLoading: searchIsPending } = useQuery({
         queryKey: [
             'searchMobilizations',
             `${searchMobsInput}`,
@@ -179,7 +179,7 @@ const MobilizationTab = () => {
         <>
             <Box sx={{ mt: 5 }}>
                 <SearchInput
-                    loading={searchIsLoading}
+                    loading={searchIsPending}
                     placeHolder="Search: id, name"
                     onChange={handleSearchChange}
                     clearSearch={handleClearSearch}
@@ -239,7 +239,7 @@ const MobilizationTab = () => {
                         <></>
                     )}
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        {mobsBySearch ? (
+                        {mobilizationSearchInput != '' ? (
                             <Pagination
                                 count={
                                     totalCountMobsBySearch

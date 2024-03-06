@@ -80,3 +80,9 @@ export interface Checklist extends BaseEntities {
     completionPercent: number;
     status: ChecklistStatus;
 }
+
+export interface ItemTemplate {
+    itemId?: string;
+    hasChecklistTemplate: boolean;
+    questions: string[];
+}

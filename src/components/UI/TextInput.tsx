@@ -6,6 +6,8 @@ interface Props {
     placeHolder: string;
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     includeClearIcon: boolean;
+    helperText?: string;
+    error: boolean;
     IconClick?: () => void;
     value?: string;
     rows?: number;
@@ -20,6 +22,8 @@ const TextInput = ({
     includeClearIcon,
     rows,
     disabled,
+    helperText,
+    error,
 }: Props) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -28,8 +32,10 @@ const TextInput = ({
                 placeholder={placeHolder}
                 variant="standard"
                 onChange={onChange}
-                sx={{ bgcolor: '#e0e0e0' }}
+                error={error}
+                // sx={{ bgcolor: '#e0e0e0' }}
                 value={value}
+                helperText={helperText}
                 type="text"
                 rows={rows}
                 maxRows={rows ? undefined : 3}

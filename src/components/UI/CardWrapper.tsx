@@ -47,7 +47,7 @@ const CardWrapper: React.FC<CardWrapperProps> = ({
                         <Divider orientation="vertical" flexItem sx={{ my: 0.7 }} />
                         <Grid item xs={4} p={3}>
                             <Box width={'90%'} margin={'auto'}>
-                                <Typography variant="caption"> {middleChild}</Typography>
+                                <Typography variant="caption">{middleChild}</Typography>
                             </Box>
                         </Grid>
                     </>
