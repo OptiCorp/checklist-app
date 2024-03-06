@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Checklist, Mobilization, PaginatedList } from './utils/types';
+import { Checklist, ItemTemplate, Mobilization, PaginatedList } from './utils/types';
 
 export const axiosClient = axios.create({
     baseURL: 'https://localhost:7040/api/',
@@ -68,4 +68,14 @@ export const getSingleChecklist = async ({
         `Mobilizations/${mobilizationId}/GetChecklist/${checklistId}`,
         signal
     );
+};
+
+export const getItemTemplate = async ({
+    signal,
+    itemId,
+}: {
+    signal: AbortSignal;
+    itemId: string;
+}) => {
+    return getFromChecklistApi<ItemTemplate>(`Templates/${itemId}`, signal);
 };

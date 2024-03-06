@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const dummyItem1: Item = {
     type: 'assembly',
-    itemId: 'alsk-as9as-dk',
+    itemId: 'TnOmHQCW6h',
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
@@ -25,7 +25,7 @@ const dummyItem1: Item = {
 
 const dummyItem2: Item = {
     type: 'assembly',
-    itemId: 'ølko-as9as-dk',
+    itemId: 'TnOmHQCW6h',
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
@@ -42,7 +42,7 @@ const dummyItem2: Item = {
 
 const dummyItem3: Item = {
     type: 'item',
-    itemId: 'poasd-sadl-as9as-drrr',
+    itemId: 'TnOmHQCW6h',
     hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
@@ -96,7 +96,7 @@ const ItemsTab = () => {
                                                 onClick={(e) =>
                                                     handleEditChecklistTemplateClick(
                                                         e,
-                                                        '/checklistTemplate'
+                                                        `${item.itemId}/checklistTemplate`
                                                     )
                                                 }
                                             >
