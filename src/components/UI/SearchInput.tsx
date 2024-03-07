@@ -27,8 +27,8 @@ const SearchInput = ({ loading, placeHolder, onChange, clearSearch, value }: Pro
                             {loading ? <CircularProgress color="inherit" size={20} /> : null}
                             {/* {params.InputProps.endAdornment} */}
                             {value != '' && !loading && (
-                                <IconButton onClick={clearSearch}>
-                                    <ClearIcon />
+                                <IconButton onClick={clearSearch} size={'small'}>
+                                    <ClearIcon fontSize={'inherit'} />
                                 </IconButton>
                             )}
                         </React.Fragment>

@@ -35,7 +35,7 @@ const router = createBrowserRouter(
                 path="mobdemob/:id"
                 errorElement={<ErrorPage />}
             ></Route>
-            <Route element={<ChecklistPage />} path=":mobId/checklist/:checklistItemId"></Route>
+            <Route element={<ChecklistPage />} path=":mobId/checklist/:checklistId"></Route>
             <Route element={<PunchesPage />} path="checklist/:checklistItemId/punches"></Route>
             <Route
                 element={<PunchDetailsPage />}

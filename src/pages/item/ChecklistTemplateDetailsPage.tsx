@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
-import { Checklist, Item, ItemTemplate } from '../../utils/types';
+import { Checklist, HasChecklistTemplateNavigation, Item, ItemTemplate } from '../../utils/types';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { axiosClient, getItemTemplate } from '../../api';
@@ -23,8 +23,8 @@ const dummyItem: Item = {
 };
 
 const ChecklistTemplateDetailsPage = () => {
-    const navigate = useNavigate();
     const { pathname } = useLocation();
+
     const paths = pathname.split('/');
     const itemId = paths[1];
     //const [createOrEdit, setCreateOrEdit] = useState<CreateOrEdit>('create');
@@ -45,10 +45,10 @@ const ChecklistTemplateDetailsPage = () => {
                 helperText: undefined,
             }));
             setTextFields(() => questions);
-        } else {
+        } else if (!itemData && !itemDateIsPending) {
             setTextFields([{ error: false, text: 'create some questions!' }]);
         }
-    }, [itemData]);
+    }, [itemData, itemDateIsPending]);
 
     const { mutate: questionsMutate, isPending: questionsIsPending } = useMutation({
         mutationFn: ({
