@@ -20,7 +20,6 @@ export interface Item extends BaseEntities {
     serialNumber: string;
     name: string;
     itemTemplateId: string;
-    hasChecklistTemplate: boolean;
     checklistId?: string; //TODO: this should probably not be here later
     partOf?: PartOf;
 }
@@ -74,15 +73,20 @@ export enum ChecklistStatus {
 
 export interface Checklist extends BaseEntities {
     itemId: string;
-    itemTemplateId: string;
+    mobilizationId?: string;
     questions: ChecklistQuestion[];
     punchesCount: number;
-    completionPercent: number;
+    completionPercentage?: number;
     status: ChecklistStatus;
 }
 
 export interface ItemTemplate {
     itemId?: string;
-    hasChecklistTemplate: boolean;
     questions: string[];
 }
+
+export interface ItemHasItemTemplate {
+    itemId: string;
+    hasChecklistTemplate: boolean;
+}
+

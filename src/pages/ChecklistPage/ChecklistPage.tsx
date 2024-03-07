@@ -30,7 +30,7 @@ const ChecklistPage = () => {
     const { mutate: checkMutate, isPending: checkIsPending } = useMutation({
         mutationFn: ({ questionId, value }: { questionId: string; value: boolean }) => {
             return axiosClient.post(
-                `mobilizations/${mobilizationId}/ChecklistQuestionCheckedUpdate/${questionId}/${value}`
+                `mobilizations/${mobilizationId}/ChecklistQuestionCheckedUpdate/${checklistId}/${questionId}/${value}`
             );
         },
         onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {
@@ -73,7 +73,7 @@ const ChecklistPage = () => {
     const { mutate: naMutate, isPending: naIsPending } = useMutation({
         mutationFn: ({ questionId, value }: { questionId: string; value: boolean }) => {
             return axiosClient.post(
-                `mobilizations/${mobilizationId}/ChecklistQuestionNotApplicableUpdate/${questionId}/${value}`
+                `mobilizations/${mobilizationId}/ChecklistQuestionNotApplicableUpdate/${checklistId}/${questionId}/${value}`
             );
         },
         onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {

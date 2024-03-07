@@ -1,5 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import { Checklist, ItemTemplate, Mobilization, PaginatedList } from './utils/types';
+import {
+    Checklist,
+    ItemHasItemTemplate,
+    ItemTemplate,
+    Mobilization,
+    PaginatedList,
+} from './utils/types';
 
 export const axiosClient = axios.create({
     baseURL: 'https://localhost:7040/api/',
@@ -78,4 +84,31 @@ export const getItemTemplate = async ({
     itemId: string;
 }) => {
     return getFromChecklistApi<ItemTemplate>(`Templates/${itemId}`, signal);
+};
+
+export const getItemChecklistsHistory = async ({
+    signal,
+    itemId,
+}: {
+    signal: AbortSignal;
+    itemId: string;
+}) => {
+    return getFromChecklistApi<PaginatedList<Checklist>>(
+        `Templates/GetChecklistsForItem/${itemId}`,
+        signal
+    );
+};
+
+export const getItemTemplateExistForItem = async ({
+    signal,
+    itemIds,
+}: {
+    signal: AbortSignal;
+    itemIds: string[];
+}) => {
+    const itemIdsParsed = itemIds.join('&itemIds=');
+    return getFromChecklistApi<ItemHasItemTemplate[]>(
+        `Templates/GetItemTemplatesExists/?itemIds=${itemIdsParsed}`,
+        signal
+    );
 };
