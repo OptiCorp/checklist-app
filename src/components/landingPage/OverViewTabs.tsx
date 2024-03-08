@@ -1,10 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import SearchInput from '../UI/SearchInput';
+import React from 'react';
 import ItemsTab from './ItemsTab';
 
+import useLocalForage from '../../hooks/useLocalForage';
 import MobilizationTab from './MobilizationTab';
-import useLatestTabHook from '../../hooks/useLatestTabHook';
 export type Tabs = 'Mob' | 'DeMob' | 'Items';
 
 export interface Film {
@@ -16,12 +15,10 @@ export type RecentOrSearch = 'recent' | 'search';
 
 const OverViewTabs = () => {
     //const [value, setValue] = React.useState<Tabs>('Mob');
-    const [latestUsedTab, setHandleSetLatestUsedTab] = useLatestTabHook('Mob');
-
-    console.log(latestUsedTab);
+    const [latestUsedTab, setHandleSetLatestUsedTab] = useLocalForage<Tabs | null>('tab', null);
 
     const handleTabChange = (_: React.SyntheticEvent, newValue: Tabs) => {
-        setHandleSetLatestUsedTab(newValue);
+        setHandleSetLatestUsedTab('tab', newValue);
     };
 
     return (
