@@ -154,8 +154,6 @@ const MobilizationTab = () => {
         gcTime: 0, //TODO: make sure it is not cached
     });
 
-    console.log(paginatedMobsBySearch);
-
     const onAllMobsPaginationChange = (_: React.ChangeEvent<unknown>, page: number) => {
         setMobilizationsAllPageNumberPageSize((prev) => ({
             pageNumber: page,
