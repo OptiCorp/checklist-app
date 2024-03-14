@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { QuestionTemplate } from '../../services/apiTypes';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import TextInput from '../UI/TextInput';
+import { LoadingButton } from '@mui/lab';
 
 interface Props {
     createOrEdit: 'create' | 'edit';
@@ -13,7 +14,7 @@ interface Props {
     onCreate: () => void;
     onEdit: () => void;
     loading: boolean;
-    onInputBlur: (index: number, questionId: string, text: string) => void;
+    onInputPutRequest: (index: number, questionId: string, text: string) => void;
     readonlyMode: boolean;
 }
 
@@ -26,7 +27,7 @@ const ChecklistTemplateDetailsMain = ({
     onCreate,
     onEdit,
     loading,
-    onInputBlur,
+    onInputPutRequest,
     readonlyMode,
 }: Props) => {
     const title: string =
@@ -38,8 +39,8 @@ const ChecklistTemplateDetailsMain = ({
             <Stack spacing={3}>
                 {textFields.map((field, index) => (
                     <TextInput
-                        disabled={loading || readonlyMode}
-                        onBlur={(e) => onInputBlur(index, field.question.id, e.target.value)}
+                        disabled={readonlyMode}
+                        onBlur={(e) => onInputPutRequest(index, field.question.id, e.target.value)}
                         key={index}
                         onChange={(e) => textFieldChange(e.target.value, index)}
                         placeHolder="Is the part pretty?"
@@ -51,13 +52,14 @@ const ChecklistTemplateDetailsMain = ({
                         disabeldPropButton={index == 0 || readonlyMode}
                     ></TextInput>
                 ))}
-                <Button
+                <LoadingButton
                     variant="contained"
-                    disabled={readonlyMode || loading}
+                    loading={loading}
+                    disabled={readonlyMode}
                     onClick={textFieldAdd}
                 >
                     ADD
-                </Button>
+                </LoadingButton>
             </Stack>
             {/* {!dataIsPending && (
                 <BottomButtons>
