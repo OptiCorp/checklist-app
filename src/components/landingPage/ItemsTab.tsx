@@ -1,69 +1,243 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Link, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePostCreateChecklistTemplate } from '../../hooks/usePostCreateChecklistTemplate';
 import apiService from '../../services/api';
-import { Item, ItemType } from '../../services/apiTypes';
+import { Item } from '../../services/apiTypes';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList from '../UI/CardWrapperList';
 import { StyledUl } from './MobilizationTab';
 
 const dummyItem1: Item = {
-    type: 'assembly',
-    itemId: '03v4OzbiM9',
-    created: new Date(),
-    lastModified: new Date(),
-    name: 'Bob2.0',
-    id: '42342-42342-12311',
+    id: 'raq6iWvV1V',
+    createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
     wpId: 'alk alsd',
+    preCheck: {
+        check: false,
+        comment: 'random comment',
+    },
+    vendorId: 'oiodfnaksnd',
+    vendor: {
+        id: 'kaskjdnøsdføa',
+        name: 'someone',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        addedById: '',
+    },
+    createdBy: {
+        id: '',
+        azureAdUserId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        userRole: {
+            id: '',
+            name: '',
+        },
+        status: '',
+        createdDate: '',
+        updatedDate: null,
+    },
+    logEntries: [],
+    itemTemplate: {
+        revision: '',
+        description: '',
+        id: '',
+        category: {
+            id: '',
+            name: '',
+            userId: '',
+        },
+        categoryId: '',
+        createdById: '',
+        type: 'assembly',
+        productNumber: '',
+    },
+    location: {
+        id: 'gfsda',
+        name: 'onsd+1sdd',
+        userId: 'sldnfdsdmøasdølnaskln',
+    },
 };
 
 const dummyItem2: Item = {
-    type: 'assembly',
-    itemId: '36D229xPLl',
-    created: new Date(),
-    lastModified: new Date(),
-    name: 'Bolt2.0',
-    id: 'asdonal-asdlma-das',
-    serialNumber: 'asuiabs-daisd-adas',
-    itemTemplateId: 'okda-asjda-adh',
-    wpId: 'aow-adnas-dasd',
+    id: 'nkjksapdnas',
+    createdDate: '2024-04-21',
+    serialNumber: 'asdlømad',
+    itemTemplateId: 'lsk-alsd',
+    wpId: 'alk alsd',
+    preCheck: {
+        check: false,
+        comment: 'random comment',
+    },
+    vendorId: 'oiodfnaksnd',
+    vendor: {
+        id: 'kaskjdnøsdføa',
+        name: 'someone',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        addedById: '',
+    },
+    createdBy: {
+        id: '',
+        azureAdUserId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        userRole: {
+            id: '',
+            name: '',
+        },
+        status: '',
+        createdDate: '',
+        updatedDate: null,
+    },
+    logEntries: [],
+    itemTemplate: {
+        revision: '',
+        description: '',
+        id: '',
+        category: {
+            id: '',
+            name: '',
+            userId: '',
+        },
+        categoryId: '',
+        createdById: '',
+        type: 'item',
+        productNumber: '',
+    },
+    location: {
+        id: 'gfsda',
+        name: 'onsd+1sdd',
+        userId: 'sldnfdsdmøasdølnaskln',
+    },
 };
 
 const dummyItem3: Item = {
-    type: 'item',
-    itemId: '3AaiS4Bw6f',
-    created: new Date(),
-    lastModified: new Date(),
-    name: 'Bolt2.0',
-    id: 'lkdf-asjdb-sdi3',
-    serialNumber: 'qwoie-qweiqna-kasnda',
-    itemTemplateId: 'okda-asjda-adh',
-    wpId: 'aow-adnas-dasd',
+    id: 'rBfH8pXyYB',
+    createdDate: '2024-04-21',
+    serialNumber: 'asdlømad',
+    itemTemplateId: 'lsk-alsd',
+    wpId: 'alk alsd',
+    preCheck: {
+        check: false,
+        comment: 'random comment',
+    },
+    vendorId: 'oiodfnaksnd',
+    vendor: {
+        id: 'kaskjdnøsdføa',
+        name: 'someone',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        addedById: '',
+    },
+    createdBy: {
+        id: '',
+        azureAdUserId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        userRole: {
+            id: '',
+            name: '',
+        },
+        status: '',
+        createdDate: '',
+        updatedDate: null,
+    },
+    logEntries: [],
+    itemTemplate: {
+        revision: '',
+        description: '',
+        id: '',
+        category: {
+            id: '',
+            name: '',
+            userId: '',
+        },
+        categoryId: '',
+        createdById: '',
+        type: 'unit',
+        productNumber: '',
+    },
+    location: {
+        id: 'gfsda',
+        name: 'onsd+1sdd',
+        userId: 'sldnfdsdmøasdølnaskln',
+    },
 };
 
 const dummyItem4: Item = {
-    type: 'item',
-    itemId: 'testingTahngn',
-    created: new Date(),
-    lastModified: new Date(),
-    name: 'Bolt2.0',
-    id: 'lkdf-asjdb-sdi3',
-    serialNumber: 'qwoie-qweiqna-kasnda',
-    itemTemplateId: 'okda-asjda-adh',
-    wpId: 'aow-adnas-dasd',
+    id: 'dsm12naksdd',
+    createdDate: '2024-04-21',
+    serialNumber: 'asdlømad',
+    itemTemplateId: 'lsk-alsd',
+    wpId: 'alk alsd',
+    preCheck: {
+        check: false,
+        comment: 'random comment',
+    },
+    vendorId: 'oiodfnaksnd',
+    vendor: {
+        id: 'kaskjdnøsdføa',
+        name: 'someone',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        addedById: '',
+    },
+    createdBy: {
+        id: '',
+        azureAdUserId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        userRole: {
+            id: '',
+            name: '',
+        },
+        status: '',
+        createdDate: '',
+        updatedDate: null,
+    },
+    logEntries: [],
+    itemTemplate: {
+        revision: '',
+        description: '',
+        id: '',
+        category: {
+            id: '',
+            name: '',
+            userId: '',
+        },
+        categoryId: '',
+        createdById: '',
+        type: 'assembly',
+        productNumber: '',
+    },
+    location: {
+        id: 'gfsda',
+        name: 'onsd+1sdd',
+        userId: 'sldnfdsdmøasdølnaskln',
+    },
 };
 
 const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3, dummyItem4];
 
 interface ItemChecklistTemplate {
-    itemId: string;
-    serialNumber: string;
-    type: ItemType;
+    item: Item;
     hasChecklistTemplate?: boolean;
 }
 
@@ -81,14 +255,12 @@ const ItemsTab = () => {
     useEffect(() => {
         setItemChecklistTemplate(
             mockItems.map((item) => ({
-                itemId: item.itemId,
-                serialNumber: item.serialNumber,
-                type: item.type,
+                item: item,
             }))
         );
     }, []);
 
-    const itemIds = mockItems.map((mI) => mI.itemId);
+    const itemIds = mockItems.map((mI) => mI.id);
 
     const {
         mutate: createItemTemplateMutate,
@@ -107,13 +279,11 @@ const ItemsTab = () => {
         if (itemDataHasItemTemplate ?? (itemDataHasItemTemplate && mutateIsSuccess)) {
             setItemChecklistTemplate(
                 mockItems.map((item) => {
-                    const findItem = itemDataHasItemTemplate.find((it) => it.itemId == item.itemId);
-                    if (!findItem) return item;
+                    const findItem = itemDataHasItemTemplate.find((it) => it.itemId == item.id);
+                    //if (!findItem) return null;
                     return {
-                        itemId: item.itemId,
-                        serialNumber: item.serialNumber,
-                        type: item.type,
-                        hasChecklistTemplate: findItem.hasChecklistTemplate,
+                        item: item,
+                        hasChecklistTemplate: findItem?.hasChecklistTemplate,
                     };
                 })
             );
@@ -127,9 +297,9 @@ const ItemsTab = () => {
                     {itemChecklistTemplate.map((item) => {
                         return (
                             <CardWrapper
-                                key={item.itemId}
+                                key={item.item.id}
                                 onClick={() =>
-                                    navigate(`/item/${item.itemId}`, {
+                                    navigate(`/item/${item.item.id}`, {
                                         state: {
                                             hasChecklistTemplate:
                                                 item.hasChecklistTemplate ?? false,
@@ -138,9 +308,15 @@ const ItemsTab = () => {
                                 }
                                 firstChild={
                                     <StyledUl>
-                                        <CardWrapperList id={'item-ID'} text={item.itemId} />
-                                        <CardWrapperList id={'srn'} text={`${item.serialNumber}`} />
-                                        <CardWrapperList id={'type'} text={`${item.type}`} />
+                                        <CardWrapperList id={'item-ID'} text={item.item.id} />
+                                        <CardWrapperList
+                                            id={'srn'}
+                                            text={`${item.item.serialNumber}`}
+                                        />
+                                        <CardWrapperList
+                                            id={'type'}
+                                            text={`${item.item.itemTemplate.type}`}
+                                        />
                                     </StyledUl>
                                 }
                                 secondChild={
@@ -155,7 +331,7 @@ const ItemsTab = () => {
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     navigate(
-                                                                        `/${item.itemId}/checklistTemplate`,
+                                                                        `/${item.item.id}/checklistTemplate`,
                                                                         {
                                                                             state: {
                                                                                 hasChecklistTemplate:
@@ -194,14 +370,14 @@ const ItemsTab = () => {
                                                             >
                                                                 Create checklistTemplate
                                                             </Link> */}
-                                                            <LoadingButton
-                                                                loading={
-                                                                    createItemTemplateIsPending
-                                                                }
+                                                            <Button
+                                                                // loading={
+                                                                //     createItemTemplateIsPending
+                                                                // }
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     createItemTemplateMutate({
-                                                                        itemId: item.itemId,
+                                                                        itemId: item.item.id,
                                                                         questions: [
                                                                             'sample question',
                                                                         ],
@@ -211,7 +387,7 @@ const ItemsTab = () => {
                                                                 size="small"
                                                             >
                                                                 Create checklist template
-                                                            </LoadingButton>
+                                                            </Button>
                                                         </Typography>
                                                     )
                                                 ) : (

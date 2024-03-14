@@ -8,16 +8,88 @@ export type BaseEntities = {
     lastModifiedBy?: string;
 };
 
-export interface Item extends BaseEntities {
+export type PreCheck = {
+    check: boolean;
+    comment: string;
+};
+
+export type Vendor = {
+    id: string;
+    name: string;
+    address: string;
+    email: string;
+    phoneNumber: string;
+    addedById: string;
+};
+
+export type User = {
+    id: string;
+    azureAdUserId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    userRole: UserRole;
+    status: string;
+    createdDate: string;
+    updatedDate: string | null;
+};
+
+export type UserRole = {
+    id: string;
+    name: string;
+};
+
+export type LogEntry = {
+    createdBy: User;
+    id: string;
     itemId: string;
-    type: ItemType;
+    userId: string;
+    message: string;
+    createdDate: string;
+};
+
+export type Location = {
+    id: string;
+    name: string;
+    userId: string;
+};
+
+export type Item = {
+    id: string;
+    preCheck: PreCheck;
+    itemTemplateId: string;
     wpId: string;
     serialNumber: string;
-    name: string;
-    itemTemplateId: string;
-    checklistId?: string; //TODO: this should probably not be here later
+    vendorId: string;
+    locationId?: string;
     parentId?: string;
-}
+    addedById?: string;
+    comment?: string;
+    listId?: string;
+    parent?: Item;
+    children?: Item[];
+    createdDate: string;
+    updatedDate?: string;
+    vendor: Vendor;
+    location: Location;
+    createdBy: User;
+    logEntries: LogEntry[];
+    itemTemplate: ItemTemplate;
+    documents?: Document;
+};
+
+export type ItemTemplate = {
+    inputValue?: string;
+    revision: string;
+    description: string;
+    id: string;
+    category: { id: string; name: string; userId: string };
+    categoryId: string;
+    createdById: string;
+    type: 'item' | 'subAssembly' | 'assembly' | 'unit';
+    productNumber: string;
+};
 
 export interface Punch extends BaseEntities {
     title: string;
@@ -85,12 +157,12 @@ export interface QuestionTemplate {
     question: string;
 }
 
-export interface ItemTemplate extends BaseEntities {
+export interface ChecklistItemTemplate extends BaseEntities {
     itemId?: string;
     questions: QuestionTemplate[];
 }
 
-export interface ItemHasItemTemplate {
+export interface ItemHasChecklistItemTemplate {
     itemId: string;
     hasChecklistTemplate: boolean;
 }
