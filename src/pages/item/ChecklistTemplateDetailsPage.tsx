@@ -1,11 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
-import apiService, { axiosClient } from '../../services/api';
-import { Item, ItemTemplate, QuestionTemplate } from '../../services/apiTypes';
-import { queryClient } from '../../tanstackQuery';
+import { useDeleteQuestion } from '../../hooks/useDeleteQuestion';
+import { usePostNewQuestion } from '../../hooks/usePostNewQuestion';
+import { usePutUpdateQuestion } from '../../hooks/usePutUpdateQuestion';
+import apiService from '../../services/api';
+import { Item, QuestionTemplate } from '../../services/apiTypes';
 
 export type CreateOrEdit = 'create' | 'edit';
 
@@ -28,16 +30,17 @@ const ChecklistTemplateDetailsPage = () => {
     const { pathname } = useLocation();
     const paths = pathname.split('/');
     const itemId = paths[1] || undefined;
-    //const [createOrEdit, setCreateOrEdit] = useState<CreateOrEdit>('create');
     const [textFields, setTextFields] = useState<
+        //TODO: add chagnedTextfield
         { question: QuestionTemplate; error: boolean; helperText?: string }[]
     >([]);
 
-    const { data: itemData, isPending: itemDateIsPending } = useQuery({
+    const { data: itemData, isPending: itemDataIsPending } = useQuery({
         queryKey: [itemId, 'itemTemplate'],
         queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId }),
         enabled: !!itemId,
     });
+
 
     const { id: itemTemplateId } = itemData ?? {};
 
@@ -48,68 +51,7 @@ const ChecklistTemplateDetailsPage = () => {
         enabled: !!itemTemplateId,
     });
 
-    const { mutate: questionsMutate, isPending: questionsIsPending } = useMutation({
-        mutationFn: ({
-            itemId,
-            question,
-            questionId,
-        }: {
-            itemId: string;
-            question: string;
-            questionId: string;
-        }) => {
-            return axiosClient(`Templates/${itemId}/${questionId}`, {
-                method: 'PUT',
-                data: question,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        },
-        onMutate: async ({
-            itemId,
-            question,
-            questionId,
-        }: {
-            itemId: string;
-            question: string;
-            questionId: string;
-        }) => {
-            await queryClient.cancelQueries({
-                queryKey: [itemId, 'itemTemplate'],
-            });
-
-            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
-                itemId,
-                'itemTemplate',
-            ]);
-
-            //optimistically update to new value
-            //const { questions } = { ...previousChecklist };
-
-            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
-                if (old) {
-                    const questions = [...old.questions];
-                    const updatedQuestion = questions.find((q) => q.id == questionId);
-                    if (updatedQuestion) {
-                        updatedQuestion.question = question;
-                    }
-                    return { ...old, questions: questions };
-                }
-                return undefined;
-            });
-
-            return { previousItemTemplate };
-        },
-        onError: (err, some, context) => {
-            queryClient.setQueryData([itemId, 'itemTemplate'], context?.previousItemTemplate);
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: [itemId, 'itemTemplate'],
-            });
-        },
-    });
+    const { mutate: questionsMutate, isPending: questionsIsPending } = usePutUpdateQuestion();
 
     useEffect(() => {
         if (itemData) {
@@ -119,114 +61,19 @@ const ChecklistTemplateDetailsPage = () => {
                 helperText: undefined,
             }));
             setTextFields(questions);
-        } else if (!itemData && !itemDateIsPending) {
+        } else if (!itemData && !itemDataIsPending) {
             //console.log(itemId);
             //TODO: create the itemTemplate
             //addQuestionMutate({ itemId: itemId, question: 'sample question' });
         }
-    }, [itemData, itemDateIsPending, itemId]);
+    }, [itemData, itemDataIsPending, itemId]);
 
-    const { mutate: addQuestionMutate, isPending: addQuestionIsPending } = useMutation({
-        mutationFn: ({ itemId, question }: { itemId: string; question: string }) => {
-            return axiosClient(`Templates/AddQuestionForTemplate/${itemTemplateId}`, {
-                method: 'POST',
-                data: question,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        },
-        onMutate: async ({ itemId, question }: { itemId: string; question: string }) => {
-            await queryClient.cancelQueries({
-                queryKey: [itemId, 'itemTemplate'],
-            });
+    const { mutate: addQuestionMutate, isPending: addQuestionIsPending } = usePostNewQuestion(
+        itemTemplateId!
+    );
 
-            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
-                itemId,
-                'itemTemplate',
-            ]);
-
-            //optimistically update to new value
-            //const { questions } = { ...previousChecklist };
-
-            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
-                if (old) {
-                    const questions = [...old.questions, { id: 'temp', question: question }];
-                    return { ...old, questions: questions };
-                }
-                return undefined;
-            });
-
-            return { previousItemTemplate };
-        },
-        onError: (err, some, context) => {
-            queryClient.setQueryData([itemId, 'itemTemplate'], context?.previousItemTemplate);
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: [itemId, 'itemTemplate'],
-            });
-        },
-    });
-
-    const { mutate: deleteQuestionMutate, isPending: deleteQuestionIsPending } = useMutation({
-        mutationFn: ({
-            itemId,
-            questionId,
-            index,
-        }: {
-            itemId: string;
-            questionId: string;
-            index: number;
-        }) => {
-            return axiosClient(`Templates/${itemId}/DeleteQuestionTemplate/${questionId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        },
-        onMutate: async ({
-            itemId,
-            questionId,
-            index,
-        }: {
-            itemId: string;
-            questionId: string;
-            index: number;
-        }) => {
-            await queryClient.cancelQueries({
-                queryKey: [itemId, 'itemTemplate'],
-            });
-
-            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
-                itemId,
-                'itemTemplate',
-            ]);
-
-            //optimistically update to new value
-            //const { questions } = { ...previousChecklist };
-
-            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
-                if (old) {
-                    const questions = [...old.questions];
-                    questions.splice(index, 1);
-                    return { ...old, questions: questions };
-                }
-                return undefined;
-            });
-
-            return { previousItemTemplate };
-        },
-        onError: (err, some, context) => {
-            queryClient.setQueryData([itemId, 'itemTemplate'], context?.previousItemTemplate);
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: [itemId, 'itemTemplate'],
-            });
-        },
-    });
+    const { mutate: deleteQuestionMutate, isPending: deleteQuestionIsPending } =
+        useDeleteQuestion();
 
     const handleTextFieldChange = (newText: string, index: number) => {
         setTextFields((state) => {
@@ -257,7 +104,7 @@ const ChecklistTemplateDetailsPage = () => {
             return newState;
         });
         if (hasError) return;
-        addQuestionMutate({ itemId: itemId, question: '' });
+        addQuestionMutate({ itemId: itemId!, question: '' });
     };
 
     const handleDeleteQuestion = (index: number, questionId: string) => {
@@ -269,7 +116,7 @@ const ChecklistTemplateDetailsPage = () => {
         //     return newState;
         // });
         if (index == 0) return;
-        deleteQuestionMutate({ index: index, itemId: itemId, questionId: questionId });
+        deleteQuestionMutate({ index: index, itemId: itemId!, questionId: questionId });
     };
 
     const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
@@ -301,7 +148,7 @@ const ChecklistTemplateDetailsPage = () => {
         handleCreateOrEdit('edit');
     };
 
-    const handleInputUpdate = (index: number, questionId: string, text: string) => {
+    const handleInputPutRequest = (index: number, questionId: string, text: string) => {
         const textStripped = text.trim();
         //const field = textFields.find((q) => q.question.id == questionId);
         if (textStripped.length <= 5) {
@@ -314,7 +161,7 @@ const ChecklistTemplateDetailsPage = () => {
             });
             return;
         }
-        questionsMutate({ itemId: itemId, question: text, questionId: questionId });
+        questionsMutate({ itemId: itemId!, question: text, questionId: questionId });
     };
 
     const isloading = deleteQuestionIsPending || questionsIsPending || addQuestionIsPending;
@@ -328,7 +175,7 @@ const ChecklistTemplateDetailsPage = () => {
                     !checklistItemQuestionConflictdata ||
                     checklistItemQuestionConflictdata.length > 0
                 }
-                onInputBlur={handleInputUpdate}
+                onInputPutRequest={handleInputPutRequest}
                 createOrEdit={itemData ? 'edit' : 'create'}
                 textFields={textFields}
                 textFieldRemove={handleDeleteQuestion}

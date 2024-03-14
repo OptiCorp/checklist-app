@@ -1,11 +1,11 @@
 import { LoadingButton } from '@mui/lab';
 import { Box, Link, Stack, Typography } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiService, { axiosClient } from '../../services/api';
-import { Item, ItemHasItemTemplate, ItemType } from '../../services/apiTypes';
-import { queryClient } from '../../tanstackQuery';
+import { usePostCreateChecklistTemplate } from '../../hooks/usePostCreateChecklistTemplate';
+import apiService from '../../services/api';
+import { Item, ItemType } from '../../services/apiTypes';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList from '../UI/CardWrapperList';
 import { StyledUl } from './MobilizationTab';
@@ -94,34 +94,7 @@ const ItemsTab = () => {
         mutate: createItemTemplateMutate,
         isPending: createItemTemplateIsPending,
         isSuccess: mutateIsSuccess,
-    } = useMutation({
-        //TODO:
-        mutationFn: ({ itemId, questions }: { itemId: string; questions: string[] }) => {
-            return axiosClient(`Templates/${itemId}/CreateTemplateForItem`, {
-                method: 'POST',
-                data: { questions: questions, itemId: itemId },
-            });
-        },
-        onSuccess: (_, { itemId }) => {
-            queryClient.setQueryData(
-                ['itemsHasChecklistTemplate'],
-                (oldData: ItemHasItemTemplate[]) => {
-                    if (oldData) {
-                        const newData = [...oldData];
-                        const item = newData.find((it) => it.itemId == itemId);
-                        if (item) item.hasChecklistTemplate = true;
-                        return newData;
-                    }
-                    return oldData;
-                }
-            );
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: ['itemsHasChecklistTemplate'],
-            });
-        },
-    });
+    } = usePostCreateChecklistTemplate();
 
     const { data: itemDataHasItemTemplate } = useQuery({
         queryKey: ['itemsHasChecklistTemplate'], //set key based on fetching from items api as well
@@ -173,7 +146,7 @@ const ItemsTab = () => {
                                 secondChild={
                                     <StyledUl>
                                         <Box display={'flex'} alignItems={'center'}>
-                                            <Typography variant="caption" component="span">
+                                            <Typography variant="caption" component="div">
                                                 {item.hasChecklistTemplate != undefined ? (
                                                     item.hasChecklistTemplate ? (
                                                         <Typography variant="inherit">
@@ -197,7 +170,11 @@ const ItemsTab = () => {
                                                             </Link>
                                                         </Typography>
                                                     ) : (
-                                                        <Typography variant="inherit" color={'red'}>
+                                                        <Typography
+                                                            variant="inherit"
+                                                            component="div"
+                                                            color={'red'}
+                                                        >
                                                             {/* <Link
                                                                 component={'button'}
                                                                 color={'inherit'}

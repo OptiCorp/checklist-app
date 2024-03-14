@@ -1,15 +1,16 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistHeader from '../../components/Checklist/ChecklistHeader';
 import ChecklistTableHeader from '../../components/Checklist/ChecklistTableHeader';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
 import PageHeaderLoading from '../../components/UI/PageHeaderLoading';
-import apiService, { axiosClient } from '../../services/api';
-import { Checklist, ChecklistStatus } from '../../services/apiTypes';
-import { queryClient } from '../../tanstackQuery';
+import { usePostCheckOrNaChecklist } from '../../hooks/usePostCheckOrNaChecklist';
+import { usePutChecklistStatus } from '../../hooks/usePutChecklistStatus';
+import apiService from '../../services/api';
+import { ChecklistStatus } from '../../services/apiTypes';
 
 export type completeType = 'check' | 'na';
 
@@ -26,131 +27,22 @@ const ChecklistPage = () => {
             apiService().getSingleChecklist({ signal, mobilizationId, checklistId }),
     });
 
-    const { mutate: checkMutate, isPending: checkIsPending } = useMutation({
-        mutationFn: ({ questionId, value }: { questionId: string; value: boolean }) => {
-            return axiosClient.post(
-                `mobilizations/${mobilizationId}/ChecklistQuestionCheckedUpdate/${checklistId}/${questionId}/${value}`
-            );
-        },
-        onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {
-            await queryClient.cancelQueries({
-                queryKey: ['checklist', mobilizationId, checklistId],
-            });
+    const { mutate: checkMutate, isPending: checkIsPending } = usePostCheckOrNaChecklist(
+        mobilizationId,
+        checklistId,
+        'check'
+    );
 
-            const previousChecklist = queryClient.getQueryData<Checklist>([
-                'checklist',
-                mobilizationId,
-                checklistId,
-            ]);
+    const { mutate: naMutate, isPending: naIsPending } = usePostCheckOrNaChecklist(
+        mobilizationId,
+        checklistId,
+        'NA'
+    );
 
-            //optimistically update to new value
-            const { questions } = { ...previousChecklist };
-
-            const q = questions?.find((c) => c.id == questionId);
-            if (q) q.checked = value;
-
-            queryClient.setQueryData<Checklist>(
-                ['checklist', mobilizationId, checklistId],
-                (old) => (old ? { ...old, questions: questions ?? [] } : undefined)
-            );
-
-            return { previousChecklist };
-        },
-        onError: (err, some, context) => {
-            queryClient.setQueryData(
-                ['checklist', mobilizationId, checklistId],
-                context?.previousChecklist
-            );
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: ['checklist', mobilizationId, checklistId],
-            });
-        },
-    });
-
-    const { mutate: naMutate, isPending: naIsPending } = useMutation({
-        mutationFn: ({ questionId, value }: { questionId: string; value: boolean }) => {
-            return axiosClient.post(
-                `mobilizations/${mobilizationId}/ChecklistQuestionNotApplicableUpdate/${checklistId}/${questionId}/${value}`
-            );
-        },
-        onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {
-            await queryClient.cancelQueries({
-                queryKey: ['checklist', mobilizationId, checklistId],
-            });
-
-            const previousChecklist = queryClient.getQueryData<Checklist>([
-                'checklist',
-                mobilizationId,
-                checklistId,
-            ]);
-
-            const { questions } = { ...previousChecklist };
-            const q = questions?.find((c) => c.id == questionId);
-            if (q) q.notApplicable = value;
-
-            queryClient.setQueryData<Checklist>(
-                ['checklist', mobilizationId, checklistId],
-                (old) => (old ? { ...old, questions: questions ?? [] } : undefined)
-            );
-
-            return { previousChecklist };
-        },
-        onError: (err, some, context) => {
-            queryClient.setQueryData(
-                ['checklist', mobilizationId, checklistId],
-                context?.previousChecklist
-            );
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: ['checklist', mobilizationId, checklistId],
-            });
-        },
-    });
-
-    const { mutate: statusMutate, isPending: statusIsPending } = useMutation({
-        mutationFn: ({ checklistId, status }: { checklistId: string; status: ChecklistStatus }) => {
-            return axiosClient.put(
-                `mobilizations/${mobilizationId}/ChecklistStatus/${checklistId}/${status}`
-            );
-        },
-        onMutate: async ({
-            checklistId,
-            status,
-        }: {
-            checklistId: string;
-            status: ChecklistStatus;
-        }) => {
-            await queryClient.cancelQueries({
-                queryKey: ['checklist', mobilizationId, checklistId],
-            });
-
-            const previousChecklist = queryClient.getQueryData<Checklist>([
-                'checklist',
-                mobilizationId,
-                checklistId,
-            ]);
-
-            queryClient.setQueryData<Checklist>([mobilizationId, checklistId], (old) =>
-                old ? { ...old, status: status } : undefined
-            );
-
-            return { previousChecklist };
-        },
-        onError: (err, some, context) => {
-            queryClient.setQueryData(
-                ['checklist', mobilizationId, checklistId],
-                context?.previousChecklist
-            );
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: ['checklist', mobilizationId, checklistId],
-            });
-        },
-    });
+    const { mutate: statusMutate, isPending: statusIsPending } = usePutChecklistStatus(
+        mobilizationId,
+        checklistId
+    );
 
     const handleTaskCompletion = (questionId: string, isCompleted: boolean, type: completeType) => {
         if (type == 'check') {
@@ -161,10 +53,11 @@ const ChecklistPage = () => {
     };
 
     const updateChecklistStatus = (status: ChecklistStatus) => {
-        statusMutate({ checklistId, status });
+        statusMutate({ status });
     };
 
     const pending = checklistDataPending || naIsPending || checkIsPending;
+
     const allQuestionsMarked =
         checklistData?.questions.every((q) => q.checked || q.notApplicable) ?? false;
     const nonQuestionsMarked =
@@ -175,7 +68,6 @@ const ChecklistPage = () => {
     if (checklistData) {
         status = checklistData.status;
     }
-    console.log(status);
 
     const isCompleted = checklistData ? checklistData.status === ChecklistStatus.Completed : false;
     return (
