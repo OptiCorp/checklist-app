@@ -1,5 +1,6 @@
+//UNUSED!!!!
 import { styled } from 'styled-components';
-import { COLORS } from './style/GlobalStyles';
+import { COLORS } from './GlobalStyles';
 
 export const BodyWrapper = styled.div`
     background-color: ${COLORS.lightGray};

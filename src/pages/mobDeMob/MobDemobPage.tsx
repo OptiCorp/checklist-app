@@ -13,12 +13,11 @@ import { useNavigate } from 'react-router-dom';
 import CardWrapper from '../../components/UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../../components/UI/CardWrapperList';
 import NestedList from '../../components/UI/NestedList';
-import { Item } from '../../utils/types';
+import { Item } from '../../services/apiTypes';
 
 const dummyItem1: Item = {
     type: 'assembly',
     itemId: 'alsk-as9as-dk',
-    hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
     name: 'Bob2.0',
@@ -27,16 +26,11 @@ const dummyItem1: Item = {
     itemTemplateId: 'lsk-alsd',
     checklistId: '4a86b51e-05aa-42c4-d930-08dc39ed4402',
     wpId: 'alk alsd',
-    partOf: {
-        itemId: '12343-asd-dd-a',
-        type: 'assembly',
-    },
 };
 
 const dummyItem2: Item = {
     type: 'assembly',
     itemId: 'ølko-as9as-dk',
-    hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
     checklistId: 'fd1abfc8-e49e-4799-d931-08dc39ed4402',
@@ -45,16 +39,11 @@ const dummyItem2: Item = {
     serialNumber: 'asuiabs-daisd-adas',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
-    partOf: {
-        itemId: 'alsk-as9as-dk',
-        type: 'item',
-    },
 };
 
 const dummyItem3: Item = {
     type: 'item',
     itemId: 'poasd-sadl-as9as-drrr',
-    hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
     name: 'Bolt2.0',
@@ -63,10 +52,6 @@ const dummyItem3: Item = {
     checklistId: 'aa5fb6ec-9156-4c99-d932-08dc39ed4402',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
-    partOf: {
-        itemId: 'alsk-as9as-dk',
-        type: 'item',
-    },
 };
 
 const mockItems: Item[] = [dummyItem2, dummyItem3];
@@ -202,7 +187,7 @@ const MobDemobPage = () => {
                         )}
                         {/* </Typography> */}
                     </Grid>
-                    {!isMobilization && dummyItem1.partOf && (
+                    {!isMobilization && dummyItem1.parentId && (
                         <Grid item display={'flex'} flexDirection={'column'} gap={1}>
                             <FormControlLabel
                                 value="end"
@@ -219,10 +204,10 @@ const MobDemobPage = () => {
                             <Box>
                                 <b>Part Of</b>:
                             </Box>
-                            <Box>
-                                <b>{dummyItem1.partOf?.type.toUpperCase()}</b>
-                            </Box>
-                            <Box>{dummyItem1.partOf?.itemId}</Box>
+                            {/* <Box>
+                                <b>{dummyItem1.parentId?.type.toUpperCase()}</b>
+                            </Box> */}
+                            <Box>{dummyItem1.parentId}</Box>
                         </Grid>
                     )}
                 </Grid>

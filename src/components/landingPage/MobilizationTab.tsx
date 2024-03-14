@@ -1,13 +1,24 @@
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { Box, Button, CircularProgress, IconButton, Pagination, Stack } from '@mui/material';
+import {
+    Box,
+    Button,
+    FormControl,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Pagination,
+    Select,
+    SelectChangeEvent,
+    Stack,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { getAllMobilizations, searchAllMobilizations } from '../../api';
-import { MobilizationStatus } from '../../utils/types';
+import apiService from '../../services/api';
+import { MobilizationStatus } from '../../services/apiTypes';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList from '../UI/CardWrapperList';
@@ -19,53 +30,12 @@ export const StyledUl = styled.ul`
     margin: 0;
 `;
 
-// const mockMobilizations: Mobilization[] = [
-//     {
-//         id: 'da-sada-sdlasmd',
-//         created: new Date(),
-//         lastModified: new Date(),
-//         customer: 'Equinor',
-//         itemsCount: 3,
-//         checklistCount: 14,
-//         status: 'Ready',
-//         checklistCountDone: 0,
-//     },
-//     {
-//         id: 'fgh-ddas-asdaww',
-//         created: new Date(),
-//         lastModified: new Date(),
-//         customer: 'Equinor',
-//         itemsCount: 22,
-//         checklistCount: 22,
-//         status: 'Completed',
-//         checklistCountDone: 22,
-//     },
-//     {
-//         id: 'wer-sada-sdlasmd',
-//         created: new Date(),
-//         lastModified: new Date(),
-//         customer: 'Equinor',
-//         itemsCount: 14,
-//         checklistCount: 14,
-//         status: 'NotReady',
-//         checklistCountDone: 0,
-//     },
-//     {
-//         id: 'aos-wqiueq-qppsla',
-//         created: new Date(),
-//         lastModified: new Date(),
-//         customer: 'Equinor',
-//         itemsCount: 14,
-//         checklistCount: 14,
-//         status: 'Started',
-//         checklistCountDone: 0,
-//     },
-// ];
-
 const MobilizationTab = () => {
     const navigate = useNavigate();
     const [mobilizationSearchInputDebounced, setMobilizationSearchInputDebounced] = useState('');
     const [mobilizationSearchInput, setMobilizationSearchInput] = useState('');
+    const [searhFilterOnStatus, setSearchFilterOnStatus] = useState('');
+    const [searchFilterOnDate, setSearchFilterOnDate] = useState('');
 
     const [mobilizationsAllpageNumberPageSize, setMobilizationsAllPageNumberPageSize] = useState({
         pageNumber: 1,
@@ -76,6 +46,13 @@ const MobilizationTab = () => {
         pageSize: 6,
     });
 
+    const handleClearSearch = () => {
+        setMobilizationSearchInput('');
+        setMobilizationSearchInputDebounced('');
+        setSearchFilterOnDate('');
+        setSearchFilterOnStatus('');
+    };
+
     const { pageNumber: mobilizationsPageNumber, pageSize: mobilizationsPageSize } =
         mobilizationsAllpageNumberPageSize;
 
@@ -83,28 +60,27 @@ const MobilizationTab = () => {
 
     const searchMobsInput = mobilizationSearchInputDebounced.trim();
 
-    //const { state } = useLocation();
-    const handleClearSearch = () => {
+    const handleClearSearchInput = () => {
         setMobilizationSearchInputDebounced('');
         setMobilizationSearchInput('');
     };
 
-    const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleTopRightButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         navigate('/newMob');
     };
 
-    const handleViewClick = (e: MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation();
-        navigate('/newMob');
-    };
+    // const handleViewClick = (e: MouseEvent<HTMLButtonElement>) => {
+    //     e.stopPropagation();
+    //     navigate('/newMob');
+    // };
 
-    const GetCardBorderColor = (status: MobilizationStatus) => {
-        if (status == 'Completed') return 'green';
-        else if (status == 'Ready') return 'orange';
-        else if (status == 'NotReady') return 'secondary.main';
-        else if (status == 'Started') return 'orange';
-    };
+    const GetCardBorderColor = useCallback((status: MobilizationStatus) => {
+        if (status == MobilizationStatus.Completed) return 'green';
+        else if (status == MobilizationStatus.Ready) return 'orange';
+        else if (status == MobilizationStatus.NotReady) return 'secondary.main';
+        else if (status == MobilizationStatus.Started) return 'orange';
+    }, []);
 
     const debouncedSearch = useRef(
         debounce((criteria: string) => {
@@ -118,7 +94,10 @@ const MobilizationTab = () => {
         debouncedSearch(inpText);
     }
 
-    const { data: paginatedMobilizations, isPending: mobsIsPending } = useQuery({
+    const searchIsEnabled =
+        searchMobsInput != '' || searchFilterOnDate != '' || searhFilterOnStatus != '';
+
+    const { data: paginatedMobilizations } = useQuery({
         queryKey: [
             'mobilizations',
             {
@@ -127,13 +106,12 @@ const MobilizationTab = () => {
             },
         ],
         queryFn: async ({ signal }) =>
-            getAllMobilizations({
+            apiService().getAllMobilizations({
                 pageNumber: mobilizationsPageNumber,
                 pageSize: mobilizationsPageSize,
                 signal,
-            }).then((res) => res.data),
+            }),
     });
-
     const { data: paginatedMobsBySearch, isLoading: searchIsPending } = useQuery({
         queryKey: [
             'searchMobilizations',
@@ -141,18 +119,32 @@ const MobilizationTab = () => {
             {
                 pageNumber: searchPageNumber,
                 pageSize: searchPageSize,
+                status: searhFilterOnStatus,
+                date: searchFilterOnDate,
             },
         ],
         queryFn: async ({ signal }) =>
-            searchAllMobilizations({
+            apiService().searchAllMobilizations({
+                status: searhFilterOnStatus,
+                date: searchFilterOnDate,
                 pageNumber: searchPageNumber,
                 pageSize: searchPageSize,
                 title: searchMobsInput,
                 signal,
-            }).then((res) => res.data),
-        enabled: searchMobsInput != '',
-        gcTime: 0, //TODO: make sure it is not cached
+            }),
+        enabled: searchIsEnabled,
+        gcTime: 0, //TODO: make sure the search data is never cached
+        staleTime: 0,
     });
+
+    const handleSearchDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.value);
+        setSearchFilterOnDate(e.target.value);
+    };
+
+    const handleSearchStatusChange = (event: SelectChangeEvent) => {
+        setSearchFilterOnStatus(event.target.value);
+    };
 
     const onAllMobsPaginationChange = (_: React.ChangeEvent<unknown>, page: number) => {
         setMobilizationsAllPageNumberPageSize((prev) => ({
@@ -161,7 +153,7 @@ const MobilizationTab = () => {
         }));
     };
 
-    const onMobsSearcgPaginationChange = (_: React.ChangeEvent<unknown>, page: number) => {
+    const onMobsSearchPaginationChange = (_: React.ChangeEvent<unknown>, page: number) => {
         setSearchPageNumberPageSize((prev) => ({
             pageNumber: page,
             pageSize: prev.pageSize,
@@ -171,8 +163,7 @@ const MobilizationTab = () => {
     const { items: mobilizations, totalCount } = paginatedMobilizations ?? {};
     const { items: mobsBySearch, totalCount: totalCountMobsBySearch } = paginatedMobsBySearch ?? {};
 
-    const mobsToRender = mobsBySearch ? mobsBySearch : mobilizations;
-
+    const mobsToRender = searchIsEnabled ? mobsBySearch : mobilizations;
     return (
         <>
             <Box sx={{ mt: 5 }}>
@@ -180,9 +171,44 @@ const MobilizationTab = () => {
                     loading={searchIsPending}
                     placeHolder="Search: id, name"
                     onChange={handleSearchChange}
-                    clearSearch={handleClearSearch}
+                    clearSearch={handleClearSearchInput}
                     value={mobilizationSearchInput}
                 ></SearchInput>
+                <Box sx={{ mt: 5, maxWidth: 200 }}>
+                    <label htmlFor="searchDate">filter date:</label>
+                    <input
+                        type="date"
+                        name="searchDate"
+                        onChange={handleSearchDateChange}
+                        value={searchFilterOnDate}
+                    ></input>
+                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <InputLabel id="select-label-mob-status">Status</InputLabel>
+                        <Select
+                            onChange={handleSearchStatusChange}
+                            value={searhFilterOnStatus}
+                            labelId="select-label-mob-status"
+                            label="Status"
+                        >
+                            <MenuItem value={''}>None</MenuItem>
+                            <MenuItem value={MobilizationStatus.NotReady}>
+                                {MobilizationStatus[MobilizationStatus.NotReady]}
+                            </MenuItem>
+                            <MenuItem value={MobilizationStatus.Ready}>
+                                {MobilizationStatus[MobilizationStatus.Ready]}
+                            </MenuItem>
+                            <MenuItem value={MobilizationStatus.Started}>
+                                {MobilizationStatus[MobilizationStatus.Started]}
+                            </MenuItem>
+                            <MenuItem value={MobilizationStatus.Completed}>
+                                {MobilizationStatus[MobilizationStatus.Completed]}
+                            </MenuItem>
+                        </Select>
+                        <Button variant="contained" onClick={handleClearSearch}>
+                            Clear
+                        </Button>
+                    </FormControl>
+                </Box>
             </Box>
             <Box sx={{ mt: 5 }}>
                 <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
@@ -207,7 +233,10 @@ const MobilizationTab = () => {
                                                 id={'Checklists Count'}
                                                 text={`${mob.checklistCount}`}
                                             />
-                                            <CardWrapperList id={'Status'} text={`${mob.status}`} />
+                                            <CardWrapperList
+                                                id={'Status'}
+                                                text={`${MobilizationStatus[mob.status]}`}
+                                            />
                                         </StyledUl>
                                     }
                                     secondChild={
@@ -220,12 +249,13 @@ const MobilizationTab = () => {
                                     }
                                     borderColor={GetCardBorderColor(mob.status)}
                                     TopRightActionButton={
-                                        mob.status !== 'Completed' && mob.status !== 'Started' ? (
-                                            <IconButton onClick={handleEditClick}>
+                                        mob.status !== MobilizationStatus.Completed &&
+                                        mob.status !== MobilizationStatus.Started ? (
+                                            <IconButton onClick={handleTopRightButtonClick}>
                                                 <ModeEditOutlineIcon color="primary" />
                                             </IconButton>
                                         ) : (
-                                            <IconButton onClick={handleViewClick}>
+                                            <IconButton onClick={handleTopRightButtonClick}>
                                                 <PreviewIcon color="primary" />
                                             </IconButton>
                                         )
@@ -237,7 +267,7 @@ const MobilizationTab = () => {
                         <></>
                     )}
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        {mobilizationSearchInput != '' ? (
+                        {searchIsEnabled ? (
                             <Pagination
                                 count={
                                     totalCountMobsBySearch
@@ -245,7 +275,7 @@ const MobilizationTab = () => {
                                         : 0
                                 }
                                 color="primary"
-                                onChange={onMobsSearcgPaginationChange}
+                                onChange={onMobsSearchPaginationChange}
                             />
                         ) : (
                             <Pagination

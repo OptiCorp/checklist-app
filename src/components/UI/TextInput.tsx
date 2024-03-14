@@ -12,6 +12,8 @@ interface Props {
     value?: string;
     rows?: number;
     disabled?: boolean;
+    onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> | undefined;
+    disabeldPropButton?: boolean;
 }
 
 const TextInput = ({
@@ -24,10 +26,13 @@ const TextInput = ({
     disabled,
     helperText,
     error,
+    onBlur,
+    disabeldPropButton,
 }: Props) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <TextField
+                onBlur={onBlur}
                 fullWidth
                 placeholder={placeHolder}
                 variant="standard"
@@ -45,7 +50,11 @@ const TextInput = ({
                         ? {
                               endAdornment: (
                                   <InputAdornment position="end">
-                                      <IconButton onClick={IconClick}>
+                                      <IconButton
+                                          onClick={IconClick}
+                                          color="secondary"
+                                          disabled={disabled || disabeldPropButton}
+                                      >
                                           <ClearOutlinedIcon />
                                       </IconButton>
                                   </InputAdornment>

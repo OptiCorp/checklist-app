@@ -7,10 +7,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { MsalProvider } from '@azure/msal-react';
 import { msalInstance } from './msalConfig.ts';
-import './index.css';
 import GlobalStyles from './style/GlobalStyles.ts';
-
-// import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

@@ -39,7 +39,9 @@ const CardWrapper: React.FC<CardWrapperProps> = ({
             <Grid container direction={'row'} wrap="nowrap" minHeight={'4rem'}>
                 <Grid item xs={middleChild ? 4 : 6} p={3}>
                     <Box width={'90%'} margin={'auto'}>
-                        <Typography variant="caption">{firstChild}</Typography>
+                        <Typography variant="caption" component={'div'}>
+                            {firstChild}
+                        </Typography>
                     </Box>
                 </Grid>
                 {middleChild && (
