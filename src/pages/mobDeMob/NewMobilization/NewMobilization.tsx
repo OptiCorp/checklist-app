@@ -17,12 +17,11 @@ import CardWrapperList, { StyledUl } from '../../../components/UI/CardWrapperLis
 import NestedList from '../../../components/UI/NestedList';
 import SearchAutoComplete from '../../../components/UI/SearchAutoComplete';
 import { RecentOrSearch } from '../../../components/landingPage/OverViewTabs';
-import { Item } from '../../../utils/types';
+import { Item } from '../../../services/apiTypes';
 
 const dummyItem1: Item = {
     type: 'assembly',
     itemId: 'alsk-as9as-dk',
-    hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
     name: 'Bob2.0',
@@ -30,16 +29,11 @@ const dummyItem1: Item = {
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
     wpId: 'alk alsd',
-    partOf: {
-        itemId: '12343-asd-dd-a',
-        type: 'assembly',
-    },
 };
 
 const dummyItem2: Item = {
     type: 'assembly',
     itemId: 'ølko-as9as-dk',
-    hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
     name: 'Bolt2.0',
@@ -47,16 +41,11 @@ const dummyItem2: Item = {
     serialNumber: 'asuiabs-daisd-adas',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
-    partOf: {
-        itemId: 'alsk-as9as-dk',
-        type: 'item',
-    },
 };
 
 const dummyItem3: Item = {
     type: 'item',
     itemId: 'poasd-sadl-as9as-drrr',
-    hasChecklistTemplate: true,
     created: new Date(),
     lastModified: new Date(),
     name: 'Bolt2.0',
@@ -64,10 +53,6 @@ const dummyItem3: Item = {
     serialNumber: 'qwoie-qweiqna-kasnda',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
-    partOf: {
-        itemId: 'alsk-as9as-dk',
-        type: 'item',
-    },
 };
 
 const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3];

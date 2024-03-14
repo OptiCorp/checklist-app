@@ -10,8 +10,8 @@ import {
     styled,
 } from '@mui/material';
 import React, { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Punch } from '../../../utils/types';
+import { useNavigate } from 'react-router-dom';
+import { Punch } from '../../../services/apiTypes';
 
 // export type Punch = {
 //     id: string;

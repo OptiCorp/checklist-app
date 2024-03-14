@@ -2,15 +2,14 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { axiosClient, getSingleChecklist } from '../../api';
 import BottomButtons from '../../components/BottomButtons/BottomButtons';
 import ChecklistHeader from '../../components/Checklist/ChecklistHeader';
-import ChecklistHeaderLoading from '../../components/UI/PageHeaderLoading';
 import ChecklistTableHeader from '../../components/Checklist/ChecklistTableHeader';
 import ChecklistTaskList from '../../components/Checklist/ChecklistTaskList';
-import { queryClient } from '../../tanstackQuery';
-import { Checklist, ChecklistStatus } from '../../utils/types';
 import PageHeaderLoading from '../../components/UI/PageHeaderLoading';
+import apiService, { axiosClient } from '../../services/api';
+import { Checklist, ChecklistStatus } from '../../services/apiTypes';
+import { queryClient } from '../../tanstackQuery';
 
 export type completeType = 'check' | 'na';
 
@@ -24,7 +23,7 @@ const ChecklistPage = () => {
     const { data: checklistData, isPending: checklistDataPending } = useQuery({
         queryKey: ['checklist', mobilizationId, checklistId],
         queryFn: async ({ signal }) =>
-            getSingleChecklist({ signal, mobilizationId, checklistId }).then((res) => res.data),
+            apiService().getSingleChecklist({ signal, mobilizationId, checklistId }),
     });
 
     const { mutate: checkMutate, isPending: checkIsPending } = useMutation({
@@ -166,7 +165,17 @@ const ChecklistPage = () => {
     };
 
     const pending = checklistDataPending || naIsPending || checkIsPending;
-    const allQuestionsMarked = checklistData?.questions.every((q) => q.checked || q.notApplicable);
+    const allQuestionsMarked =
+        checklistData?.questions.every((q) => q.checked || q.notApplicable) ?? false;
+    const nonQuestionsMarked =
+        checklistData?.questions.every((q) => !q.checked && !q.notApplicable) ?? false;
+
+    let status: ChecklistStatus | undefined = undefined;
+
+    if (checklistData) {
+        status = checklistData.status;
+    }
+    console.log(status);
 
     const isCompleted = checklistData ? checklistData.status === ChecklistStatus.Completed : false;
     return (
@@ -203,11 +212,12 @@ const ChecklistPage = () => {
                 )}
             </Box>
             <BottomButtons>
-                <Button variant="outlined" onClick={() => navigate(-1)}>
+                <Button variant="outlined" size="small" onClick={() => navigate(-1)}>
                     Back
                 </Button>
                 <LoadingButton
                     loading={statusIsPending}
+                    size="small"
                     variant="contained"
                     onClick={() =>
                         !isCompleted
@@ -218,6 +228,18 @@ const ChecklistPage = () => {
                 >
                     {!isCompleted ? 'Mark as complete' : 'Mark as inprogress'}
                 </LoadingButton>
+                {status != ChecklistStatus.NotStarted && nonQuestionsMarked ? (
+                    <LoadingButton
+                        loading={statusIsPending}
+                        size="small"
+                        variant="contained"
+                        onClick={() => updateChecklistStatus(ChecklistStatus.NotStarted)}
+                    >
+                        Mark as not started
+                    </LoadingButton>
+                ) : (
+                    <></>
+                )}
             </BottomButtons>
         </>
     );

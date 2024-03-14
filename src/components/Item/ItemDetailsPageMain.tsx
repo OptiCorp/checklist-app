@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checklist, ChecklistStatus, PaginatedList } from '../../utils/types';
+import { Checklist, ChecklistStatus, PaginatedList } from '../../services/apiTypes';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList, { StyledUl } from '../UI/CardWrapperList';
 

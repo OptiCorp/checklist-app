@@ -1,7 +1,7 @@
 import { Box, Skeleton } from '@mui/material';
 import React from 'react';
 import { completeType } from '../../pages/ChecklistPage/ChecklistPage';
-import { ChecklistQuestion } from '../../utils/types';
+import { ChecklistQuestion } from '../../services/apiTypes';
 import ChecklistRows from './ChecklistRows';
 
 type Props = {

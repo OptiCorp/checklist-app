@@ -1,10 +1,10 @@
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
-import { Checklist, HasChecklistTemplateNavigation, Item, ItemTemplate } from '../../utils/types';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { axiosClient, getItemTemplate } from '../../api';
+import apiService, { axiosClient } from '../../services/api';
+import { Item, ItemTemplate, QuestionTemplate } from '../../services/apiTypes';
 import { queryClient } from '../../tanstackQuery';
 
 export type CreateOrEdit = 'create' | 'edit';
@@ -14,7 +14,6 @@ const dummyItem: Item = {
     id: 'aslkd-12-lsad-a',
     created: new Date(),
     lastModified: new Date(),
-    hasChecklistTemplate: true,
     name: 'Hydraulic Arm',
     itemTemplateId: '9391293',
     serialNumber: '131233',
@@ -22,50 +21,60 @@ const dummyItem: Item = {
     wpId: '1231232',
 };
 
+//TODO: let user deside what to do with conflicting templates
+//(checklists that have started to be filled out based on questions from QuestionTemplates)
+
 const ChecklistTemplateDetailsPage = () => {
     const { pathname } = useLocation();
-
     const paths = pathname.split('/');
-    const itemId = paths[1];
+    const itemId = paths[1] || undefined;
     //const [createOrEdit, setCreateOrEdit] = useState<CreateOrEdit>('create');
     const [textFields, setTextFields] = useState<
-        { text: string; error: boolean; helperText?: string }[]
+        { question: QuestionTemplate; error: boolean; helperText?: string }[]
     >([]);
 
     const { data: itemData, isPending: itemDateIsPending } = useQuery({
         queryKey: [itemId, 'itemTemplate'],
-        queryFn: async ({ signal }) => getItemTemplate({ signal, itemId }).then((res) => res.data),
+        queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId }),
+        enabled: !!itemId,
     });
 
-    useEffect(() => {
-        if (itemData) {
-            const questions = itemData.questions.map((q) => ({
-                text: q,
-                error: false,
-                helperText: undefined,
-            }));
-            setTextFields(() => questions);
-        } else if (!itemData && !itemDateIsPending) {
-            setTextFields([{ error: false, text: 'create some questions!' }]);
-        }
-    }, [itemData, itemDateIsPending]);
+    const { id: itemTemplateId } = itemData ?? {};
+
+    const { data: checklistItemQuestionConflictdata } = useQuery({
+        queryKey: [itemId, itemTemplateId],
+        queryFn: async ({ signal }) =>
+            apiService().getCheckItemQuestionConflicts({ signal, itemId, itemTemplateId }),
+        enabled: !!itemTemplateId,
+    });
 
     const { mutate: questionsMutate, isPending: questionsIsPending } = useMutation({
         mutationFn: ({
             itemId,
-            questions,
-            method,
+            question,
+            questionId,
         }: {
             itemId: string;
-            questions: string[];
-            method: 'POST' | 'PUT';
+            question: string;
+            questionId: string;
         }) => {
-            return axiosClient(`Templates/${itemId}`, {
-                method: method,
-                data: { itemId: itemId, questions: questions } as ItemTemplate,
+            return axiosClient(`Templates/${itemId}/${questionId}`, {
+                method: 'PUT',
+                data: question,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
         },
-        onMutate: async ({ itemId, questions }: { itemId: string; questions: string[] }) => {
+        onMutate: async ({
+            itemId,
+            question,
+            questionId,
+        }: {
+            itemId: string;
+            question: string;
+            questionId: string;
+        }) => {
             await queryClient.cancelQueries({
                 queryKey: [itemId, 'itemTemplate'],
             });
@@ -78,9 +87,134 @@ const ChecklistTemplateDetailsPage = () => {
             //optimistically update to new value
             //const { questions } = { ...previousChecklist };
 
-            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) =>
-                old ? { ...old, questions: questions } : undefined
-            );
+            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
+                if (old) {
+                    const questions = [...old.questions];
+                    const updatedQuestion = questions.find((q) => q.id == questionId);
+                    if (updatedQuestion) {
+                        updatedQuestion.question = question;
+                    }
+                    return { ...old, questions: questions };
+                }
+                return undefined;
+            });
+
+            return { previousItemTemplate };
+        },
+        onError: (err, some, context) => {
+            queryClient.setQueryData([itemId, 'itemTemplate'], context?.previousItemTemplate);
+        },
+        onSettled: async () => {
+            return await queryClient.invalidateQueries({
+                queryKey: [itemId, 'itemTemplate'],
+            });
+        },
+    });
+
+    useEffect(() => {
+        if (itemData) {
+            const questions = itemData.questions.map((q) => ({
+                question: q,
+                error: false,
+                helperText: undefined,
+            }));
+            setTextFields(questions);
+        } else if (!itemData && !itemDateIsPending) {
+            //console.log(itemId);
+            //TODO: create the itemTemplate
+            //addQuestionMutate({ itemId: itemId, question: 'sample question' });
+        }
+    }, [itemData, itemDateIsPending, itemId]);
+
+    const { mutate: addQuestionMutate, isPending: addQuestionIsPending } = useMutation({
+        mutationFn: ({ itemId, question }: { itemId: string; question: string }) => {
+            return axiosClient(`Templates/AddQuestionForTemplate/${itemTemplateId}`, {
+                method: 'POST',
+                data: question,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        },
+        onMutate: async ({ itemId, question }: { itemId: string; question: string }) => {
+            await queryClient.cancelQueries({
+                queryKey: [itemId, 'itemTemplate'],
+            });
+
+            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
+                itemId,
+                'itemTemplate',
+            ]);
+
+            //optimistically update to new value
+            //const { questions } = { ...previousChecklist };
+
+            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
+                if (old) {
+                    const questions = [...old.questions, { id: 'temp', question: question }];
+                    return { ...old, questions: questions };
+                }
+                return undefined;
+            });
+
+            return { previousItemTemplate };
+        },
+        onError: (err, some, context) => {
+            queryClient.setQueryData([itemId, 'itemTemplate'], context?.previousItemTemplate);
+        },
+        onSettled: async () => {
+            return await queryClient.invalidateQueries({
+                queryKey: [itemId, 'itemTemplate'],
+            });
+        },
+    });
+
+    const { mutate: deleteQuestionMutate, isPending: deleteQuestionIsPending } = useMutation({
+        mutationFn: ({
+            itemId,
+            questionId,
+            index,
+        }: {
+            itemId: string;
+            questionId: string;
+            index: number;
+        }) => {
+            return axiosClient(`Templates/${itemId}/DeleteQuestionTemplate/${questionId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        },
+        onMutate: async ({
+            itemId,
+            questionId,
+            index,
+        }: {
+            itemId: string;
+            questionId: string;
+            index: number;
+        }) => {
+            await queryClient.cancelQueries({
+                queryKey: [itemId, 'itemTemplate'],
+            });
+
+            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
+                itemId,
+                'itemTemplate',
+            ]);
+
+            //optimistically update to new value
+            //const { questions } = { ...previousChecklist };
+
+            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
+                if (old) {
+                    const questions = [...old.questions];
+                    questions.splice(index, 1);
+                    return { ...old, questions: questions };
+                }
+                return undefined;
+            });
 
             return { previousItemTemplate };
         },
@@ -98,7 +232,7 @@ const ChecklistTemplateDetailsPage = () => {
         setTextFields((state) => {
             const oldState = [...state];
             const field = oldState[index];
-            field.text = newText;
+            field.question.question = newText;
             if (field.error) {
                 field.error = false;
                 field.helperText = undefined;
@@ -110,31 +244,32 @@ const ChecklistTemplateDetailsPage = () => {
     };
 
     const handleTextFieldAdd = () => {
+        let hasError = false;
         setTextFields((state) => {
             const newState = [...state];
-            const lastIndex = newState.length - 1;
-            const lastQuestion = newState[lastIndex];
-            if (newState[lastIndex].text.length < 5) {
-                lastQuestion.helperText = 'lenght must be grater than 5';
-                lastQuestion.error = true;
-                return newState;
-            }
-            lastQuestion.helperText = undefined;
-            lastQuestion.error = false;
-            //remove previous error message:
-            newState.push({ error: false, helperText: undefined, text: '' });
+            newState.forEach((f) => {
+                if (f.question.question.length < 5) {
+                    hasError = true;
+                    f.error = true;
+                    f.helperText = 'lenght must be grater than 5';
+                }
+            });
             return newState;
         });
+        if (hasError) return;
+        addQuestionMutate({ itemId: itemId, question: '' });
     };
 
-    const handleTextFieldRemove = (index: number) => {
-        console.log(textFields.length);
-        if (textFields.length == 1) return;
-        setTextFields((state) => {
-            const newState = [...state]; // Create a copy of the state array
-            newState.splice(index, 1); // Remove the element at the specified index
-            return newState;
-        });
+    const handleDeleteQuestion = (index: number, questionId: string) => {
+        // console.log(textFields.length);
+        // if (textFields.length == 1) return;
+        // setTextFields((state) => {
+        //     const newState = [...state]; // Create a copy of the state array
+        //     newState.splice(index, 1); // Remove the element at the specified index
+        //     return newState;
+        // });
+        if (index == 0) return;
+        deleteQuestionMutate({ index: index, itemId: itemId, questionId: questionId });
     };
 
     const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
@@ -142,7 +277,7 @@ const ChecklistTemplateDetailsPage = () => {
         setTextFields((f) => {
             const oldTextFields = [...f];
             oldTextFields.forEach((field) => {
-                if (field.text.length < 5) {
+                if (field.question.question.length <= 5) {
                     field.error = true;
                     field.helperText = 'lenght must be grater than 5';
                     hasSomeError = true;
@@ -151,12 +286,11 @@ const ChecklistTemplateDetailsPage = () => {
             return oldTextFields;
         });
         if (hasSomeError) return;
-        const method = createOrEdit == 'create' ? 'POST' : 'PUT';
-        questionsMutate({
-            itemId: itemId,
-            method: method,
-            questions: textFields.map((q) => q.text),
-        });
+        // questionsMutate({
+        //     itemId: itemId,
+        //     method: method,
+        //     questions: textFields.map((q) => q.text),
+        // });
     };
 
     const handleCreate = () => {
@@ -167,15 +301,37 @@ const ChecklistTemplateDetailsPage = () => {
         handleCreateOrEdit('edit');
     };
 
+    const handleInputUpdate = (index: number, questionId: string, text: string) => {
+        const textStripped = text.trim();
+        //const field = textFields.find((q) => q.question.id == questionId);
+        if (textStripped.length <= 5) {
+            setTextFields((f) => {
+                const fields = [...f];
+                const field = fields[index];
+                field.error = true;
+                field.helperText = 'lenght must be grater than 5';
+                return fields;
+            });
+            return;
+        }
+        questionsMutate({ itemId: itemId, question: text, questionId: questionId });
+    };
+
+    const isloading = deleteQuestionIsPending || questionsIsPending || addQuestionIsPending;
+
     return (
         <>
             <ItemTopHeader item={dummyItem}></ItemTopHeader>
             <ChecklistTemplateDetailsMain
-                createLoading={questionsIsPending}
-                dataIsPending={itemDateIsPending}
+                loading={isloading}
+                readonlyMode={
+                    !checklistItemQuestionConflictdata ||
+                    checklistItemQuestionConflictdata.length > 0
+                }
+                onInputBlur={handleInputUpdate}
                 createOrEdit={itemData ? 'edit' : 'create'}
                 textFields={textFields}
-                textFieldRemove={handleTextFieldRemove}
+                textFieldRemove={handleDeleteQuestion}
                 textFieldAdd={handleTextFieldAdd}
                 textFieldChange={handleTextFieldChange}
                 onCreate={handleCreate}

@@ -8,11 +8,6 @@ export type BaseEntities = {
     lastModifiedBy?: string;
 };
 
-export type PartOf = {
-    itemId: string;
-    type: ItemType;
-};
-
 export interface Item extends BaseEntities {
     itemId: string;
     type: ItemType;
@@ -21,7 +16,7 @@ export interface Item extends BaseEntities {
     name: string;
     itemTemplateId: string;
     checklistId?: string; //TODO: this should probably not be here later
-    partOf?: PartOf;
+    parentId?: string;
 }
 
 export interface Punch extends BaseEntities {
@@ -36,7 +31,12 @@ export interface ItemChecklists extends BaseEntities {
     Punches: Punch[];
 }
 
-export type MobilizationStatus = 'NotReady' | 'Ready' | 'Completed' | 'Started';
+export enum MobilizationStatus {
+    NotReady,
+    Ready,
+    Started,
+    Completed,
+}
 type MobilizationType = 'Mobilization' | 'Demobilization';
 
 export interface Mobilization extends BaseEntities {
@@ -80,13 +80,17 @@ export interface Checklist extends BaseEntities {
     status: ChecklistStatus;
 }
 
-export interface ItemTemplate {
+export interface QuestionTemplate {
+    id: string;
+    question: string;
+}
+
+export interface ItemTemplate extends BaseEntities {
     itemId?: string;
-    questions: string[];
+    questions: QuestionTemplate[];
 }
 
 export interface ItemHasItemTemplate {
     itemId: string;
     hasChecklistTemplate: boolean;
 }
-

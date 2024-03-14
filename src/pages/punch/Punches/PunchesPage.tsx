@@ -1,6 +1,6 @@
 import PunchesMain from '../../../components/Punch/Punches/PunchesMain';
 import PunchesPageHeader from '../../../components/Punch/Punches/PunchesPageHeader';
-import { Item, Punch } from '../../../utils/types';
+import { Item, Punch } from '../../../services/apiTypes';
 
 const dummyItem: Item = {
     type: 'item',

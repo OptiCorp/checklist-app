@@ -1,22 +1,21 @@
-import { Box, Button, Typography } from '@mui/material';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { debounce } from 'lodash';
+import { useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ItemDetailsPageMain from '../../components/Item/ItemDetailsPageMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
-import { HasChecklistTemplateNavigation, Item } from '../../utils/types';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getItemChecklistsHistory, getItemTemplateExistForItem } from '../../api';
 import SearchInput from '../../components/UI/SearchInput';
-import { useRef, useState } from 'react';
-import { debounce } from 'lodash';
-import LoadingButton from '@mui/lab/LoadingButton';
+import apiService from '../../services/api';
+import { Item } from '../../services/apiTypes';
 
 const dummyItem: Item = {
     itemId: '31232',
     id: 'aslkd-12-lsad-a',
     created: new Date(),
     lastModified: new Date(),
-    hasChecklistTemplate: true,
     name: 'Geir2.0',
     itemTemplateId: '9391293',
     serialNumber: '131233',
@@ -37,14 +36,13 @@ const ItemDetailsPage = () => {
 
     const { data: itemChecklistData, isPending: itemChecklistDataIsPending } = useQuery({
         queryKey: ['itemHistory', { itemId: itemId }],
-        queryFn: async ({ signal }) =>
-            getItemChecklistsHistory({ signal, itemId }).then((res) => res.data),
+        queryFn: async ({ signal }) => apiService().getItemChecklistsHistory({ signal, itemId }),
     });
 
     const { data: itemTemplateData, isLoading: itemTemplateDateIsLoading } = useQuery({
         queryKey: ['itemsHasChecklistTemplate', { itemId: itemId }],
         queryFn: async ({ signal }) =>
-            getItemTemplateExistForItem({ signal, itemIds: [itemId] }).then((res) => res.data),
+            apiService().getItemTemplateExistForItem({ signal, itemIds: [itemId] }),
         enabled: !!itemChecklistData && itemChecklistData.items.length == 0,
     });
 

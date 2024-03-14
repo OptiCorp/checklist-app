@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
-import { Item } from '../../../utils/types';
+import { Item } from '../../../services/apiTypes';
 
 interface Props {
     title: string;
@@ -38,10 +38,10 @@ const PunchesPageHeader = ({ item: item, title, checklistItemId, mobilizationId 
                     <Box>
                         <b>Part Of</b>:
                     </Box>
-                    <Box>
+                    {/* <Box>
                         <b>{item.partOf?.type.toUpperCase()}</b>
-                    </Box>
-                    <Box>{item.partOf?.itemId}</Box>
+                    </Box> */}
+                    <Box>{item.parentId}</Box>
                 </Grid>
             </Grid>
         </Box>

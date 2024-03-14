@@ -4,7 +4,7 @@ import { BreadcrumbsContext } from '../../store/breadcrumbsContext';
 
 const LandingPage = () => {
     const { state } = useContext(BreadcrumbsContext);
-    
+
     return (
         <>
             <OverViewTabs></OverViewTabs>

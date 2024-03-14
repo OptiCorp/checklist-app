@@ -23,7 +23,7 @@ import ItemDetailsPage from './pages/item/ItemDetailsPage';
 import PunchDetailsPage from './pages/punch/PunchDetails/PunchDetailsPage';
 import PunchesPage from './pages/punch/Punches/PunchesPage';
 import { queryClient } from './tanstackQuery';
-import { lightTheme } from './theme';
+import { lightTheme } from './style/muiTheme';
 
 const router = createBrowserRouter(
     createRoutesFromElements(

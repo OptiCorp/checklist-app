@@ -1,9 +1,11 @@
+import { LoadingButton } from '@mui/lab';
 import { Box, Link, Stack, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getItemTemplateExistForItem } from '../../api';
-import { Item, ItemType } from '../../utils/types';
+import apiService, { axiosClient } from '../../services/api';
+import { Item, ItemHasItemTemplate, ItemType } from '../../services/apiTypes';
+import { queryClient } from '../../tanstackQuery';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList from '../UI/CardWrapperList';
 import { StyledUl } from './MobilizationTab';
@@ -18,10 +20,6 @@ const dummyItem1: Item = {
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
     wpId: 'alk alsd',
-    partOf: {
-        itemId: '12343-asd-dd-a',
-        type: 'assembly',
-    },
 };
 
 const dummyItem2: Item = {
@@ -34,10 +32,6 @@ const dummyItem2: Item = {
     serialNumber: 'asuiabs-daisd-adas',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
-    partOf: {
-        itemId: 'alsk-as9as-dk',
-        type: 'item',
-    },
 };
 
 const dummyItem3: Item = {
@@ -50,13 +44,21 @@ const dummyItem3: Item = {
     serialNumber: 'qwoie-qweiqna-kasnda',
     itemTemplateId: 'okda-asjda-adh',
     wpId: 'aow-adnas-dasd',
-    partOf: {
-        itemId: 'alsk-as9as-dk',
-        type: 'item',
-    },
 };
 
-const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3];
+const dummyItem4: Item = {
+    type: 'item',
+    itemId: 'testingTahngn',
+    created: new Date(),
+    lastModified: new Date(),
+    name: 'Bolt2.0',
+    id: 'lkdf-asjdb-sdi3',
+    serialNumber: 'qwoie-qweiqna-kasnda',
+    itemTemplateId: 'okda-asjda-adh',
+    wpId: 'aow-adnas-dasd',
+};
+
+const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3, dummyItem4];
 
 interface ItemChecklistTemplate {
     itemId: string;
@@ -67,13 +69,13 @@ interface ItemChecklistTemplate {
 
 const ItemsTab = () => {
     const navigate = useNavigate();
-    const handleEditChecklistTemplateClick = (
-        e: React.MouseEvent<HTMLButtonElement>,
-        navigateTo: string
-    ) => {
-        e.stopPropagation();
-        navigate(navigateTo);
-    };
+    // const handleEditChecklistTemplateClick = (
+    //     e: React.MouseEvent<HTMLButtonElement>,
+    //     navigateTo: string
+    // ) => {
+    //     e.stopPropagation();
+    //     navigate(navigateTo);
+    // };
     const [itemChecklistTemplate, setItemChecklistTemplate] = useState<ItemChecklistTemplate[]>([]);
 
     useEffect(() => {
@@ -88,26 +90,62 @@ const ItemsTab = () => {
 
     const itemIds = mockItems.map((mI) => mI.itemId);
 
+    const {
+        mutate: createItemTemplateMutate,
+        isPending: createItemTemplateIsPending,
+        isSuccess: mutateIsSuccess,
+    } = useMutation({
+        //TODO:
+        mutationFn: ({ itemId, questions }: { itemId: string; questions: string[] }) => {
+            return axiosClient(`Templates/${itemId}/CreateTemplateForItem`, {
+                method: 'POST',
+                data: { questions: questions, itemId: itemId },
+            });
+        },
+        onSuccess: (_, { itemId }) => {
+            queryClient.setQueryData(
+                ['itemsHasChecklistTemplate'],
+                (oldData: ItemHasItemTemplate[]) => {
+                    if (oldData) {
+                        const newData = [...oldData];
+                        const item = newData.find((it) => it.itemId == itemId);
+                        if (item) item.hasChecklistTemplate = true;
+                        return newData;
+                    }
+                    return oldData;
+                }
+            );
+        },
+        onSettled: async () => {
+            return await queryClient.invalidateQueries({
+                queryKey: ['itemsHasChecklistTemplate'],
+            });
+        },
+    });
+
     const { data: itemDataHasItemTemplate } = useQuery({
-        queryKey: ['itemsHasChecklistTemplate'],
+        queryKey: ['itemsHasChecklistTemplate'], //set key based on fetching from items api as well
         queryFn: async ({ signal }) =>
-            getItemTemplateExistForItem({ signal, itemIds }).then((res) => res.data),
+            apiService().getItemTemplateExistForItem({ signal, itemIds }),
     });
 
     useEffect(() => {
-        if (itemDataHasItemTemplate) {
+        console.log(itemDataHasItemTemplate);
+        if (itemDataHasItemTemplate ?? (itemDataHasItemTemplate && mutateIsSuccess)) {
             setItemChecklistTemplate(
-                mockItems.map((item) => ({
-                    itemId: item.itemId,
-                    serialNumber: item.serialNumber,
-                    type: item.type,
-                    hasChecklistTemplate: itemDataHasItemTemplate.find(
-                        (it) => it.itemId == item.itemId
-                    )?.hasChecklistTemplate,
-                }))
+                mockItems.map((item) => {
+                    const findItem = itemDataHasItemTemplate.find((it) => it.itemId == item.itemId);
+                    if (!findItem) return item;
+                    return {
+                        itemId: item.itemId,
+                        serialNumber: item.serialNumber,
+                        type: item.type,
+                        hasChecklistTemplate: findItem.hasChecklistTemplate,
+                    };
+                })
             );
         }
-    }, [itemDataHasItemTemplate]);
+    }, [itemDataHasItemTemplate, mutateIsSuccess]);
 
     return (
         <>
@@ -160,7 +198,7 @@ const ItemsTab = () => {
                                                         </Typography>
                                                     ) : (
                                                         <Typography variant="inherit" color={'red'}>
-                                                            <Link
+                                                            {/* <Link
                                                                 component={'button'}
                                                                 color={'inherit'}
                                                                 onClick={(e) => {
@@ -178,7 +216,25 @@ const ItemsTab = () => {
                                                                 //to={`/${item.itemId}/checklistTemplate`}
                                                             >
                                                                 Create checklistTemplate
-                                                            </Link>
+                                                            </Link> */}
+                                                            <LoadingButton
+                                                                loading={
+                                                                    createItemTemplateIsPending
+                                                                }
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    createItemTemplateMutate({
+                                                                        itemId: item.itemId,
+                                                                        questions: [
+                                                                            'sample question',
+                                                                        ],
+                                                                    });
+                                                                }}
+                                                                variant="contained"
+                                                                size="small"
+                                                            >
+                                                                Create checklist template
+                                                            </LoadingButton>
                                                         </Typography>
                                                     )
                                                 ) : (
