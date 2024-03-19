@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
 import { useDeleteQuestion } from '../../hooks/useDeleteQuestion';
@@ -28,8 +28,7 @@ const dummyItem: Item = {
 
 const ChecklistTemplateDetailsPage = () => {
     const { pathname } = useLocation();
-    const paths = pathname.split('/');
-    const itemId = paths[1] || undefined;
+    const { itemId } = useParams();
     const [textFields, setTextFields] = useState<
         //TODO: add chagnedTextfield
         { question: QuestionTemplate; error: boolean; helperText?: string }[]
@@ -37,17 +36,20 @@ const ChecklistTemplateDetailsPage = () => {
 
     const { data: itemData, isPending: itemDataIsPending } = useQuery({
         queryKey: [itemId, 'itemTemplate'],
-        queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId }),
+        queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId: itemId! }),
         enabled: !!itemId,
     });
-
 
     const { id: itemTemplateId } = itemData ?? {};
 
     const { data: checklistItemQuestionConflictdata } = useQuery({
         queryKey: [itemId, itemTemplateId],
         queryFn: async ({ signal }) =>
-            apiService().getCheckItemQuestionConflicts({ signal, itemId, itemTemplateId }),
+            apiService().getCheckItemQuestionConflicts({
+                signal,
+                itemId: itemId!,
+                itemTemplateId: itemTemplateId!,
+            }),
         enabled: !!itemTemplateId,
     });
 

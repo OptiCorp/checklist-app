@@ -1,14 +1,15 @@
-//UNUSED!!!!
 import { styled } from 'styled-components';
 import { COLORS } from './GlobalStyles';
+import { Accordion, Stack } from '@mui/material';
 
+//UNUSED!!!!
 export const BodyWrapper = styled.div`
     background-color: ${COLORS.lightGray};
     display: flex;
     justify-content: center;
     min-height: 100vh;
 `;
-
+//UNUSED!!!!
 export const AppContainer = styled.div`
     max-width: 1200px;
     width: 100%;

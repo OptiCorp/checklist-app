@@ -31,6 +31,7 @@
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.13",
     "react-router-dom": "^6.21.3",
     "styled-components": "^6.1.8"
   },
@@ -40,6 +41,7 @@
     "@storybook/addon-interactions": "^8.0.0",
     "@storybook/addon-links": "^8.0.0",
     "@storybook/addon-onboarding": "^8.0.0",
+    "@storybook/addon-themes": "^8.0.0",
     "@storybook/blocks": "^8.0.0",
     "@storybook/react": "^8.0.0",
     "@storybook/react-vite": "^8.0.0",

@@ -4,7 +4,7 @@ import { axiosClient } from '../services/api';
 import { ItemHasChecklistItemTemplate } from '../services/apiTypes';
 import { queryClient } from '../tanstackQuery';
 
-export const usePostCreateChecklistTemplate = () => {
+export const usePostCreateChecklistTemplate = ({ itemIds }: { itemIds: string[] }) => {
     const navigate = useNavigate();
     return useMutation({
         //TODO:
@@ -16,7 +16,7 @@ export const usePostCreateChecklistTemplate = () => {
         },
         onSuccess: (_, { itemId }) => {
             queryClient.setQueryData(
-                ['itemsHasChecklistTemplate'],
+                ['itemsHasChecklistTemplate', itemIds],
                 (oldData: ItemHasChecklistItemTemplate[]) => {
                     if (oldData) {
                         const newData = [...oldData];
@@ -31,7 +31,7 @@ export const usePostCreateChecklistTemplate = () => {
         },
         onSettled: async () => {
             return await queryClient.invalidateQueries({
-                queryKey: ['itemsHasChecklistTemplate'],
+                queryKey: ['itemsHasChecklistTemplate', itemIds],
             });
         },
     });

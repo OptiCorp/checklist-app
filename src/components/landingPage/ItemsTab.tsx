@@ -9,6 +9,7 @@ import { Item } from '../../services/apiTypes';
 import CardWrapper from '../UI/CardWrapper';
 import CardWrapperList from '../UI/CardWrapperList';
 import { StyledUl } from './MobilizationTab';
+import { CustomCard } from '../UI/CustomCard/CustomCard';
 
 const dummyItem1: Item = {
     id: 'raq6iWvV1V',
@@ -67,7 +68,7 @@ const dummyItem1: Item = {
 };
 
 const dummyItem2: Item = {
-    id: 'nkjksapdnas',
+    id: 'somerandom-id-yeah',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
@@ -179,7 +180,7 @@ const dummyItem3: Item = {
 };
 
 const dummyItem4: Item = {
-    id: 'dsm12naksdd',
+    id: 'notheronæl11-askdn12',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
@@ -238,7 +239,7 @@ const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3, dummyItem4];
 
 interface ItemChecklistTemplate {
     item: Item;
-    hasChecklistTemplate?: boolean;
+    hasChecklistTemplate: boolean;
 }
 
 const ItemsTab = () => {
@@ -256,6 +257,7 @@ const ItemsTab = () => {
         setItemChecklistTemplate(
             mockItems.map((item) => ({
                 item: item,
+                hasChecklistTemplate: true,
             }))
         );
     }, []);
@@ -266,24 +268,24 @@ const ItemsTab = () => {
         mutate: createItemTemplateMutate,
         isPending: createItemTemplateIsPending,
         isSuccess: mutateIsSuccess,
-    } = usePostCreateChecklistTemplate();
+    } = usePostCreateChecklistTemplate({ itemIds: itemIds });
 
-    const { data: itemDataHasItemTemplate } = useQuery({
-        queryKey: ['itemsHasChecklistTemplate'], //set key based on fetching from items api as well
-        queryFn: async ({ signal }) =>
-            apiService().getItemTemplateExistForItem({ signal, itemIds }),
-    });
+    const { data: itemDataHasItemTemplate, isPending: itemDataHasItemTemplateIsPending } = useQuery(
+        {
+            queryKey: ['itemsHasChecklistTemplate', itemIds], //set key based on fetching from items api as well
+            queryFn: async ({ signal }) =>
+                apiService().getItemTemplateExistForItem({ signal, itemIds }),
+        }
+    );
 
     useEffect(() => {
-        console.log(itemDataHasItemTemplate);
         if (itemDataHasItemTemplate ?? (itemDataHasItemTemplate && mutateIsSuccess)) {
             setItemChecklistTemplate(
                 mockItems.map((item) => {
                     const findItem = itemDataHasItemTemplate.find((it) => it.itemId == item.id);
-                    //if (!findItem) return null;
                     return {
                         item: item,
-                        hasChecklistTemplate: findItem?.hasChecklistTemplate,
+                        hasChecklistTemplate: findItem ? findItem.hasChecklistTemplate : true,
                     };
                 })
             );
@@ -293,12 +295,60 @@ const ItemsTab = () => {
     return (
         <>
             <Box sx={{ mt: 5 }}>
-                <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
+                <Stack spacing={{ xs: 2.5, sm: 4, md: 6, lg: 6 }}>
                     {itemChecklistTemplate.map((item) => {
                         return (
-                            <CardWrapper
+                            <CustomCard
+                                extraKeyValueLoading={itemDataHasItemTemplateIsPending}
+                                defaultExpanded={false}
+                                isPhoneMode={true}
                                 key={item.item.id}
-                                onClick={() =>
+                                // onClick={() =>
+                                //     navigate(`/item/${item.item.id}`, {
+                                //         state: {
+                                //             hasChecklistTemplate:
+                                //                 item.hasChecklistTemplate ?? false,
+                                //         },
+                                //     })
+                                // }
+                                // firstChild={
+                                //     <StyledUl>
+                                //         <CardWrapperList id={'item-ID'} text={item.item.id} />
+                                //         <CardWrapperList
+                                //             id={'srn'}
+                                //             text={`${item.item.serialNumber}`}
+                                //         />
+                                //         <CardWrapperList
+                                //             id={'type'}
+                                //             text={`${item.item.itemTemplate.type}`}
+                                //         />
+                                //     </StyledUl>
+                                // }
+                                topKeyValues={[
+                                    { key: 'item-Id', value: item.item.id },
+                                    { key: 'srn', value: item.item.serialNumber },
+                                    { key: 'type', value: item.item.itemTemplate.type },
+                                ]}
+                                extraKeyValue={{
+                                    key: 'Has checklistTemplate',
+                                    value: `${item.hasChecklistTemplate}`,
+                                }}
+                                extraKeyValueValueColor={
+                                    item.hasChecklistTemplate ? 'green' : 'secondary.main'
+                                }
+                                primaryActionText={
+                                    item.hasChecklistTemplate ? 'Edit template' : 'create template'
+                                }
+                                primaryAction={
+                                    !item.hasChecklistTemplate
+                                        ? () =>
+                                              createItemTemplateMutate({
+                                                  itemId: item.item.id,
+                                                  questions: ['sample question'],
+                                              })
+                                        : () => navigate(`${item.item.id}/checklistTemplate`)
+                                }
+                                secondaryAction={() =>
                                     navigate(`/item/${item.item.id}`, {
                                         state: {
                                             hasChecklistTemplate:
@@ -306,109 +356,97 @@ const ItemsTab = () => {
                                         },
                                     })
                                 }
-                                firstChild={
-                                    <StyledUl>
-                                        <CardWrapperList id={'item-ID'} text={item.item.id} />
-                                        <CardWrapperList
-                                            id={'srn'}
-                                            text={`${item.item.serialNumber}`}
-                                        />
-                                        <CardWrapperList
-                                            id={'type'}
-                                            text={`${item.item.itemTemplate.type}`}
-                                        />
-                                    </StyledUl>
-                                }
-                                secondChild={
-                                    <StyledUl>
-                                        <Box display={'flex'} alignItems={'center'}>
-                                            <Typography variant="caption" component="div">
-                                                {item.hasChecklistTemplate != undefined ? (
-                                                    item.hasChecklistTemplate ? (
-                                                        <Typography variant="inherit">
-                                                            <Link
-                                                                component={'button'}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    navigate(
-                                                                        `/${item.item.id}/checklistTemplate`,
-                                                                        {
-                                                                            state: {
-                                                                                hasChecklistTemplate:
-                                                                                    true,
-                                                                            },
-                                                                        }
-                                                                    );
-                                                                }}
-                                                                //to={`/${item.itemId}/checklistTemplate`}
-                                                            >
-                                                                Edit checklistTemplate
-                                                            </Link>
-                                                        </Typography>
-                                                    ) : (
-                                                        <Typography
-                                                            variant="inherit"
-                                                            component="div"
-                                                            color={'red'}
-                                                        >
-                                                            {/* <Link
-                                                                component={'button'}
-                                                                color={'inherit'}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    navigate(
-                                                                        `/${item.itemId}/checklistTemplate`,
-                                                                        {
-                                                                            state: {
-                                                                                hasChecklistTemplate:
-                                                                                    false,
-                                                                            },
-                                                                        }
-                                                                    );
-                                                                }}
-                                                                //to={`/${item.itemId}/checklistTemplate`}
-                                                            >
-                                                                Create checklistTemplate
-                                                            </Link> */}
-                                                            <Button
-                                                                // loading={
-                                                                //     createItemTemplateIsPending
-                                                                // }
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    createItemTemplateMutate({
-                                                                        itemId: item.item.id,
-                                                                        questions: [
-                                                                            'sample question',
-                                                                        ],
-                                                                    });
-                                                                }}
-                                                                variant="contained"
-                                                                size="small"
-                                                            >
-                                                                Create checklist template
-                                                            </Button>
-                                                        </Typography>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
-                                            </Typography>
-                                            {/* <IconButton
-                                                sx={{ color: 'primary.main' }}
-                                                onClick={(e) =>
-                                                    handleEditChecklistTemplateClick(
-                                                        e,
-                                                        `${item.itemId}/checklistTemplate`
-                                                    )
-                                                }
-                                            >
-                                                <ModeEditOutlineIcon />
-                                            </IconButton> */}
-                                        </Box>
-                                    </StyledUl>
-                                }
-                            ></CardWrapper>
+                                secondaryActionText="Item history"
+                                // secondChild={
+                                //     <StyledUl>
+                                //         <Box display={'flex'} alignItems={'center'}>
+                                //             <Typography variant="caption" component="div">
+                                //                 {item.hasChecklistTemplate != undefined ? (
+                                //                     item.hasChecklistTemplate ? (
+                                //                         <Typography variant="inherit">
+                                //                             <Link
+                                //                                 component={'button'}
+                                //                                 onClick={(e) => {
+                                //                                     e.stopPropagation();
+                                //                                     navigate(
+                                //                                         `/${item.item.id}/checklistTemplate`,
+                                //                                         {
+                                //                                             state: {
+                                //                                                 hasChecklistTemplate:
+                                //                                                     true,
+                                //                                             },
+                                //                                         }
+                                //                                     );
+                                //                                 }}
+                                //                                 //to={`/${item.itemId}/checklistTemplate`}
+                                //                             >
+                                //                                 Edit checklistTemplate
+                                //                             </Link>
+                                //                         </Typography>
+                                //                     ) : (
+                                //                         <Typography
+                                //                             variant="inherit"
+                                //                             component="div"
+                                //                             color={'red'}
+                                //                         >
+                                //                             {/* <Link
+                                //                                 component={'button'}
+                                //                                 color={'inherit'}
+                                //                                 onClick={(e) => {
+                                //                                     e.stopPropagation();
+                                //                                     navigate(
+                                //                                         `/${item.itemId}/checklistTemplate`,
+                                //                                         {
+                                //                                             state: {
+                                //                                                 hasChecklistTemplate:
+                                //                                                     false,
+                                //                                             },
+                                //                                         }
+                                //                                     );
+                                //                                 }}
+                                //                                 //to={`/${item.itemId}/checklistTemplate`}
+                                //                             >
+                                //                                 Create checklistTemplate
+                                //                             </Link> */}
+                                //                             <Button
+                                //                                 // loading={
+                                //                                 //     createItemTemplateIsPending
+                                //                                 // }
+                                //                                 onClick={(e) => {
+                                //                                     e.stopPropagation();
+                                //                                     createItemTemplateMutate({
+                                //                                         itemId: item.item.id,
+                                //                                         questions: [
+                                //                                             'sample question',
+                                //                                         ],
+                                //                                     });
+                                //                                 }}
+                                //                                 variant="contained"
+                                //                                 size="small"
+                                //                             >
+                                //                                 Create checklist template
+                                //                             </Button>
+                                //                         </Typography>
+                                //                     )
+                                //                 ) : (
+                                //                     ''
+                                //                 )}
+                                //             </Typography>
+                                //             {/* <IconButton
+                                //                 sx={{ color: 'primary.main' }}
+                                //                 onClick={(e) =>
+                                //                     handleEditChecklistTemplateClick(
+                                //                         e,
+                                //                         `${item.itemId}/checklistTemplate`
+                                //                     )
+                                //                 }
+                                //             >
+                                //                 <ModeEditOutlineIcon />
+                                //             </IconButton> */}
+                                //         </Box>
+                                //     </StyledUl>
+                                // }
+                            ></CustomCard>
                         );
                     })}
                 </Stack>

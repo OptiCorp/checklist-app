@@ -21,7 +21,7 @@ const ChecklistTableHeader = () => {
                 </Grid>
                 <Grid item xs={1}>
                     <Typography component="p" sx={{ float: 'right' }}>
-                        <b>Check</b>
+                        <b>Ok</b>
                     </Typography>
                 </Grid>
             </Grid>

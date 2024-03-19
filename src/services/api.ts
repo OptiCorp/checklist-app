@@ -1,5 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import { Checklist, ChecklistItemTemplate, ItemHasChecklistItemTemplate, Mobilization, PaginatedList } from './apiTypes';
+import {
+    Checklist,
+    ChecklistItemTemplate,
+    ItemHasChecklistItemTemplate,
+    Mobilization,
+    PaginatedList,
+} from './apiTypes';
 
 export const axiosClient = axios.create({
     baseURL: 'https://localhost:7040/api/',

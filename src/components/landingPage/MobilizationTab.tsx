@@ -1,16 +1,13 @@
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
-import PreviewIcon from '@mui/icons-material/Preview';
 import {
     Box,
     Button,
     FormControl,
-    IconButton,
     InputLabel,
     MenuItem,
     Pagination,
     Select,
     SelectChangeEvent,
-    Stack,
+    Stack
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
@@ -20,8 +17,7 @@ import styled from 'styled-components';
 import apiService from '../../services/api';
 import { MobilizationStatus } from '../../services/apiTypes';
 import BottomButtons from '../BottomButtons/BottomButtons';
-import CardWrapper from '../UI/CardWrapper';
-import CardWrapperList from '../UI/CardWrapperList';
+import { CustomCard } from '../UI/CustomCard/CustomCard';
 import SearchInput from '../UI/SearchInput';
 
 export const StyledUl = styled.ul`
@@ -211,56 +207,46 @@ const MobilizationTab = () => {
                 </Box>
             </Box>
             <Box sx={{ mt: 5 }}>
-                <Stack spacing={{ xs: 1.5, sm: 2, md: 4, lg: 4 }}>
+                <Stack spacing={{ xs: 2.5, sm: 5 }}>
                     {mobsToRender ? (
                         mobsToRender.map((mob) => {
                             return (
-                                <CardWrapper
+                                <CustomCard
+                                    isPhoneMode={true}
                                     key={mob.id}
                                     onClick={() => navigate('/mobdemob/someId')} //todo:
-                                    firstChild={
-                                        <StyledUl>
-                                            <CardWrapperList
-                                                id={'mob-ID'}
-                                                text={mob.id.slice(0, 5)}
-                                            />
-                                            <CardWrapperList id={'title'} text={mob.title} />
-                                            <CardWrapperList
-                                                id={'Checklist Done'}
-                                                text={`${mob.checklistCountDone}`}
-                                            />
-                                            <CardWrapperList
-                                                id={'Checklists Count'}
-                                                text={`${mob.checklistCount}`}
-                                            />
-                                            <CardWrapperList
-                                                id={'Status'}
-                                                text={`${MobilizationStatus[mob.status]}`}
-                                            />
-                                        </StyledUl>
-                                    }
-                                    secondChild={
-                                        <StyledUl>
-                                            <CardWrapperList
-                                                id={'Customer'}
-                                                text={mob.customer ?? 'customer'}
-                                            />
-                                        </StyledUl>
-                                    }
-                                    borderColor={GetCardBorderColor(mob.status)}
-                                    TopRightActionButton={
-                                        mob.status !== MobilizationStatus.Completed &&
-                                        mob.status !== MobilizationStatus.Started ? (
-                                            <IconButton onClick={handleTopRightButtonClick}>
-                                                <ModeEditOutlineIcon color="primary" />
-                                            </IconButton>
-                                        ) : (
-                                            <IconButton onClick={handleTopRightButtonClick}>
-                                                <PreviewIcon color="primary" />
-                                            </IconButton>
-                                        )
-                                    }
-                                ></CardWrapper>
+                                    topKeyValues={[
+                                        { key: 'mob-id', value: mob.id },
+                                        { key: 'title', value: mob.title },
+                                        {
+                                            key: 'Checklists done',
+                                            value: mob.checklistCountDone.toString(),
+                                        },
+                                        {
+                                            key: 'Status',
+                                            value: `${MobilizationStatus[mob.status]}`,
+                                        },
+                                    ]}
+                                    bottomKeyValues={[
+                                        {
+                                            key: 'costumer',
+                                            value: mob.customer ?? 'missing costumer',
+                                        },
+                                    ]}
+                                    // borderColor={GetCardBorderColor(mob.status)}
+                                    // TopRightActionButton={
+                                    //     mob.status !== MobilizationStatus.Completed &&
+                                    //     mob.status !== MobilizationStatus.Started ? (
+                                    //         <IconButton onClick={handleTopRightButtonClick}>
+                                    //             <ModeEditOutlineIcon color="primary" />
+                                    //         </IconButton>
+                                    //     ) : (
+                                    //         <IconButton onClick={handleTopRightButtonClick}>
+                                    //             <PreviewIcon color="primary" />
+                                    //         </IconButton>
+                                    //     )
+                                    // }
+                                ></CustomCard>
                             );
                         })
                     ) : (

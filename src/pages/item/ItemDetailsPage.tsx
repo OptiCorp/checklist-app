@@ -1,15 +1,18 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ItemDetailsPageMain from '../../components/Item/ItemDetailsPageMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
 import SearchInput from '../../components/UI/SearchInput';
 import apiService from '../../services/api';
 import { Item } from '../../services/apiTypes';
+import { ErrorBoundary } from 'react-error-boundary';
+import axios, { AxiosError } from 'axios';
+import { usePostCreateChecklistTemplate } from '../../hooks/usePostCreateChecklistTemplate';
 
 const dummyItem: Item = {
     itemId: '31232',
@@ -30,20 +33,28 @@ const ItemDetailsPage = () => {
     // console.log(locationState)
     const [checklistSearchInputDebounced, setChecklistSearchInputDebounced] = useState('');
     const [checklistSearchInput, setChecklistSearchInput] = useState('');
-    const { pathname } = useLocation();
-    const paths = pathname.split('/');
-    const itemId = paths[2];
+    const { id: itemId } = useParams();
 
     const { data: itemChecklistData, isPending: itemChecklistDataIsPending } = useQuery({
         queryKey: ['itemHistory', { itemId: itemId }],
-        queryFn: async ({ signal }) => apiService().getItemChecklistsHistory({ signal, itemId }),
+        queryFn: async ({ signal }) =>
+            apiService().getItemChecklistsHistory({ signal, itemId: itemId! }),
+        // throwOnError: (error) => {
+        //     if (axios.isAxiosError(error)) {
+        //         if (error.response) {
+        //             return error.response?.status >= 500;
+        //         }
+        //     }
+        //     return true;
+        // },
+        // throwOnError: true,
     });
 
-    const { data: itemTemplateData, isLoading: itemTemplateDateIsLoading } = useQuery({
+    const { data: itemTemplateData, isLoading: itemTemplateDataIsLoading } = useQuery({
         queryKey: ['itemsHasChecklistTemplate', { itemId: itemId }],
         queryFn: async ({ signal }) =>
-            apiService().getItemTemplateExistForItem({ signal, itemIds: [itemId] }),
-        enabled: !!itemChecklistData && itemChecklistData.items.length == 0,
+            apiService().getItemTemplateExistForItem({ signal, itemIds: [itemId!] }),
+        enabled: !!itemChecklistData,
     });
 
     const debouncedSearch = useRef(
@@ -63,27 +74,48 @@ const ItemDetailsPage = () => {
         debouncedSearch(inpText);
     }
 
+    const {
+        mutate: createItemTemplateMutate,
+        isPending: createItemTemplateIsPending,
+        isSuccess: mutateIsSuccess,
+    } = usePostCreateChecklistTemplate({ itemIds: [itemId!] });
+
+    const ItemHasChecklistTemplate: boolean | undefined = itemTemplateData
+        ? itemTemplateData[0].hasChecklistTemplate
+        : undefined;
+
+    const createOrEditItemTemplate = () => {
+        if (ItemHasChecklistTemplate == undefined) return;
+        else if (ItemHasChecklistTemplate) navigate(`/${itemId}/checklistTemplate`);
+        else if (!ItemHasChecklistTemplate) {
+            createItemTemplateMutate({ itemId: itemId!, questions: ['sample question'] });
+        }
+    };
+
+    console.log(itemTemplateData);
+
     return (
         <>
             <ItemTopHeader item={dummyItem}>
-                <LoadingButton
-                    loading={itemChecklistDataIsPending || itemTemplateDateIsLoading}
-                    variant="contained"
-                    size="small"
-                    startIcon={<AddCircleOutlineOutlinedIcon />}
-                    onClick={() => navigate(`/${itemId}/checklistTemplate`)}
-                >
-                    <Typography variant="body2">
-                        {!itemTemplateData && 'Edit checklist template'}
-                        {itemTemplateData &&
-                            !itemTemplateData[0].hasChecklistTemplate &&
-                            'Create checklist template'}
-                    </Typography>
-                </LoadingButton>
+                {
+                    <LoadingButton
+                        loading={itemChecklistDataIsPending || itemTemplateDataIsLoading}
+                        variant="contained"
+                        size="small"
+                        startIcon={<AddCircleOutlineOutlinedIcon />}
+                        onClick={createOrEditItemTemplate}
+                    >
+                        <Typography variant="body2">
+                            {ItemHasChecklistTemplate
+                                ? 'Edit checklist template'
+                                : 'Create checklist template'}
+                        </Typography>
+                    </LoadingButton>
+                }
             </ItemTopHeader>
             <Box mt={5}>
                 <Typography variant="h4">History</Typography>
-                {itemChecklistData?.items.length != 0 && (
+                {itemChecklistData && (
                     <SearchInput
                         loading={false}
                         onChange={handleSearchChange}
@@ -93,7 +125,10 @@ const ItemDetailsPage = () => {
                     ></SearchInput>
                 )}
             </Box>
-            <ItemDetailsPageMain itemChecklistData={itemChecklistData} />
+            <ItemDetailsPageMain
+                itemChecklistData={itemChecklistData}
+                isLoading={itemChecklistDataIsPending}
+            />
         </>
     );
 };
