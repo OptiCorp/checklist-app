@@ -10,10 +10,10 @@ import { msalInstance } from './msalConfig.ts';
 import GlobalStyles from './style/GlobalStyles.ts';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
+    <>
         <GlobalStyles />
         <MsalProvider instance={msalInstance}>
             <App />
         </MsalProvider>
-    </React.StrictMode>
+    </>
 );

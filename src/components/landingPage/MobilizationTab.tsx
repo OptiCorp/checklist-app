@@ -7,11 +7,11 @@ import {
     Pagination,
     Select,
     SelectChangeEvent,
-    Stack
+    Stack,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
-import { MouseEvent, useCallback, useRef, useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import apiService from '../../services/api';
@@ -61,22 +61,22 @@ const MobilizationTab = () => {
         setMobilizationSearchInput('');
     };
 
-    const handleTopRightButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation();
-        navigate('/newMob');
-    };
+    // const handleTopRightButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    //     e.stopPropagation();
+    //     navigate('/newMob');
+    // };
 
     // const handleViewClick = (e: MouseEvent<HTMLButtonElement>) => {
     //     e.stopPropagation();
     //     navigate('/newMob');
     // };
 
-    const GetCardBorderColor = useCallback((status: MobilizationStatus) => {
-        if (status == MobilizationStatus.Completed) return 'green';
-        else if (status == MobilizationStatus.Ready) return 'orange';
-        else if (status == MobilizationStatus.NotReady) return 'secondary.main';
-        else if (status == MobilizationStatus.Started) return 'orange';
-    }, []);
+    // const GetCardBorderColor = useCallback((status: MobilizationStatus) => {
+    //     if (status == MobilizationStatus.Completed) return 'green';
+    //     else if (status == MobilizationStatus.Ready) return 'orange';
+    //     else if (status == MobilizationStatus.NotReady) return 'secondary.main';
+    //     else if (status == MobilizationStatus.Started) return 'orange';
+    // }, []);
 
     const debouncedSearch = useRef(
         debounce((criteria: string) => {
@@ -98,7 +98,7 @@ const MobilizationTab = () => {
             'mobilizations',
             {
                 pageNumber: mobilizationsPageNumber,
-                pageSize: mobilizationsPageSize,
+                // pageSize: mobilizationsPageSize,
             },
         ],
         queryFn: async ({ signal }) =>
@@ -107,6 +107,7 @@ const MobilizationTab = () => {
                 pageSize: mobilizationsPageSize,
                 signal,
             }),
+        placeholderData: keepPreviousData,
     });
     const { data: paginatedMobsBySearch, isLoading: searchIsPending } = useQuery({
         queryKey: [
@@ -129,8 +130,8 @@ const MobilizationTab = () => {
                 signal,
             }),
         enabled: searchIsEnabled,
-        gcTime: 0, //TODO: make sure the search data is never cached
-        staleTime: 0,
+        gcTime: 0, //dont cache search data
+        staleTime: 0, //default
     });
 
     const handleSearchDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,7 +166,7 @@ const MobilizationTab = () => {
             <Box sx={{ mt: 5 }}>
                 <SearchInput
                     loading={searchIsPending}
-                    placeHolder="Search: id, name"
+                    placeHolder="Search for title"
                     onChange={handleSearchChange}
                     clearSearch={handleClearSearchInput}
                     value={mobilizationSearchInput}
@@ -214,7 +215,7 @@ const MobilizationTab = () => {
                                 <CustomCard
                                     isPhoneMode={true}
                                     key={mob.id}
-                                    onClick={() => navigate('/mobdemob/someId')} //todo:
+                                    // onClick={() => navigate('/mobdemob/someId')} //todo:
                                     topKeyValues={[
                                         { key: 'mob-id', value: mob.id },
                                         { key: 'title', value: mob.title },
@@ -233,6 +234,8 @@ const MobilizationTab = () => {
                                             value: mob.customer ?? 'missing costumer',
                                         },
                                     ]}
+                                    primaryAction={() => navigate('/mobdemob/someId')}
+                                    primaryActionText="View"
                                     // borderColor={GetCardBorderColor(mob.status)}
                                     // TopRightActionButton={
                                     //     mob.status !== MobilizationStatus.Completed &&

@@ -20,7 +20,12 @@ const ChecklistTableHeader = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={1}>
-                    <Typography component="p" sx={{ float: 'right' }}>
+                    <Typography
+                        component="p"
+                        sx={{ float: 'right' }}
+                        width={42} //because of width for the checklistBox
+                        textAlign={'center'}
+                    >
                         <b>Ok</b>
                     </Typography>
                 </Grid>

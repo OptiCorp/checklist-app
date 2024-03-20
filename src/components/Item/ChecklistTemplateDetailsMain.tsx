@@ -1,9 +1,9 @@
+import { LoadingButton } from '@mui/lab';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { QuestionTemplate } from '../../services/apiTypes';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import TextInput from '../UI/TextInput';
-import { LoadingButton } from '@mui/lab';
 
 interface Props {
     createOrEdit: 'create' | 'edit';
@@ -11,8 +11,8 @@ interface Props {
     textFieldAdd: () => void;
     textFields: { question: QuestionTemplate; error: boolean; helperText?: string }[];
     textFieldChange: (text: string, index: number) => void;
-    onCreate: () => void;
-    onEdit: () => void;
+    // onCreate: () => void;
+    // onEdit: () => void;
     loading: boolean;
     onInputPutRequest: (index: number, questionId: string, text: string) => void;
     readonlyMode: boolean;
@@ -24,8 +24,8 @@ const ChecklistTemplateDetailsMain = ({
     textFieldRemove,
     textFieldAdd,
     textFieldChange,
-    onCreate,
-    onEdit,
+    // onCreate,
+    // onEdit,
     loading,
     onInputPutRequest,
     readonlyMode,
@@ -54,7 +54,7 @@ const ChecklistTemplateDetailsMain = ({
                 ))}
                 <LoadingButton
                     variant="contained"
-                    loading={loading}
+                    // loading={loading}
                     disabled={readonlyMode}
                     onClick={textFieldAdd}
                 >
@@ -77,6 +77,9 @@ const ChecklistTemplateDetailsMain = ({
             <BottomButtons>
                 <Button variant="outlined" size="small" onClick={() => navigate(-1)}>
                     Back
+                </Button>
+                <Button variant="contained" size="small" disabled={readonlyMode}>
+                    Save
                 </Button>
             </BottomButtons>
         </Box>

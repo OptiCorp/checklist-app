@@ -7,15 +7,10 @@ import {
     Box,
     Button,
     Divider,
-    Grid,
-    IconButton,
-    Skeleton,
-    Table,
-    TableBody,
     Typography,
     styled,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import CardWrapperList, { StyledUl } from '../CardWrapperList';
 
 const StyledCustomAccordian = styled(Accordion)(({ theme }) => ({

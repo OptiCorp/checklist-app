@@ -1,7 +1,7 @@
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
-import { Button, ThemeProvider } from '@mui/material';
-import { QueryClientProvider, useQueryErrorResetBoundary } from '@tanstack/react-query';
+import { ThemeProvider } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -12,19 +12,17 @@ import {
 } from 'react-router-dom';
 import { msalInstance } from './msalConfig';
 import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
-import ErrorPage from './pages/ErrorPage/ErrorPage';
 import LandingPage from './pages/LandingPage/LandingPage';
 import { Login } from './pages/Login/Login';
 import RootLayout from './pages/RootLayout';
 import ChecklistTemplateDetailsPage from './pages/item/ChecklistTemplateDetailsPage';
-import ItemDetailsPage, { ErrorFallback } from './pages/item/ItemDetailsPage';
+import ItemDetailsPage from './pages/item/ItemDetailsPage';
 import MobDemobPage from './pages/mobDeMob/MobDemobPage';
 import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
 import PunchDetailsPage from './pages/punch/PunchDetails/PunchDetailsPage';
 import PunchesPage from './pages/punch/Punches/PunchesPage';
 import { lightTheme } from './style/muiTheme';
 import { queryClient } from './tanstackQuery';
-import { ErrorBoundary } from 'react-error-boundary';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -33,7 +31,7 @@ const router = createBrowserRouter(
             <Route element={<NewMobilization />} path="newMob/"></Route>
             <Route
                 element={<MobDemobPage />}
-                path="mobdemob/:id"
+                path="mobdemob/:mobId"
                 // errorElement={<ErrorPage />}
             ></Route>
             <Route element={<ChecklistPage />} path=":mobId/checklist/:checklistId"></Route>
@@ -43,7 +41,7 @@ const router = createBrowserRouter(
                 path="checklist/:checklistItemId/:punchId"
             ></Route>
 
-            <Route element={<ItemDetailsPage />} path="item/:id"></Route>
+            <Route element={<ItemDetailsPage />} path="item/:itemId"></Route>
 
             <Route
                 element={<ChecklistTemplateDetailsPage />}

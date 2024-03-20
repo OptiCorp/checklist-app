@@ -1,14 +1,10 @@
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Link, Stack, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePostCreateChecklistTemplate } from '../../hooks/usePostCreateChecklistTemplate';
 import apiService from '../../services/api';
 import { Item } from '../../services/apiTypes';
-import CardWrapper from '../UI/CardWrapper';
-import CardWrapperList from '../UI/CardWrapperList';
-import { StyledUl } from './MobilizationTab';
 import { CustomCard } from '../UI/CustomCard/CustomCard';
 
 const dummyItem1: Item = {
@@ -180,7 +176,7 @@ const dummyItem3: Item = {
 };
 
 const dummyItem4: Item = {
-    id: 'notheronæl11-askdn12',
+    id: 'd2259717-6d21-411d-ae06-a3e20333a1ea',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',

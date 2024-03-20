@@ -11,15 +11,15 @@ const ItemTopHeader = ({ item: item, children }: Props) => {
         <Box marginTop={5}>
             <Grid container>
                 <Grid item flexGrow={1}>
-                    <Typography variant="h4">{item.type.toUpperCase()}</Typography>
+                    <Typography variant="h4">{item.itemTemplate.type.toUpperCase()}</Typography>
                     {/* <Typography variant="body1"> */}
                     <Box>
                         <Box>
                             <b>item-Id</b>: {item.id}
                         </Box>
-                        <Box>
+                        {/* <Box>
                             <b>item name</b>: {item.name}
-                        </Box>
+                        </Box> */}
                     </Box>
                     {/* </Typography> */}
                 </Grid>

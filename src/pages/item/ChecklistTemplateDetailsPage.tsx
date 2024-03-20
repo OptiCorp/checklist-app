@@ -29,6 +29,8 @@ const dummyItem: Item = {
 const ChecklistTemplateDetailsPage = () => {
     const { pathname } = useLocation();
     const { itemId } = useParams();
+
+    console.log(itemId);
     const [textFields, setTextFields] = useState<
         //TODO: add chagnedTextfield
         { question: QuestionTemplate; error: boolean; helperText?: string }[]
@@ -121,34 +123,34 @@ const ChecklistTemplateDetailsPage = () => {
         deleteQuestionMutate({ index: index, itemId: itemId!, questionId: questionId });
     };
 
-    const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
-        let hasSomeError = false;
-        setTextFields((f) => {
-            const oldTextFields = [...f];
-            oldTextFields.forEach((field) => {
-                if (field.question.question.length <= 5) {
-                    field.error = true;
-                    field.helperText = 'lenght must be grater than 5';
-                    hasSomeError = true;
-                }
-            });
-            return oldTextFields;
-        });
-        if (hasSomeError) return;
-        // questionsMutate({
-        //     itemId: itemId,
-        //     method: method,
-        //     questions: textFields.map((q) => q.text),
-        // });
-    };
+    // const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
+    //     let hasSomeError = false;
+    //     setTextFields((f) => {
+    //         const oldTextFields = [...f];
+    //         oldTextFields.forEach((field) => {
+    //             if (field.question.question.length <= 5) {
+    //                 field.error = true;
+    //                 field.helperText = 'lenght must be grater than 5';
+    //                 hasSomeError = true;
+    //             }
+    //         });
+    //         return oldTextFields;
+    //     });
+    //     if (hasSomeError) return;
+    //     questionsMutate({
+    //         itemId: itemId,
+    //         method: method,
+    //         questions: textFields.map((q) => q.text),
+    //     });
+    // };
 
-    const handleCreate = () => {
-        handleCreateOrEdit('create');
-    };
+    // const handleCreate = () => {
+    //     handleCreateOrEdit('create');
+    // };
 
-    const handleEdit = () => {
-        handleCreateOrEdit('edit');
-    };
+    // const handleEdit = () => {
+    //     handleCreateOrEdit('edit');
+    // };
 
     const handleInputPutRequest = (index: number, questionId: string, text: string) => {
         const textStripped = text.trim();
@@ -183,8 +185,8 @@ const ChecklistTemplateDetailsPage = () => {
                 textFieldRemove={handleDeleteQuestion}
                 textFieldAdd={handleTextFieldAdd}
                 textFieldChange={handleTextFieldChange}
-                onCreate={handleCreate}
-                onEdit={handleEdit}
+                // onCreate={handleCreate}
+                // onEdit={handleEdit}
             />
         </>
     );
