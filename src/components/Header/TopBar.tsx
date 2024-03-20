@@ -1,5 +1,5 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { Drawer, Menu, MenuItem } from '@mui/material';
+import { Button, Drawer, Menu, MenuItem } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -10,7 +10,7 @@ import { useState } from 'react';
 import DrawerContent from './DrawerContent';
 import { useNavigate } from 'react-router-dom';
 
-const navigations = ['home'];
+const navigations = ['home', 'nother', 'another'];
 
 function TopBar() {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -45,11 +45,11 @@ function TopBar() {
                         <Box
                             onClick={() => navigate('/')}
                             component="img"
-                            sx={{ width: 40, mr: 1, cursor: 'pointer' }}
+                            sx={{ width: 40, mr: 2, cursor: 'pointer' }}
                             alt="logo"
                             src={'/WP_1.svg'}
                         />
-                        <Typography
+                        {/* <Typography
                             variant="h6"
                             noWrap
                             component="a"
@@ -63,9 +63,21 @@ function TopBar() {
                                 color: 'inherit',
                                 textDecoration: 'none',
                             }}
-                        ></Typography>
+                        ></Typography> */}
 
-                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                            {navigations.map((page) => (
+                                <Button
+                                    key={page}
+                                    onClick={handleCloseNavMenu}
+                                    sx={{ my: 2, display: 'block' }}
+                                >
+                                    {page}
+                                </Button>
+                            ))}
+                        </Box>
+
+                        <Box sx={{ flexGrow: 1 }}></Box>
 
                         <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
                             <IconButton

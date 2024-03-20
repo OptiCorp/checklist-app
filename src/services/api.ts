@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import {
     Checklist,
-    ItemHasItemTemplate,
-    ItemTemplate,
+    ChecklistItemTemplate,
+    ItemHasChecklistItemTemplate,
     Mobilization,
     PaginatedList,
 } from './apiTypes';
@@ -76,7 +76,7 @@ const apiService = () => {
     };
 
     const getItemTemplate = ({ signal, itemId }: { signal: AbortSignal; itemId: string }) => {
-        return getFromChecklistApi<ItemTemplate>(`Templates/${itemId}`, signal);
+        return getFromChecklistApi<ChecklistItemTemplate>(`Templates/${itemId}`, signal);
     };
 
     const getItemChecklistsHistory = ({
@@ -100,7 +100,7 @@ const apiService = () => {
         itemIds: string[];
     }) => {
         const itemIdsParsed = itemIds.join('&itemIds=');
-        return getFromChecklistApi<ItemHasItemTemplate[]>(
+        return getFromChecklistApi<ItemHasChecklistItemTemplate[]>(
             `Templates/GetItemTemplatesExists/?itemIds=${itemIdsParsed}`,
             signal
         );

@@ -6,7 +6,6 @@ export const breadcrumbsReducer = (state: Breadcrumbs, action: BreadcrumbsAction
             // const newLinks = [...state.links, action.payload.link];
             // console.log(newLinks);
             //return { ...state, links: newLinks };
-            
         }
 
         // case ActionType.GoBackward: {

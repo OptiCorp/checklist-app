@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
 import { useDeleteQuestion } from '../../hooks/useDeleteQuestion';
@@ -28,8 +28,9 @@ const dummyItem: Item = {
 
 const ChecklistTemplateDetailsPage = () => {
     const { pathname } = useLocation();
-    const paths = pathname.split('/');
-    const itemId = paths[1] || undefined;
+    const { itemId } = useParams();
+
+    console.log(itemId);
     const [textFields, setTextFields] = useState<
         //TODO: add chagnedTextfield
         { question: QuestionTemplate; error: boolean; helperText?: string }[]
@@ -37,17 +38,20 @@ const ChecklistTemplateDetailsPage = () => {
 
     const { data: itemData, isPending: itemDataIsPending } = useQuery({
         queryKey: [itemId, 'itemTemplate'],
-        queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId }),
+        queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId: itemId! }),
         enabled: !!itemId,
     });
-
 
     const { id: itemTemplateId } = itemData ?? {};
 
     const { data: checklistItemQuestionConflictdata } = useQuery({
         queryKey: [itemId, itemTemplateId],
         queryFn: async ({ signal }) =>
-            apiService().getCheckItemQuestionConflicts({ signal, itemId, itemTemplateId }),
+            apiService().getCheckItemQuestionConflicts({
+                signal,
+                itemId: itemId!,
+                itemTemplateId: itemTemplateId!,
+            }),
         enabled: !!itemTemplateId,
     });
 
@@ -119,34 +123,34 @@ const ChecklistTemplateDetailsPage = () => {
         deleteQuestionMutate({ index: index, itemId: itemId!, questionId: questionId });
     };
 
-    const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
-        let hasSomeError = false;
-        setTextFields((f) => {
-            const oldTextFields = [...f];
-            oldTextFields.forEach((field) => {
-                if (field.question.question.length <= 5) {
-                    field.error = true;
-                    field.helperText = 'lenght must be grater than 5';
-                    hasSomeError = true;
-                }
-            });
-            return oldTextFields;
-        });
-        if (hasSomeError) return;
-        // questionsMutate({
-        //     itemId: itemId,
-        //     method: method,
-        //     questions: textFields.map((q) => q.text),
-        // });
-    };
+    // const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
+    //     let hasSomeError = false;
+    //     setTextFields((f) => {
+    //         const oldTextFields = [...f];
+    //         oldTextFields.forEach((field) => {
+    //             if (field.question.question.length <= 5) {
+    //                 field.error = true;
+    //                 field.helperText = 'lenght must be grater than 5';
+    //                 hasSomeError = true;
+    //             }
+    //         });
+    //         return oldTextFields;
+    //     });
+    //     if (hasSomeError) return;
+    //     questionsMutate({
+    //         itemId: itemId,
+    //         method: method,
+    //         questions: textFields.map((q) => q.text),
+    //     });
+    // };
 
-    const handleCreate = () => {
-        handleCreateOrEdit('create');
-    };
+    // const handleCreate = () => {
+    //     handleCreateOrEdit('create');
+    // };
 
-    const handleEdit = () => {
-        handleCreateOrEdit('edit');
-    };
+    // const handleEdit = () => {
+    //     handleCreateOrEdit('edit');
+    // };
 
     const handleInputPutRequest = (index: number, questionId: string, text: string) => {
         const textStripped = text.trim();
@@ -181,8 +185,8 @@ const ChecklistTemplateDetailsPage = () => {
                 textFieldRemove={handleDeleteQuestion}
                 textFieldAdd={handleTextFieldAdd}
                 textFieldChange={handleTextFieldChange}
-                onCreate={handleCreate}
-                onEdit={handleEdit}
+                // onCreate={handleCreate}
+                // onEdit={handleEdit}
             />
         </>
     );

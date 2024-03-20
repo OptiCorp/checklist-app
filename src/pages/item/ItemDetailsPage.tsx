@@ -1,26 +1,72 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ItemDetailsPageMain from '../../components/Item/ItemDetailsPageMain';
 import ItemTopHeader from '../../components/Item/ItemTopHeader';
 import SearchInput from '../../components/UI/SearchInput';
+import { usePostCreateChecklistTemplate } from '../../hooks/usePostCreateChecklistTemplate';
 import apiService from '../../services/api';
 import { Item } from '../../services/apiTypes';
 
 const dummyItem: Item = {
-    itemId: '31232',
     id: 'aslkd-12-lsad-a',
-    created: new Date(),
-    lastModified: new Date(),
-    name: 'Geir2.0',
     itemTemplateId: '9391293',
     serialNumber: '131233',
-    type: 'item',
     wpId: '1231232',
+    preCheck: {
+        check: false,
+        comment: '',
+    },
+    vendorId: '',
+    createdDate: '',
+    vendor: {
+        id: '',
+        name: '',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        addedById: '',
+    },
+    location: {
+        id: '',
+        name: '',
+        userId: '',
+    },
+    createdBy: {
+        id: '',
+        azureAdUserId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        userRole: {
+            id: '',
+            name: '',
+        },
+        status: '',
+        createdDate: '',
+        updatedDate: null,
+    },
+    logEntries: [],
+    itemTemplate: {
+        inputValue: undefined,
+        revision: '',
+        description: '',
+        id: '',
+        category: {
+            id: '',
+            name: '',
+            userId: '',
+        },
+        categoryId: '',
+        createdById: '',
+        type: 'item',
+        productNumber: '',
+    },
 };
 
 const ItemDetailsPage = () => {
@@ -30,20 +76,41 @@ const ItemDetailsPage = () => {
     // console.log(locationState)
     const [checklistSearchInputDebounced, setChecklistSearchInputDebounced] = useState('');
     const [checklistSearchInput, setChecklistSearchInput] = useState('');
-    const { pathname } = useLocation();
-    const paths = pathname.split('/');
-    const itemId = paths[2];
-
-    const { data: itemChecklistData, isPending: itemChecklistDataIsPending } = useQuery({
-        queryKey: ['itemHistory', { itemId: itemId }],
-        queryFn: async ({ signal }) => apiService().getItemChecklistsHistory({ signal, itemId }),
+    const { itemId } = useParams();
+    const [cheklistsAllpageNumberPageSize, setChecklistsAllPageNumberPageSize] = useState({
+        pageNumber: 1,
+        pageSize: 6,
     });
 
-    const { data: itemTemplateData, isLoading: itemTemplateDateIsLoading } = useQuery({
+    const { pageNumber: checklistsPageNumber, pageSize: checklistsPageSize } =
+        cheklistsAllpageNumberPageSize;
+
+    const { data: itemChecklistData, isPending: itemChecklistDataIsPending } = useQuery({
+        queryKey: ['itemHistory', { itemId: itemId, pageNumber: checklistsPageNumber }],
+        queryFn: ({ signal }) => apiService().getItemChecklistsHistory({ signal, itemId: itemId! }),
+        placeholderData: keepPreviousData,
+        // throwOnError: (error) => {
+        //     if (axios.isAxiosError(error)) {
+        //         if (error.response) {
+        //             return error.response?.status >= 500;
+        //         }
+        //     }
+        //     return true;
+        // },
+        // throwOnError: true,
+    });
+
+    const itemHasAnyChecklists =
+        itemChecklistData && !itemChecklistDataIsPending
+            ? itemChecklistData.items.length > 0
+            : undefined;
+
+    const { data: itemTemplateData, isLoading: itemTemplateDataIsLoading } = useQuery({
         queryKey: ['itemsHasChecklistTemplate', { itemId: itemId }],
-        queryFn: async ({ signal }) =>
-            apiService().getItemTemplateExistForItem({ signal, itemIds: [itemId] }),
-        enabled: !!itemChecklistData && itemChecklistData.items.length == 0,
+        queryFn: ({ signal }) =>
+            apiService().getItemTemplateExistForItem({ signal, itemIds: [itemId!] }),
+        // enabled: !!itemChecklistData,
+        enabled: itemHasAnyChecklists == false,
     });
 
     const debouncedSearch = useRef(
@@ -63,37 +130,78 @@ const ItemDetailsPage = () => {
         debouncedSearch(inpText);
     }
 
+    const {
+        mutate: createItemTemplateMutate,
+        isPending: createItemTemplateIsPending,
+        isSuccess: mutateIsSuccess,
+    } = usePostCreateChecklistTemplate({ itemIds: [itemId!] });
+
+    // const itemHasChecklistTemplate: boolean | undefined = itemTemplateData
+    //     ? itemTemplateData[0].hasChecklistTemplate
+    //     : undefined;
+
+    const itemHasChecklistTemplate = itemHasAnyChecklists
+        ? true
+        : itemTemplateData
+          ? itemTemplateData[0].hasChecklistTemplate
+          : undefined;
+
+    const createOrEditItemTemplate = () => {
+        if (itemHasChecklistTemplate == undefined) return;
+        else if (itemHasChecklistTemplate) navigate(`/${itemId}/checklistTemplate`);
+        else if (!itemHasChecklistTemplate) {
+            createItemTemplateMutate({ itemId: itemId!, questions: ['sample question'] });
+        }
+    };
+
+    const handleAllChecklistsPaginationChange = (_: React.ChangeEvent<unknown>, page: number) => {
+        setChecklistsAllPageNumberPageSize((prev) => ({
+            pageNumber: page,
+            pageSize: prev.pageSize,
+        }));
+    };
+
+    console.log(itemTemplateData);
+
     return (
         <>
             <ItemTopHeader item={dummyItem}>
-                <LoadingButton
-                    loading={itemChecklistDataIsPending || itemTemplateDateIsLoading}
-                    variant="contained"
-                    size="small"
-                    startIcon={<AddCircleOutlineOutlinedIcon />}
-                    onClick={() => navigate(`/${itemId}/checklistTemplate`)}
-                >
-                    <Typography variant="body2">
-                        {!itemTemplateData && 'Edit checklist template'}
-                        {itemTemplateData &&
-                            !itemTemplateData[0].hasChecklistTemplate &&
-                            'Create checklist template'}
-                    </Typography>
-                </LoadingButton>
+                {
+                    <LoadingButton
+                        loading={itemChecklistDataIsPending || itemTemplateDataIsLoading}
+                        variant="contained"
+                        size="small"
+                        startIcon={<AddCircleOutlineOutlinedIcon />}
+                        onClick={createOrEditItemTemplate}
+                    >
+                        <Typography variant="body2">
+                            {itemHasChecklistTemplate
+                                ? 'Edit checklist template'
+                                : 'Create checklist template'}
+                        </Typography>
+                    </LoadingButton>
+                }
             </ItemTopHeader>
             <Box mt={5}>
                 <Typography variant="h4">History</Typography>
-                {itemChecklistData?.items.length != 0 && (
+                {itemChecklistData && (
                     <SearchInput
                         loading={false}
                         onChange={handleSearchChange}
-                        placeHolder="search"
+                        placeHolder="search for "
                         clearSearch={handleClearSearch}
                         value={checklistSearchInput}
                     ></SearchInput>
                 )}
             </Box>
-            <ItemDetailsPageMain itemChecklistData={itemChecklistData} />
+            <ItemDetailsPageMain
+                itemChecklistData={itemChecklistData}
+                isLoading={itemChecklistDataIsPending}
+                // checklistsPageNumber={checklistsPageNumber}
+                checklistsPageSize={checklistsPageSize}
+                onPaginationChange={handleAllChecklistsPaginationChange}
+                itemHasAnyChecklists={itemHasAnyChecklists}
+            />
         </>
     );
 };

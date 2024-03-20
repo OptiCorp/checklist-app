@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { axiosClient } from '../services/api';
-import { ItemTemplate } from '../services/apiTypes';
+import { ChecklistItemTemplate } from '../services/apiTypes';
 import { queryClient } from '../tanstackQuery';
 
 export const usePutUpdateQuestion = () => {
@@ -35,12 +35,12 @@ export const usePutUpdateQuestion = () => {
                 queryKey: [itemId, 'itemTemplate'],
             });
 
-            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
+            const previousItemTemplate = queryClient.getQueryData<ChecklistItemTemplate>([
                 itemId,
                 'itemTemplate',
             ]);
 
-            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
+            queryClient.setQueryData<ChecklistItemTemplate>([itemId, 'itemTemplate'], (old) => {
                 if (old) {
                     const questions = [...old.questions];
                     const updatedQuestion = questions.find((q) => q.id == questionId);

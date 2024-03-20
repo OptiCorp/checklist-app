@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { axiosClient } from '../services/api';
-import { ItemTemplate } from '../services/apiTypes';
+import { ChecklistItemTemplate } from '../services/apiTypes';
 import { queryClient } from '../tanstackQuery';
 
 export const usePostNewQuestion = (itemTemplateId: string) => {
@@ -19,7 +19,7 @@ export const usePostNewQuestion = (itemTemplateId: string) => {
                 queryKey: [itemId, 'itemTemplate'],
             });
 
-            const previousItemTemplate = queryClient.getQueryData<ItemTemplate>([
+            const previousItemTemplate = queryClient.getQueryData<ChecklistItemTemplate>([
                 itemId,
                 'itemTemplate',
             ]);
@@ -27,7 +27,7 @@ export const usePostNewQuestion = (itemTemplateId: string) => {
             //optimistically update to new value
             //const { questions } = { ...previousChecklist };
 
-            queryClient.setQueryData<ItemTemplate>([itemId, 'itemTemplate'], (old) => {
+            queryClient.setQueryData<ChecklistItemTemplate>([itemId, 'itemTemplate'], (old) => {
                 if (old) {
                     const questions = [...old.questions, { id: 'temp', question: question }];
                     return { ...old, questions: questions };

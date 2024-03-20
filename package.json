@@ -9,7 +9,9 @@
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
         "preview": "vite preview",
         "lint:fix": "eslint --fix",
-        "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.json"
+        "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.json",
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build"
     },
     "dependencies": {
         "@azure/msal-browser": "^3.7.0",
@@ -29,10 +31,21 @@
         "lodash.debounce": "^4.0.8",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-error-boundary": "^4.0.13",
         "react-router-dom": "^6.21.3",
         "styled-components": "^6.1.8"
     },
     "devDependencies": {
+        "@chromatic-com/storybook": "^1.2.19",
+        "@storybook/addon-essentials": "^8.0.0",
+        "@storybook/addon-interactions": "^8.0.0",
+        "@storybook/addon-links": "^8.0.0",
+        "@storybook/addon-onboarding": "^8.0.0",
+        "@storybook/addon-themes": "^8.0.0",
+        "@storybook/blocks": "^8.0.0",
+        "@storybook/react": "^8.0.0",
+        "@storybook/react-vite": "^8.0.0",
+        "@storybook/test": "^8.0.0",
         "@tanstack/eslint-plugin-query": "^5.17.20",
         "@types/lodash.debounce": "^4.0.9",
         "@types/react": "^18.2.43",
@@ -47,7 +60,9 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
+        "eslint-plugin-storybook": "^0.8.0",
         "prettier": "^3.2.4",
+        "storybook": "^8.0.0",
         "typescript": "^5.2.2",
         "vite": "^5.0.8"
     }

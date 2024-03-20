@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import DropdownCard from './DropdownCard';
 import { useEffect } from 'react';
 
-
-
 export const StyledUl = styled.ul`
     list-style-type: none;
     padding: 0;
