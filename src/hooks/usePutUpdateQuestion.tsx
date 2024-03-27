@@ -1,20 +1,22 @@
 import { useMutation } from '@tanstack/react-query';
-import { axiosClient } from '../services/api';
-import { ChecklistItemTemplate } from '../services/apiTypes';
+import { axiosClientChecklist } from '../services/api';
+import { ItemTemplateChecklistApi } from '../services/apiTypes';
 import { queryClient } from '../tanstackQuery';
 
 export const usePutUpdateQuestion = () => {
     return useMutation({
         mutationFn: ({
-            itemId,
+            itemTemplateId,
+            checklistTemplateId,
             question,
             questionId,
         }: {
-            itemId: string;
+            itemTemplateId: string;
+            checklistTemplateId: string;
             question: string;
             questionId: string;
         }) => {
-            return axiosClient(`Templates/${itemId}/${questionId}`, {
+            return axiosClientChecklist(`Templates/${itemTemplateId}/${checklistTemplateId}/${questionId}`, {
                 method: 'PUT',
                 data: question,
                 headers: {
@@ -23,43 +25,55 @@ export const usePutUpdateQuestion = () => {
             });
         },
         onMutate: async ({
-            itemId,
+            itemTemplateId,
             question,
             questionId,
         }: {
-            itemId: string;
+            itemTemplateId: string;
             question: string;
             questionId: string;
         }) => {
             await queryClient.cancelQueries({
-                queryKey: [itemId, 'itemTemplate'],
+                queryKey: [itemTemplateId, 'itemTemplate'],
             });
 
-            const previousItemTemplate = queryClient.getQueryData<ChecklistItemTemplate>([
-                itemId,
+            const previousItemTemplate = queryClient.getQueryData<ItemTemplateChecklistApi>([
+                itemTemplateId,
                 'itemTemplate',
             ]);
 
-            queryClient.setQueryData<ChecklistItemTemplate>([itemId, 'itemTemplate'], (old) => {
-                if (old) {
-                    const questions = [...old.questions];
-                    const updatedQuestion = questions.find((q) => q.id == questionId);
-                    if (updatedQuestion) {
-                        updatedQuestion.question = question;
+            queryClient.setQueryData<ItemTemplateChecklistApi>(
+                [itemTemplateId, 'itemTemplate'],
+                (old) => {
+                    if (old) {
+                        const checklistTemplate = { ...old.checklistTemplate };
+                        // checklistTemplate.questions.push({ id: 'temp', question: '' });
+                        const questions = [...checklistTemplate.questions];
+
+                        const updatedQuestion = questions.find((q) => q.id == questionId);
+                        if (updatedQuestion) {
+                            updatedQuestion.question = question;
+                        }
+                        return {
+                            ...old,
+                            checklistTemplate: { ...checklistTemplate, questions: questions },
+                        };
                     }
-                    return { ...old, questions: questions };
+                    return undefined;
                 }
-                return undefined;
-            });
+            );
 
             return { previousItemTemplate };
         },
-        onError: (err, { itemId }, context) => {
-            queryClient.setQueryData([itemId, 'itemTemplate'], context?.previousItemTemplate);
+        onError: (err, { itemTemplateId }, context) => {
+            queryClient.setQueryData(
+                [itemTemplateId, 'itemTemplate'],
+                context?.previousItemTemplate
+            );
         },
-        onSettled: async (err, data, { itemId }) => {
+        onSettled: async (err, data, { itemTemplateId }) => {
             return await queryClient.invalidateQueries({
-                queryKey: [itemId, 'itemTemplate'],
+                queryKey: [itemTemplateId, 'itemTemplate'],
             });
         },
     });

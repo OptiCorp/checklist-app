@@ -11,7 +11,9 @@ import {
     styled,
 } from '@mui/material';
 import { FC } from 'react';
-import CardWrapperList, { StyledUl } from '../CardWrapperList';
+import CardWrapperList from '../CardWrapperList';
+import { StyledUl } from '../../../style/GlobalStyles';
+import { LoadingButton } from '@mui/lab';
 
 const StyledCustomAccordian = styled(Accordion)(({ theme }) => ({
     //border: '0.5px solid black',
@@ -28,6 +30,7 @@ interface CardProps {
     extraKeyValueValueColor?: string;
     bottomKeyValues?: { key: string; value: string }[];
     primaryAction?: () => void;
+    primaryActionLoading?: boolean;
     primaryActionText?: string;
     secondaryAction?: () => void;
     secondaryActionText?: string;
@@ -43,6 +46,7 @@ export const CustomCard: FC<CardProps> = ({
     extraKeyValueValueColor,
     primaryAction,
     primaryActionText,
+    primaryActionLoading = false,
     secondaryAction,
     secondaryActionText,
     defaultExpanded = false,
@@ -128,15 +132,20 @@ export const CustomCard: FC<CardProps> = ({
                         {/* <IconButton onClick={() => setExpanded(!expanded)} sx={{ display: 'hidden' }}>
                         <ExpandMoreIcon sx={{ display: 'hidden' }}/>
                     </IconButton> */}
-                        <Box width={40}></Box>
+                        <Box width={24}></Box>
                     </Box>
                 )}
             </AccordionDetails>
             {primaryAction && (
                 <AccordionActions>
-                    <Button onClick={primaryAction} size="small" variant="contained">
+                    <LoadingButton
+                        onClick={primaryAction}
+                        loading={primaryActionLoading}
+                        size="small"
+                        variant="contained"
+                    >
                         {primaryActionText}
-                    </Button>
+                    </LoadingButton>
                     {secondaryAction && (
                         <Button onClick={secondaryAction} size="small" variant="contained">
                             {secondaryActionText}

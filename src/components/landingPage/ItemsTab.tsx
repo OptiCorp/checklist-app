@@ -8,7 +8,7 @@ import { Item } from '../../services/apiTypes';
 import { CustomCard } from '../UI/CustomCard/CustomCard';
 
 const dummyItem1: Item = {
-    id: 'raq6iWvV1V',
+    id: 'newRegards',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
@@ -45,7 +45,7 @@ const dummyItem1: Item = {
     itemTemplate: {
         revision: '',
         description: '',
-        id: '',
+        id: 'templateFromSerciceBus',
         category: {
             id: '',
             name: '',
@@ -64,7 +64,7 @@ const dummyItem1: Item = {
 };
 
 const dummyItem2: Item = {
-    id: 'somerandom-id-yeah',
+    id: 'sNQxuVYoAF',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
@@ -101,7 +101,7 @@ const dummyItem2: Item = {
     itemTemplate: {
         revision: '',
         description: '',
-        id: '',
+        id: '0MlbWtWXQ2',
         category: {
             id: '',
             name: '',
@@ -120,7 +120,7 @@ const dummyItem2: Item = {
 };
 
 const dummyItem3: Item = {
-    id: 'rBfH8pXyYB',
+    id: 'PXuOhySmPk',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
@@ -157,7 +157,7 @@ const dummyItem3: Item = {
     itemTemplate: {
         revision: '',
         description: '',
-        id: '',
+        id: '1hlTjhIQko',
         category: {
             id: '',
             name: '',
@@ -176,7 +176,7 @@ const dummyItem3: Item = {
 };
 
 const dummyItem4: Item = {
-    id: 'd2259717-6d21-411d-ae06-a3e20333a1ea',
+    id: '6vP1uvcEIg',
     createdDate: '2024-04-21',
     serialNumber: 'asdlømad',
     itemTemplateId: 'lsk-alsd',
@@ -213,7 +213,7 @@ const dummyItem4: Item = {
     itemTemplate: {
         revision: '',
         description: '',
-        id: '',
+        id: '1KKnyFWh7y',
         category: {
             id: '',
             name: '',
@@ -233,8 +233,7 @@ const dummyItem4: Item = {
 
 const mockItems: Item[] = [dummyItem1, dummyItem2, dummyItem3, dummyItem4];
 
-interface ItemChecklistTemplate {
-    item: Item;
+interface ItemExtension extends Item {
     hasChecklistTemplate: boolean;
 }
 
@@ -247,46 +246,51 @@ const ItemsTab = () => {
     //     e.stopPropagation();
     //     navigate(navigateTo);
     // };
-    const [itemChecklistTemplate, setItemChecklistTemplate] = useState<ItemChecklistTemplate[]>([]);
+    const [itemChecklistTemplate, setItemChecklistTemplate] = useState<ItemExtension[]>([]);
 
-    useEffect(() => {
-        setItemChecklistTemplate(
-            mockItems.map((item) => ({
-                item: item,
-                hasChecklistTemplate: true,
-            }))
-        );
-    }, []);
+    // useEffect(() => {
+    //     setItemChecklistTemplate(
+    //         mockItems.map((item) => ({
+    //             ...item,
+    //             hasChecklistTemplate: true,
+    //         }))
+    //     );
+    // }, []);
 
     const itemIds = mockItems.map((mI) => mI.id);
 
-    const {
-        mutate: createItemTemplateMutate,
-        isPending: createItemTemplateIsPending,
-        isSuccess: mutateIsSuccess,
-    } = usePostCreateChecklistTemplate({ itemIds: itemIds });
+    // const {
+    //     mutate: createItemTemplateMutate,
+    //     isPending: createItemTemplateIsPending,
+    //     isSuccess: mutateIsSuccess,
+    // } = usePostCreateChecklistTemplate({ itemIds: itemIds });
+    const { data: itemsData } = useQuery({
+        queryKey: ['items'],
+        queryFn: async ({ signal }) => apiService().getAllItems({ signal: signal }),
+    });
 
     const { data: itemDataHasItemTemplate, isPending: itemDataHasItemTemplateIsPending } = useQuery(
         {
             queryKey: ['itemsHasChecklistTemplate', itemIds], //set key based on fetching from items api as well
             queryFn: async ({ signal }) =>
                 apiService().getItemTemplateExistForItem({ signal, itemIds }),
+            enabled: !!itemsData,
         }
     );
 
     useEffect(() => {
-        if (itemDataHasItemTemplate ?? (itemDataHasItemTemplate && mutateIsSuccess)) {
+        if (itemDataHasItemTemplate && itemsData) {
             setItemChecklistTemplate(
-                mockItems.map((item) => {
+                itemsData.map((item) => {
                     const findItem = itemDataHasItemTemplate.find((it) => it.itemId == item.id);
                     return {
-                        item: item,
-                        hasChecklistTemplate: findItem ? findItem.hasChecklistTemplate : true,
+                        ...item,
+                        hasChecklistTemplate: findItem ? findItem.hasChecklistTemplate : false,
                     };
                 })
             );
         }
-    }, [itemDataHasItemTemplate, mutateIsSuccess]);
+    }, [itemDataHasItemTemplate, itemsData]);
 
     return (
         <>
@@ -298,7 +302,7 @@ const ItemsTab = () => {
                                 extraKeyValueLoading={itemDataHasItemTemplateIsPending}
                                 defaultExpanded={false}
                                 isPhoneMode={true}
-                                key={item.item.id}
+                                key={item.id}
                                 // onClick={() =>
                                 //     navigate(`/item/${item.item.id}`, {
                                 //         state: {
@@ -321,10 +325,13 @@ const ItemsTab = () => {
                                 //     </StyledUl>
                                 // }
                                 topKeyValues={[
-                                    { key: 'item-Id', value: item.item.id },
-                                    { key: 'srn', value: item.item.serialNumber },
-                                    { key: 'type', value: item.item.itemTemplate.type },
+                                    { key: 'item-Id', value: item.id },
+                                    { key: 'srn', value: item.serialNumber },
+                                    // { key: 'type', value: item?.itemTemplate?.type },
                                 ]}
+                                // bottomKeyValues={[
+                                //     { key: 'itemTemplateId', value: item.itemTemplate.id },
+                                // ]}
                                 extraKeyValue={{
                                     key: 'Has checklistTemplate',
                                     value: `${item.hasChecklistTemplate}`,
@@ -338,14 +345,17 @@ const ItemsTab = () => {
                                 primaryAction={
                                     !item.hasChecklistTemplate
                                         ? () =>
-                                              createItemTemplateMutate({
-                                                  itemId: item.item.id,
-                                                  questions: ['sample question'],
-                                              })
-                                        : () => navigate(`${item.item.id}/checklistTemplate`)
+                                              navigate(
+                                                  `${item.itemTemplateId}/checklistTemplate/create`
+                                              )
+                                        : () =>
+                                              navigate(
+                                                  `${item.itemTemplateId}/checklistTemplate/edit`
+                                              )
                                 }
+                                primaryActionLoading={itemDataHasItemTemplateIsPending}
                                 secondaryAction={() =>
-                                    navigate(`/item/${item.item.id}`, {
+                                    navigate(`${item.itemTemplateId}/item/${item.id}`, {
                                         state: {
                                             hasChecklistTemplate:
                                                 item.hasChecklistTemplate ?? false,

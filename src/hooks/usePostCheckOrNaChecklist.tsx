@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { axiosClient } from '../services/api';
+import { axiosClientChecklist } from '../services/api';
 import { queryClient } from '../tanstackQuery';
 import { Checklist } from '../services/apiTypes';
 
@@ -14,8 +14,13 @@ export const usePostCheckOrNaChecklist = (
                 checkOrNa == 'NA'
                     ? 'ChecklistQuestionNotApplicableUpdate'
                     : 'ChecklistQuestionCheckedUpdate';
-            return axiosClient.post(
-                `mobilizations/${mobilizationId}/${partialEnpoint}/${checklistId}/${questionId}/${value}`
+            return axiosClientChecklist.post(
+                `mobilizations/${mobilizationId}/${partialEnpoint}/${checklistId}/${questionId}/${value}`,
+                {
+                    checklistQuestionId: questionId,
+                    checklistId: checklistId,
+                    value: value,
+                }
             );
         },
         onMutate: async ({ questionId, value }: { questionId: string; value: boolean }) => {

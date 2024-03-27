@@ -76,14 +76,24 @@ const ItemDetailsPage = () => {
     // console.log(locationState)
     const [checklistSearchInputDebounced, setChecklistSearchInputDebounced] = useState('');
     const [checklistSearchInput, setChecklistSearchInput] = useState('');
-    const { itemId } = useParams();
+    const { itemId, itemTemplateId } = useParams();
     const [cheklistsAllpageNumberPageSize, setChecklistsAllPageNumberPageSize] = useState({
         pageNumber: 1,
         pageSize: 6,
     });
+    const [cheklistsAllSearchedpageNumberPageSize, setChecklistsAllSearchedPageNumberPageSize] =
+        useState({
+            pageNumber: 1,
+            pageSize: 6,
+        });
+
+    const searchChecklistInput = checklistSearchInputDebounced.trim();
 
     const { pageNumber: checklistsPageNumber, pageSize: checklistsPageSize } =
         cheklistsAllpageNumberPageSize;
+
+    const { pageNumber: checklistsSearchedPageNumber, pageSize: checklistsSearchedPageSize } =
+        cheklistsAllSearchedpageNumberPageSize;
 
     const { data: itemChecklistData, isPending: itemChecklistDataIsPending } = useQuery({
         queryKey: ['itemHistory', { itemId: itemId, pageNumber: checklistsPageNumber }],
@@ -113,6 +123,31 @@ const ItemDetailsPage = () => {
         enabled: itemHasAnyChecklists == false,
     });
 
+    const searchIsEnabled = searchChecklistInput != '';
+
+    const { data: paginatedChecklistsBySearch, isLoading: searchIsPending } = useQuery({
+        queryKey: [
+            'searchChecklists',
+            `${searchChecklistInput}`,
+            itemId,
+            {
+                pageNumber: checklistsSearchedPageNumber,
+                pageSize: checklistsSearchedPageSize,
+            },
+        ],
+        queryFn: async ({ signal }) =>
+            apiService().searchCheclistsForItem({
+                checklistSearchId: searchChecklistInput,
+                itemId: itemId!,
+                pageNumber: checklistsPageNumber,
+                pageSize: checklistsPageSize,
+                signal,
+            }),
+        enabled: searchIsEnabled && !!itemId,
+        gcTime: 0, //dont cache search data
+        staleTime: 0, //default
+    });
+
     const debouncedSearch = useRef(
         debounce((criteria: string) => {
             setChecklistSearchInputDebounced(criteria);
@@ -130,12 +165,6 @@ const ItemDetailsPage = () => {
         debouncedSearch(inpText);
     }
 
-    const {
-        mutate: createItemTemplateMutate,
-        isPending: createItemTemplateIsPending,
-        isSuccess: mutateIsSuccess,
-    } = usePostCreateChecklistTemplate({ itemIds: [itemId!] });
-
     // const itemHasChecklistTemplate: boolean | undefined = itemTemplateData
     //     ? itemTemplateData[0].hasChecklistTemplate
     //     : undefined;
@@ -148,20 +177,28 @@ const ItemDetailsPage = () => {
 
     const createOrEditItemTemplate = () => {
         if (itemHasChecklistTemplate == undefined) return;
-        else if (itemHasChecklistTemplate) navigate(`/${itemId}/checklistTemplate`);
-        else if (!itemHasChecklistTemplate) {
-            createItemTemplateMutate({ itemId: itemId!, questions: ['sample question'] });
-        }
+        else if (itemHasChecklistTemplate) navigate(`/${itemTemplateId}/checklistTemplate/edit`);
+        else if (!itemHasChecklistTemplate) navigate(`/${itemTemplateId}/checklistTemplate/create`);
     };
 
     const handleAllChecklistsPaginationChange = (_: React.ChangeEvent<unknown>, page: number) => {
-        setChecklistsAllPageNumberPageSize((prev) => ({
-            pageNumber: page,
-            pageSize: prev.pageSize,
-        }));
+        if (searchIsEnabled) {
+            setChecklistsAllSearchedPageNumberPageSize((prev) => ({
+                pageNumber: page,
+                pageSize: prev.pageSize,
+            }));
+        } else {
+            setChecklistsAllPageNumberPageSize((prev) => ({
+                pageNumber: page,
+                pageSize: prev.pageSize,
+            }));
+        }
     };
 
-    console.log(itemTemplateData);
+    const checklistsToDisplay = searchIsEnabled ? paginatedChecklistsBySearch : itemChecklistData;
+    const paginationPageSizeToDisplay = searchIsEnabled
+        ? checklistsPageSize
+        : checklistsSearchedPageSize;
 
     return (
         <>
@@ -184,23 +221,23 @@ const ItemDetailsPage = () => {
             </ItemTopHeader>
             <Box mt={5}>
                 <Typography variant="h4">History</Typography>
-                {itemChecklistData && (
+                {itemChecklistData && itemHasAnyChecklists && (
                     <SearchInput
-                        loading={false}
+                        loading={searchIsPending}
                         onChange={handleSearchChange}
-                        placeHolder="search for "
+                        placeHolder="search for checklist id"
                         clearSearch={handleClearSearch}
                         value={checklistSearchInput}
                     ></SearchInput>
                 )}
             </Box>
             <ItemDetailsPageMain
-                itemChecklistData={itemChecklistData}
+                itemChecklistData={checklistsToDisplay}
                 isLoading={itemChecklistDataIsPending}
                 // checklistsPageNumber={checklistsPageNumber}
-                checklistsPageSize={checklistsPageSize}
+                checklistsPageSize={paginationPageSizeToDisplay}
                 onPaginationChange={handleAllChecklistsPaginationChange}
-                itemHasAnyChecklists={itemHasAnyChecklists}
+                // itemHasAnyChecklists={itemHasAnyChecklists}
             />
         </>
     );

@@ -1,12 +1,11 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { QuestionTemplate } from '../../services/apiTypes';
 import BottomButtons from '../BottomButtons/BottomButtons';
 import TextInput from '../UI/TextInput';
 
 interface Props {
-    createOrEdit: 'create' | 'edit';
     textFieldRemove: (index: number, id: string) => void;
     textFieldAdd: () => void;
     textFields: { question: QuestionTemplate; error: boolean; helperText?: string }[];
@@ -14,12 +13,12 @@ interface Props {
     // onCreate: () => void;
     // onEdit: () => void;
     loading: boolean;
-    onInputPutRequest: (index: number, questionId: string, text: string) => void;
+    onInputBlur?: (index: number, questionId: string, text: string) => void;
     readonlyMode: boolean;
+    title: string;
 }
 
 const ChecklistTemplateDetailsMain = ({
-    createOrEdit,
     textFields,
     textFieldRemove,
     textFieldAdd,
@@ -27,20 +26,28 @@ const ChecklistTemplateDetailsMain = ({
     // onCreate,
     // onEdit,
     loading,
-    onInputPutRequest,
+    onInputBlur,
     readonlyMode,
+    title,
 }: Props) => {
-    const title: string =
-        createOrEdit == 'create' ? 'Create checklist template' : 'Edit checklist template';
     const navigate = useNavigate();
     return (
         <Box mt={5}>
             <Typography variant="h5">{title}</Typography>
+            {loading && (
+                <Box my={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress />
+                </Box>
+            )}
             <Stack spacing={3}>
                 {textFields.map((field, index) => (
                     <TextInput
                         disabled={readonlyMode}
-                        onBlur={(e) => onInputPutRequest(index, field.question.id, e.target.value)}
+                        onBlur={(e) =>
+                            onInputBlur
+                                ? onInputBlur(index, field.question.id, e.target.value)
+                                : null
+                        }
                         key={index}
                         onChange={(e) => textFieldChange(e.target.value, index)}
                         placeHolder="Is the part pretty?"
@@ -52,36 +59,17 @@ const ChecklistTemplateDetailsMain = ({
                         disabeldPropButton={index == 0 || readonlyMode}
                     ></TextInput>
                 ))}
-                <LoadingButton
-                    variant="contained"
-                    // loading={loading}
-                    disabled={readonlyMode}
-                    onClick={textFieldAdd}
-                >
-                    ADD
-                </LoadingButton>
+                {!loading && (
+                    <LoadingButton
+                        variant="contained"
+                        // loading={loading}
+                        disabled={readonlyMode}
+                        onClick={textFieldAdd}
+                    >
+                        ADD
+                    </LoadingButton>
+                )}
             </Stack>
-            {/* {!dataIsPending && (
-                <BottomButtons>
-                    {createOrEdit == 'create' ? (
-                        <LoadingButton onClick={onCreate} loading={loading} variant="contained">
-                            Create
-                        </LoadingButton>
-                    ) : (
-                        <LoadingButton onClick={onEdit} loading={loading} variant="contained">
-                            Save
-                        </LoadingButton>
-                    )}
-                </BottomButtons>
-            )} */}
-            <BottomButtons>
-                <Button variant="outlined" size="small" onClick={() => navigate(-1)}>
-                    Back
-                </Button>
-                <Button variant="contained" size="small" disabled={readonlyMode}>
-                    Save
-                </Button>
-            </BottomButtons>
         </Box>
     );
 };

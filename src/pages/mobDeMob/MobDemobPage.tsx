@@ -11,9 +11,10 @@ import {
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CardWrapper from '../../components/UI/CardWrapper';
-import CardWrapperList, { StyledUl } from '../../components/UI/CardWrapperList';
+import CardWrapperList from '../../components/UI/CardWrapperList';
 import NestedList from '../../components/UI/NestedList';
 import { Item } from '../../services/apiTypes';
+import { StyledUl } from '../../style/GlobalStyles';
 
 const dummyItem1: Item = {
     type: 'assembly',

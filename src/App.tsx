@@ -15,14 +15,16 @@ import ChecklistPage from './pages/ChecklistPage/ChecklistPage';
 import LandingPage from './pages/LandingPage/LandingPage';
 import { Login } from './pages/Login/Login';
 import RootLayout from './pages/RootLayout';
-import ChecklistTemplateDetailsPage from './pages/item/ChecklistTemplateDetailsPage';
-import ItemDetailsPage from './pages/item/ItemDetailsPage';
+import EditChecklistTemplateDetailsPage from './pages/Item/EditChecklistTemplateDetailsPage';
+import ItemDetailsPage from './pages/Item/ItemDetailsPage';
 import MobDemobPage from './pages/mobDeMob/MobDemobPage';
 import NewMobilization from './pages/mobDeMob/NewMobilization/NewMobilization';
 import PunchDetailsPage from './pages/punch/PunchDetails/PunchDetailsPage';
 import PunchesPage from './pages/punch/Punches/PunchesPage';
 import { lightTheme } from './style/muiTheme';
 import { queryClient } from './tanstackQuery';
+import CreateChecklistTemplateDetailsPage from './pages/Item/CreateChecklistTemplateDetailsPage';
+import { useIsAuthenticated } from '@azure/msal-react';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -41,11 +43,15 @@ const router = createBrowserRouter(
                 path="checklist/:checklistItemId/:punchId"
             ></Route>
 
-            <Route element={<ItemDetailsPage />} path="item/:itemId"></Route>
+            <Route element={<ItemDetailsPage />} path=":itemTemplateId/item/:itemId"></Route>
 
             <Route
-                element={<ChecklistTemplateDetailsPage />}
-                path=":itemId/checklistTemplate"
+                element={<EditChecklistTemplateDetailsPage />}
+                path=":itemTemplateId/checklistTemplate/edit"
+            ></Route>
+            <Route
+                element={<CreateChecklistTemplateDetailsPage />}
+                path=":itemTemplateId/checklistTemplate/create"
             ></Route>
         </Route>
     )
@@ -58,8 +64,8 @@ const ReactQueryDevtoolsProduction = React.lazy(() =>
 );
 
 function App() {
-    //const isAuthenticated = useIsAuthenticated(); //to use Auth from msal
-    const [isAuthenticated, setIsAutheticated] = useState(true); //to skip auth
+    const isAuthenticated = useIsAuthenticated(); //to use Auth from msal
+    // const [isAuthenticated, setIsAutheticated] = useState(true); //to skip auth
     const [showDevtools, setShowDevtools] = useState(false);
 
     const initiateMsal = useCallback(async () => {

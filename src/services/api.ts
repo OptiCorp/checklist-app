@@ -1,23 +1,52 @@
 import axios, { AxiosResponse } from 'axios';
 import {
     Checklist,
-    ChecklistItemTemplate,
+    Item,
     ItemHasChecklistItemTemplate,
+    ItemTemplateChecklistApi,
     Mobilization,
     PaginatedList,
 } from './apiTypes';
+import { msalInstance } from '../msalConfig';
+import { SilentRequest } from '@azure/msal-browser';
 
-export const axiosClient = axios.create({
+export const axiosClientChecklist = axios.create({
     baseURL: 'https://localhost:7040/api/',
 });
 
+export const axiosClientInventory = axios.create({
+    baseURL: 'https://wellpartner-inventory.azurewebsites.net/api/',
+});
+
+//'063f1617-3dd5-49a2-9323-69b1605fba48/user.read'
+const request: SilentRequest = {
+    scopes: [],
+    account: msalInstance.getAllAccounts()[0],
+};
+
+console.log(request.account);
+
 export async function getFromChecklistApi<T>(url: string, signal: AbortSignal): Promise<T> {
-    const res = axiosClient<null, AxiosResponse<T>>({
+    const res = axiosClientChecklist<null, AxiosResponse<T>>({
         url: url,
         method: 'GET',
         signal: signal,
     });
     return (await res).data;
+}
+
+export async function getFromInventoryApi<T>(url: string, signal: AbortSignal): Promise<T> {
+    return msalInstance.acquireTokenSilent(request).then(async (tokenReponse) => {
+        const res = axiosClientInventory<null, AxiosResponse<T>>({
+            url: url,
+            method: 'GET',
+            signal: signal,
+            headers: {
+                Authorization: `Bearer ${tokenReponse.accessToken}`,
+            },
+        });
+        return (await res).data;
+    });
 }
 
 const apiService = () => {
@@ -52,10 +81,32 @@ const apiService = () => {
         title: string;
     }) => {
         const dateQuery = date != '' ? `&date=${date}` : '';
-        const statusQuery = status != '' ? `&MobilizationStatus=${status}` : '';
+        const statusQuery = status !== '' ? `&MobilizationStatus=${status}` : '';
         const queries = dateQuery.concat(statusQuery);
         return getFromChecklistApi<PaginatedList<Mobilization>>(
             `Mobilizations/GetBySearch?title=${title}&PageNumber=${pageNumber}&PageSize=${pageSize}${queries}`,
+            signal
+        );
+    };
+
+    const searchCheclistsForItem = ({
+        pageNumber,
+        pageSize,
+        signal,
+        itemId,
+        checklistSearchId,
+    }: {
+        pageNumber: number;
+        pageSize: number;
+        signal: AbortSignal;
+        itemId: string;
+        checklistSearchId: string;
+    }) => {
+        // const dateQuery = date != '' ? `&date=${date}` : '';
+        // const statusQuery = status != '' ? `&MobilizationStatus=${status}` : '';
+        // const queries = dateQuery.concat(statusQuery);
+        return getFromChecklistApi<PaginatedList<Checklist>>(
+            `Items/${itemId}/searchChecklists?checklistSearchId=${checklistSearchId}&PageNumber=${pageNumber}&PageSize=${pageSize}`,
             signal
         );
     };
@@ -75,8 +126,17 @@ const apiService = () => {
         );
     };
 
-    const getItemTemplate = ({ signal, itemId }: { signal: AbortSignal; itemId: string }) => {
-        return getFromChecklistApi<ChecklistItemTemplate>(`Templates/${itemId}`, signal);
+    const getItemTemplate = ({
+        signal,
+        itemTemplateId,
+    }: {
+        signal: AbortSignal;
+        itemTemplateId: string;
+    }) => {
+        return getFromChecklistApi<ItemTemplateChecklistApi>(
+            `Templates/${itemTemplateId}/getItemTemplateById`,
+            signal
+        );
     };
 
     const getItemChecklistsHistory = ({
@@ -87,7 +147,7 @@ const apiService = () => {
         itemId: string;
     }) => {
         return getFromChecklistApi<PaginatedList<Checklist>>(
-            `Templates/${itemId}/GetChecklistsForItem`,
+            `Items/${itemId}/GetChecklistsForItem`,
             signal
         );
     };
@@ -101,24 +161,28 @@ const apiService = () => {
     }) => {
         const itemIdsParsed = itemIds.join('&itemIds=');
         return getFromChecklistApi<ItemHasChecklistItemTemplate[]>(
-            `Templates/GetItemTemplatesExists/?itemIds=${itemIdsParsed}`,
+            `Items/GetItemTemplatesExists?itemIds=${itemIdsParsed}`,
             signal
         );
     };
 
     const getCheckItemQuestionConflicts = ({
         signal,
-        itemId,
         itemTemplateId,
+        checklistTemplateId,
     }: {
         signal: AbortSignal;
-        itemId: string;
         itemTemplateId: string;
+        checklistTemplateId: string;
     }) => {
-        return getFromChecklistApi<string[]>(
-            `Templates/${itemId}/GetCheckItemQuestionConflict/${itemTemplateId}`,
+        return getFromChecklistApi<Checklist[]>(
+            `Templates/${itemTemplateId}/GetCheckItemQuestionConflict/${checklistTemplateId}`,
             signal
         );
+    };
+
+    const getAllItems = ({ signal }: { signal: AbortSignal }) => {
+        return getFromInventoryApi<Item[]>('Item', signal);
     };
 
     return {
@@ -129,6 +193,8 @@ const apiService = () => {
         getItemChecklistsHistory,
         getItemTemplateExistForItem,
         getCheckItemQuestionConflicts,
+        searchCheclistsForItem,
+        getAllItems,
     };
 };
 

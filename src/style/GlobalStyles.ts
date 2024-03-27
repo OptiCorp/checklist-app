@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 export const TEXT_SHADOW = '2px 1px 1px rgba(0, 0, 0, 0.5)';
 
@@ -12,6 +12,12 @@ export const COLORS = {
     green: '#008000',
     red: '#EB0000',
 };
+
+export const StyledUl = styled.ul`
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+`;
 
 // type Props = {};
 

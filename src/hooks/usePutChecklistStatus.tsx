@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import { axiosClient } from '../services/api';
+import { axiosClientChecklist } from '../services/api';
 import { queryClient } from '../tanstackQuery';
 import { Checklist, ChecklistStatus } from '../services/apiTypes';
 
 export const usePutChecklistStatus = (mobilizationId: string, checklistId: string) => {
     return useMutation({
         mutationFn: ({ status }: { status: ChecklistStatus }) => {
-            return axiosClient.put(
+            return axiosClientChecklist.put(
                 `mobilizations/${mobilizationId}/ChecklistStatus/${checklistId}/${status}`
             );
         },

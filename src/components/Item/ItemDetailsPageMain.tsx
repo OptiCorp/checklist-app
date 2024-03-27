@@ -12,7 +12,6 @@ interface Props {
     checklistsPageSize: number;
     onPaginationChange: (_: React.ChangeEvent<unknown>, page: number) => void;
     isLoading: boolean;
-    itemHasAnyChecklists: boolean | undefined;
 }
 
 const ItemDetailsPageMain: FC<Props> = ({
@@ -21,12 +20,12 @@ const ItemDetailsPageMain: FC<Props> = ({
     // checklistsPageNumber,
     checklistsPageSize,
     onPaginationChange,
-    itemHasAnyChecklists,
 }) => {
     const navigate = useNavigate();
 
     const { items: checklists, totalCount } = itemChecklistData ?? {};
 
+    const paginationCount = totalCount ? Math.ceil(totalCount / checklistsPageSize) : 0;
     return (
         <>
             <Box sx={{ mt: 5 }}>
@@ -36,20 +35,10 @@ const ItemDetailsPageMain: FC<Props> = ({
                             <CustomCard
                                 key={ch.id}
                                 isPhoneMode={true}
-                                // onClick={() => navigate(`/${ci.mobilizationId}/checklist/${ci.id}`)} //todo:
                                 topKeyValues={[
                                     { key: 'id', value: ch.id },
-                                    { key: 'Part of mob:', value: ch.mobilizationId! },
+                                    { key: 'Part of mob', value: ch.mobilizationId! },
                                 ]}
-                                // firstChild={
-                                //     <StyledUl>
-                                //         <CardWrapperList id={'id'} text={ci.id} />
-                                //         {ci.mobilizationId && (
-                                //             <CardWrapperList id={'Part of Mob'} text={ci.mobilizationId} />
-                                //         )}
-                                //         {/* <CardWrapperList id={'Created'} text={`${ci.created.toDateString()}`} /> */}
-                                //     </StyledUl>
-                                // }
                                 bottomKeyValues={[
                                     { key: 'Punches', value: `${ch.punchesCount}` },
                                     { key: 'Status', value: `${ChecklistStatus[ch.status]}` },
@@ -58,29 +47,22 @@ const ItemDetailsPageMain: FC<Props> = ({
                                     navigate(`/${ch.mobilizationId}/checklist/${ch.id}`)
                                 }
                                 primaryActionText="Checklist"
-                                // secondChild={
-                                //     <StyledUl>
-                                //         <CardWrapperList id={'Punches'} text={`${ci.punchesCount}`} />
-                                //         <CardWrapperList id={'Status'} text={`${ChecklistStatus[ci.status]}`} />
-
-                                //     </StyledUl>
-                                // }
                             ></CustomCard>
                         ))
                     ) : (
                         <></>
                     )}
+                    {checklists && checklists.length == 0 && !isLoading && (
+                        <Typography>Nothing to show</Typography>
+                    )}
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        {checklists && checklists.length > 0 && (
-                            <Pagination
-                                count={totalCount ? Math.ceil(totalCount / checklistsPageSize) : 0}
-                                color="primary"
-                                onChange={onPaginationChange}
-                            />
-                        )}
+                        <Pagination
+                            count={paginationCount}
+                            color="primary"
+                            onChange={onPaginationChange}
+                        />
                     </Box>
                 </Stack>
-                {itemHasAnyChecklists == false && <Typography>Has no history</Typography>}
             </Box>
         </>
     );

@@ -1,65 +1,58 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ChecklistTemplateDetailsMain from '../../components/Item/ChecklistTemplateDetailsMain';
-import ItemTopHeader from '../../components/Item/ItemTopHeader';
+import ItemTopHeader from '../../components/Item/ItemTemplateTopHeader';
 import { useDeleteQuestion } from '../../hooks/useDeleteQuestion';
 import { usePostNewQuestion } from '../../hooks/usePostNewQuestion';
 import { usePutUpdateQuestion } from '../../hooks/usePutUpdateQuestion';
 import apiService from '../../services/api';
-import { Item, QuestionTemplate } from '../../services/apiTypes';
-
-export type CreateOrEdit = 'create' | 'edit';
-
-const dummyItem: Item = {
-    itemId: '31232',
-    id: 'aslkd-12-lsad-a',
-    created: new Date(),
-    lastModified: new Date(),
-    name: 'Hydraulic Arm',
-    itemTemplateId: '9391293',
-    serialNumber: '131233',
-    type: 'item',
-    wpId: '1231232',
-};
+import { ItemTemplate, QuestionTemplate } from '../../services/apiTypes';
+import BottomButtons from '../../components/BottomButtons/BottomButtons';
+import { Button } from '@mui/material';
 
 //TODO: let user deside what to do with conflicting templates
 //(checklists that have started to be filled out based on questions from QuestionTemplates)
 
-const ChecklistTemplateDetailsPage = () => {
-    const { pathname } = useLocation();
-    const { itemId } = useParams();
+const EditChecklistTemplateDetailsPage = () => {
+    // const { pathname } = useLocation();
+    const navigate = useNavigate();
+    const { itemTemplateId } = useParams();
 
-    console.log(itemId);
+    console.log(itemTemplateId);
     const [textFields, setTextFields] = useState<
         //TODO: add chagnedTextfield
         { question: QuestionTemplate; error: boolean; helperText?: string }[]
     >([]);
 
     const { data: itemData, isPending: itemDataIsPending } = useQuery({
-        queryKey: [itemId, 'itemTemplate'],
-        queryFn: async ({ signal }) => apiService().getItemTemplate({ signal, itemId: itemId! }),
-        enabled: !!itemId,
+        queryKey: [itemTemplateId, 'itemTemplate'],
+        queryFn: async ({ signal }) =>
+            apiService().getItemTemplate({ signal, itemTemplateId: itemTemplateId! }),
+        enabled: !!itemTemplateId,
     });
 
-    const { id: itemTemplateId } = itemData ?? {};
+    const { checklistTemplate } = itemData ?? {};
+    const { id: checklistTemplateId } = checklistTemplate ?? {};
+
+    // const { id: itemTemplateId } = itemData ?? {};
 
     const { data: checklistItemQuestionConflictdata } = useQuery({
-        queryKey: [itemId, itemTemplateId],
+        queryKey: ['checklistTemplateConflict', itemTemplateId],
         queryFn: async ({ signal }) =>
             apiService().getCheckItemQuestionConflicts({
                 signal,
-                itemId: itemId!,
+                checklistTemplateId: checklistTemplateId!,
                 itemTemplateId: itemTemplateId!,
             }),
-        enabled: !!itemTemplateId,
+        enabled: !!itemTemplateId && !!checklistTemplateId,
     });
 
     const { mutate: questionsMutate, isPending: questionsIsPending } = usePutUpdateQuestion();
 
     useEffect(() => {
-        if (itemData) {
-            const questions = itemData.questions.map((q) => ({
+        if (itemData?.checklistTemplate) {
+            const questions = itemData.checklistTemplate.questions.map((q) => ({
                 question: q,
                 error: false,
                 helperText: undefined,
@@ -70,11 +63,9 @@ const ChecklistTemplateDetailsPage = () => {
             //TODO: create the itemTemplate
             //addQuestionMutate({ itemId: itemId, question: 'sample question' });
         }
-    }, [itemData, itemDataIsPending, itemId]);
+    }, [itemData, itemDataIsPending, itemTemplateId]);
 
-    const { mutate: addQuestionMutate, isPending: addQuestionIsPending } = usePostNewQuestion(
-        itemTemplateId!
-    );
+    const { mutate: addQuestionMutate, isPending: addQuestionIsPending } = usePostNewQuestion();
 
     const { mutate: deleteQuestionMutate, isPending: deleteQuestionIsPending } =
         useDeleteQuestion();
@@ -95,6 +86,7 @@ const ChecklistTemplateDetailsPage = () => {
     };
 
     const handleTextFieldAdd = () => {
+        if (!checklistTemplate) return;
         let hasError = false;
         setTextFields((state) => {
             const newState = [...state];
@@ -107,8 +99,13 @@ const ChecklistTemplateDetailsPage = () => {
             });
             return newState;
         });
+
         if (hasError) return;
-        addQuestionMutate({ itemId: itemId!, question: '' });
+        addQuestionMutate({
+            itemTemplateId: itemTemplateId!,
+            question: '',
+            checklistTemplateId: checklistTemplate.id,
+        });
     };
 
     const handleDeleteQuestion = (index: number, questionId: string) => {
@@ -120,7 +117,13 @@ const ChecklistTemplateDetailsPage = () => {
         //     return newState;
         // });
         if (index == 0) return;
-        deleteQuestionMutate({ index: index, itemId: itemId!, questionId: questionId });
+        if (!checklistTemplate) return;
+        deleteQuestionMutate({
+            index: index,
+            itemTemplateId: itemTemplateId!,
+            checklistTemplateId: checklistTemplate.id,
+            questionId: questionId,
+        });
     };
 
     // const handleCreateOrEdit = (createOrEdit: 'create' | 'edit') => {
@@ -152,7 +155,7 @@ const ChecklistTemplateDetailsPage = () => {
     //     handleCreateOrEdit('edit');
     // };
 
-    const handleInputPutRequest = (index: number, questionId: string, text: string) => {
+    const handleInputSendRequest = (index: number, questionId: string, text: string) => {
         const textStripped = text.trim();
         //const field = textFields.find((q) => q.question.id == questionId);
         if (textStripped.length <= 5) {
@@ -165,31 +168,43 @@ const ChecklistTemplateDetailsPage = () => {
             });
             return;
         }
-        questionsMutate({ itemId: itemId!, question: text, questionId: questionId });
+        if (!checklistTemplate) return;
+        questionsMutate({
+            itemTemplateId: itemTemplateId!,
+            checklistTemplateId: checklistTemplate.id,
+            question: text,
+            questionId: questionId,
+        });
     };
 
-    const isloading = deleteQuestionIsPending || questionsIsPending || addQuestionIsPending;
-
+    //const isloading = deleteQuestionIsPending || questionsIsPending || addQuestionIsPending;
+    const isAnyConflictWithItem =
+        checklistItemQuestionConflictdata && checklistItemQuestionConflictdata.length > 0;
     return (
         <>
-            <ItemTopHeader item={dummyItem}></ItemTopHeader>
+            <ItemTopHeader itemTemplateId={itemTemplateId}></ItemTopHeader>
             <ChecklistTemplateDetailsMain
-                loading={isloading}
-                readonlyMode={
-                    !checklistItemQuestionConflictdata ||
-                    checklistItemQuestionConflictdata.length > 0
-                }
-                onInputPutRequest={handleInputPutRequest}
-                createOrEdit={itemData ? 'edit' : 'create'}
+                loading={itemDataIsPending}
+                readonlyMode={isAnyConflictWithItem ?? true}
+                onInputBlur={handleInputSendRequest}
                 textFields={textFields}
                 textFieldRemove={handleDeleteQuestion}
                 textFieldAdd={handleTextFieldAdd}
                 textFieldChange={handleTextFieldChange}
+                title="Edit template"
                 // onCreate={handleCreate}
                 // onEdit={handleEdit}
             />
+            <BottomButtons>
+                <Button variant="outlined" size="small" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+                <Button variant="contained" size="small" disabled={false}>
+                    Save
+                </Button>
+            </BottomButtons>
         </>
     );
 };
 
-export default ChecklistTemplateDetailsPage;
+export default EditChecklistTemplateDetailsPage;

@@ -1,25 +1,24 @@
 import { Box, Grid, Typography } from '@mui/material';
-import { Item } from '../../services/apiTypes';
 
 interface Props {
-    item: Item;
+    itemTemplateId?: string;
     children?: JSX.Element;
 }
 
-const ItemTopHeader = ({ item: item, children }: Props) => {
+const ItemTemplateTopHeader = ({ itemTemplateId: itemTemplateId, children }: Props) => {
     return (
         <Box marginTop={5}>
             <Grid container>
                 <Grid item flexGrow={1}>
-                    <Typography variant="h4">Item</Typography>
+                    <Typography variant="h4">ItemTemplate</Typography>
                     {/* <Typography variant="body1"> */}
                     <Box>
                         <Typography>
-                            <b>item-Id</b>: {item.id}
+                            <b>itemTemplate-Id</b>: {itemTemplateId}
                         </Typography>
-                        <Typography>
-                            <b>type</b>: {item.itemTemplate.type}
-                        </Typography>
+                        {/* <Typography>
+                            <b>type</b>: {itemTemplate.type}
+                        </Typography> */}
                         {/* <Box>
                             <b>item name</b>: {item.name}
                         </Box> */}
@@ -32,4 +31,4 @@ const ItemTopHeader = ({ item: item, children }: Props) => {
     );
 };
 
-export default ItemTopHeader;
+export default ItemTemplateTopHeader;

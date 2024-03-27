@@ -90,8 +90,10 @@ const MobilizationTab = () => {
         debouncedSearch(inpText);
     }
 
+    console.log(searhFilterOnStatus)
+
     const searchIsEnabled =
-        searchMobsInput != '' || searchFilterOnDate != '' || searhFilterOnStatus != '';
+        searchMobsInput != '' || searchFilterOnDate != '' || searhFilterOnStatus !== '';
 
     const { data: paginatedMobilizations } = useQuery({
         queryKey: [
@@ -220,10 +222,6 @@ const MobilizationTab = () => {
                                         { key: 'mob-id', value: mob.id },
                                         { key: 'title', value: mob.title },
                                         {
-                                            key: 'Checklists done',
-                                            value: mob.checklistCountDone.toString(),
-                                        },
-                                        {
                                             key: 'Status',
                                             value: `${MobilizationStatus[mob.status]}`,
                                         },
@@ -232,6 +230,10 @@ const MobilizationTab = () => {
                                         {
                                             key: 'costumer',
                                             value: mob.customer ?? 'missing costumer',
+                                        },
+                                        {
+                                            key: 'checklists done',
+                                            value: `${mob.checklistCountDone.toString()}/${mob.checklistCount.toString()}`,
                                         },
                                     ]}
                                     primaryAction={() => navigate('/mobdemob/someId')}

@@ -1,38 +1,36 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { axiosClient } from '../services/api';
-import { ItemHasChecklistItemTemplate } from '../services/apiTypes';
+import { axiosClientChecklist } from '../services/api';
+import { ItemTemplateChecklistApi } from '../services/apiTypes';
 import { queryClient } from '../tanstackQuery';
 
-export const usePostCreateChecklistTemplate = ({ itemIds }: { itemIds: string[] }) => {
-    const navigate = useNavigate();
+type CreateChecklistTemplateRequest = {
+    questions: string[];
+    itemTemplateId: string;
+};
+
+export const usePostCreateChecklistTemplate = () => {
     return useMutation({
         //TODO:
-        mutationFn: ({ itemId, questions }: { itemId: string; questions: string[] }) => {
-            return axiosClient(`Templates/${itemId}/CreateTemplateForItem`, {
+        mutationFn: async ({
+            itemTemplateId,
+            questions,
+        }: {
+            itemTemplateId: string;
+            questions: string[];
+        }) => {
+            const res = axiosClientChecklist<
+                CreateChecklistTemplateRequest,
+                AxiosResponse<ItemTemplateChecklistApi>
+            >(`Templates/${itemTemplateId}/CreateChecklistTemplateForItemTemplate`, {
                 method: 'POST',
-                data: { questions: questions, itemId: itemId },
+                data: { questions: questions, itemTemplateId: itemTemplateId },
             });
+            return (await res).data;
         },
-        onSuccess: (_, { itemId }) => {
-            queryClient.setQueryData(
-                ['itemsHasChecklistTemplate', itemIds],
-                (oldData: ItemHasChecklistItemTemplate[]) => {
-                    if (oldData) {
-                        const newData = [...oldData];
-                        const item = newData.find((it) => it.itemId == itemId);
-                        if (item) item.hasChecklistTemplate = true;
-                        return newData;
-                    }
-                    return oldData;
-                }
-            );
-            navigate(`/${itemId}/checklistTemplate`);
-        },
-        onSettled: async () => {
-            return await queryClient.invalidateQueries({
-                queryKey: ['itemsHasChecklistTemplate', itemIds],
-            });
+        onSuccess: (data, { itemTemplateId }) => {
+            queryClient.setQueryData([itemTemplateId, 'itemTemplate'], data);
         },
     });
 };

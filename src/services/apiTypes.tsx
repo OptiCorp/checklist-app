@@ -73,9 +73,9 @@ export type Item = {
     updatedDate?: string;
     vendor: Vendor;
     location: Location;
-    createdBy: User;
+    createdBy?: User;
     logEntries: LogEntry[];
-    itemTemplate: ItemTemplate;
+    itemTemplate?: ItemTemplate;
     documents?: Document;
 };
 
@@ -89,6 +89,11 @@ export type ItemTemplate = {
     createdById: string;
     type: 'item' | 'subAssembly' | 'assembly' | 'unit';
     productNumber: string;
+};
+
+export type ItemTemplateChecklistApi = {
+    id: string;
+    checklistTemplate: ChecklistTemplate;
 };
 
 export interface Punch extends BaseEntities {
@@ -150,11 +155,17 @@ export interface Checklist extends BaseEntities {
     punchesCount: number;
     completionPercentage?: number;
     status: ChecklistStatus;
+    checklistTemplateId: string;
 }
 
 export interface QuestionTemplate {
     id: string;
     question: string;
+}
+
+export interface ChecklistTemplate {
+    id: string;
+    questions: QuestionTemplate[];
 }
 
 export interface ChecklistItemTemplate extends BaseEntities {
